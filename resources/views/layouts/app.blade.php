@@ -20,7 +20,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/toastr.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/tcms.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/tcms.css').'?'.date('Ymd-Hi')  }}" rel="stylesheet">
     <!-- icons from https://iconify.design/ -->
     <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/ja.js"></script>

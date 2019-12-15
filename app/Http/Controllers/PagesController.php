@@ -185,6 +185,11 @@ class PagesController extends Controller
       $depo = \App\deposit::firstOrNew(['depo_id'=>$request->did]);
 //        ->leftJoin('company','deposit.company_id','=','company.company_id');
 
-      return view('pages.depositdetail',['did'=>$depo->depo_id, 'dep'=>$depo,]);
+      $disps = \App\depositdisp::select()
+        ->join('claims','deposit_disp.claim_id','claims.claim_id')
+        ->join('users','deposit_disp.user_id','users.id')
+        ->get();
+
+      return view('pages.depositdetail',['did'=>$depo->depo_id, 'dep'=>$depo,'disps'=>$disps]);
     }
 }

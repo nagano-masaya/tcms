@@ -5,17 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class deposit extends Model
+class depositdisp extends Model
 {
     //
     use softDeletes;
 
-    protected $table = 'deposit';
-    protected $primaryKey = 'depo_id';
-    protected $guarded = ['depo_id'];
+    protected $table = 'deposit_disp';
     //DateTime型でデータを取得するため、$datesに登録
-    protected $dates = [
-      'depo_date'
-    ];
-
 }
