@@ -22,8 +22,15 @@ class CreateClaimsTable extends Migration
             $table->timestamp('claim_make_date')->nullable();
             $table->timestamp('claim_sent_date')->nullable();
             $table->timestamp('pay_date')->nullable();
-            $table->timestamp('paied_date')->nullable();
-            $table->json('history');
+            $table->bigInteger('pay_price');
+            $table->integer('tax_rate');
+            $table->bigInteger('tax');
+            $table->bigInteger('price_total');
+            $table->bigInteger('taxed_price');
+            $table->bigInteger('discount_price');
+            $table->bigInteger('offset_price');
+            $table->json('details');
+            $table->json('history')->nullable()->defautl('[]');
             $table->softDeletes();
             $table->timestamps();
         });
