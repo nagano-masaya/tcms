@@ -54,7 +54,15 @@ class DatabaseSeeder extends Seeder
             'update_by'=>0,
             'deleted_at'=>null,
             'created_at'=>new DateTime('2019-12-08 16:13:58'),
-            'updated_at'=>new DateTime('2019-12-08 16:13:58')}
+            'updated_at'=>new DateTime('2019-12-08 16:13:58')    $this->call(ClaimsTableSeeder::class);
+        $this->call(ContructsTableSeeder::class);
+        $this->call(ConstructsTableSeeder::class);
+        $this->call(ConsttypesTableSeeder::class);
+        $this->call(OrdersTableSeeder::class);
+        $this->call(CompanyTableSeeder::class);
+        $this->call(DepositTableSeeder::class);
+        $this->call(DepositDispTableSeeder::class);
+    }
           ]);
           DB::table('contructs')->insert(
             [
