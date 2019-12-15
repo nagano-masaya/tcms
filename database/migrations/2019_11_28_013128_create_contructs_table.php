@@ -19,6 +19,7 @@ class CreateContructsTable extends Migration
             $table->date('date_from');
             $table->date('date_to');
             $table->string('customer')->nullable();
+            $table->bigInteger('cust_company_id');
             $table->string('cust_company');
             $table->string('cust_person')->nullable();
             $table->bigInteger('price');
