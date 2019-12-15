@@ -1,0 +1,190 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class PagesController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    //==================================================
+    // 工事一覧のリクエスト処理
+    //==================================================
+    public function contruct(Request $request){
+
+      if(isset($request->cont)){
+        \App\contruct::where('cont_id',intval($request->cont))
+                  ->delete();
+      }
+
+      $cons = DB::table('contructs')
+          ->whereNull('deleted_at')
+          ->get();
+
+      return view('Pages.contruct',['cons' => $cons]);
+    }
+
+
+    //==================================================
+    //  工事編集画面のリクエスト処理（GET)
+    //==================================================
+    public function contDetaile(Request $request){
+
+      $con = \App\contruct::firstOrNew(['cont_id' => $request->cont]);
+      // オリジナルデータとしてセッションに保持させる
+      $request->session()->put('contdetaile_org_data',$con);
+
+      return view('pages.contdetaile',['con' => $con]);
+    }
+
+    function bint(string $s){
+      return intval(str_replace($s,'',','))*10000;
+    }
+
+    //==================================================
+    //  工事編集画面のリクエスト処理（POST)
+    //==================================================
+    public function conDetailSave(Request $request){
+        $con = $request->session()->get('contdetaile_org_data');
+        $msg = "OK";
+
+        $con->name = $request->name;
+        $con->date_from = $request->date_from;
+        $con->date_to = $request->date_to;
+        $con->customer = $request->customer;
+        $con->cust_company = $request->cust_company;
+        $con->cust_person = $request->cust_person;
+        $con->price = intval(str_replace(',','',$request->price))*10000;
+        $con->budget_remain = intval(str_replace(',','',$request->budget_remain))*10000;
+        $con->state = $request->state;
+        $con->exec_budget =intval(str_replace(',','',$request->exec_budget))*10000;
+        $con->price_taxed = intval(str_replace(',','',$request->price_taxed))*10000;
+        $con->claim_remain = intval(str_replace(',','',$request->claim_remain))*10000;
+        $con->deposit_remain = intval(str_replace(',','',$request->deposit_remain))*10000;
+        $con->sales_person = $request->sales_person;
+        $con->const_admin = $request->const_admin;
+        $con->update_by = 0;
+
+        $con->save();
+        return "OK";
+
+    }
+
+    //==================================================
+    //  現場編集画面のリクエスト処理（GET)
+    //==================================================
+    public function constDetaile(Request $request){
+
+      $con = \App\construct::firstOrNew(['const_id' => $request->const_id]);
+      // オリジナルデータとしてセッションに保持させる
+      $cont = $request->session()->get('contdetaile_org_data');
+
+      return view('pages.constdetaile',['con' => $con,'cont'=>$cont]);
+    }
+
+    //==================================================
+    //  請求一覧のリクエスト処理（GET)
+    //==================================================
+    public function claimlist(Request $request){
+
+/*
+      if(isset($request->cont)){
+        \App\contruct::where('cont_id',intval($request->cont))
+                  ->delete();
+      }
+*/
+
+      $cons = \App\claims::select()
+          ->join('company','claims.company_id','=','company.company_id')
+          ->whereNull('claims.deleted_at')
+          ->get();
+
+      return view('Pages.claimlist',['cons' => $cons]);
+    }
+
+    public function claimdetail(Request $request){
+
+      $cid="0";
+      if(isset($request->cid)){
+        $cid=$request->cid;
+      }
+      $con = \App\claims::firstOrNew(['claim_id' => $request->cid]);
+      // オリジナルデータとしてセッションに保持させる
+      $request->session()->put('claimdetaile_org_data',$con);
+
+      $conts = \App\contruct::select()
+        ->where('cust_company_id','=',$con->company_id)
+        ->get();
+
+      //return view('Pages.test',['con' => $con,'conts'=>$conts ]);
+      return view('Pages.claimdetail',['con' => $con,'conts'=>$conts ]);
+
+    }
+
+    public function claimdetailSave(Request $request){
+
+      $con = $request->session()->get('claimdetaile_org_data');
+
+      if( $con == null){
+        return "NULL";
+      }
+
+      //$con->claim_id = $request->claim_id;
+      $con->company_id = $request->company_id;
+      $con->user_id = $request->user_id;
+      $con->price = $request->price*10000;
+      $con->claim_date = $request->claim_date;
+      $con->claim_make_date = $request->claim_make_date;
+      $con->claim_sent_date = $request->claim_sent_date;
+      $con->pay_date = $request->pay_date;
+      $con->pay_price = $request->pay_price*10000;
+      $con->price_total = $request->price_total*10000;
+      $con->tax_rate = $request->tax_rate;
+      $con->tax = $request->tax*10000;
+      $con->taxed_price = $request->taxed_price*10000;
+      $con->discount_price = $request->discount_price*10000;
+      $con->offset_price = $request->offset_price*10000;
+      $con->details = $request->details;
+      $con->history = $request->history;
+      $con->save();
+
+      return "OK";
+
+    }
+
+
+    //==================================================
+    // 支払一覧のリクエスト処理
+    //==================================================
+    //('company','claims.company_id','=','company.company_id')
+    public function deposits(Request $request){
+      $depos = \App\deposit::select()
+        ->leftJoin('company','deposit.company_id','=','company.company_id')
+        ->get();
+
+      $coms = \App\company::select()
+        ->whereNull('deleted_at')
+        ->get();
+
+      return view('pages.deposit',['depos'=>$depos,'coms'=>$coms]);
+    }
+
+    //==================================================
+    // 支払一覧のリクエスト処理
+    //==================================================
+    //('company','claims.company_id','=','company.company_id')
+    public function depositdetail(Request $request){
+
+      $depo = \App\deposit::firstOrNew(['depo_id'=>$request->did]);
+//        ->leftJoin('company','deposit.company_id','=','company.company_id');
+
+      return view('pages.depositdetail',['did'=>$depo->depo_id, 'dep'=>$depo,]);
+    }
+}
