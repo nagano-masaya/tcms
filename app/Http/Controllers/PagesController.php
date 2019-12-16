@@ -182,7 +182,7 @@ class PagesController extends Controller
     //('company','claims.company_id','=','company.company_id')
     public function depositdetail(Request $request){
 
-      $depo = \App\deposit::select('deposit.*,company.nickname')
+      $depo = \App\deposit::select()
         ->leftJoin('company','deposit.company_id','=','company.company_id')
         ->firstOrNew(['depo_id'=>$request->did]);
 

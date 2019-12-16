@@ -36,6 +36,9 @@ function recalcAmount(){
   $('input[name="dept_remain"]').val(tcms_num3(v1.toString()));
 }
 
+
+var history=[];
+
 $(document).ready(function(){
   $('#claimlist tbody').children().remove();
   claims.forEach(function(v){
@@ -62,19 +65,71 @@ $(document).ready(function(){
       recalcAmount();
     });
     recalcAmount();
-  })
+  });
+
+  history =eval("[]");
 });
+
+  $('input[name="regist"]').click(validate());
+
+
+var postdata;
+var hitem;
+
+function validate(){
+  var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
+  postdata = {
+   _token: CSRF_TOKEN,
+   depo_id:parseInt($("input[name='depo_id']").val()),
+   company_id:parseInt($("input[name='company_id']").val()),
+   user_id:{{Auth::user()->id}},
+   price:parseInt($("input[name='price']").val()),
+   depo_date:$("input[name='depo_date']").val(),
+   history:null
+ };
+
+  hitem = {
+    update_date:new Date(),
+    depo_id:postdata.depo_id,
+    company_id:postdata.company_id,
+    user_id:postdata.user_id,
+    price:postdata.price,
+    depo_date:postdata.depo_date
+  };
+
+history.push(hitem);
+postdata.history = history;
+
+
+/*  $.ajax({
+      url: 'depositdetail',
+      type: 'POST',
+      data: postdata,
+      dataType: 'JSON',
+      success: function (data) {
+          console.log(data);
+          //toastr.info('登録しました。');
+          alert('登録しました');
+      }
+  }).done(function (data,status,xhr) {
+      console.log(data);
+      //toastr.info('登録しました。');
+      window.alert('登録しました');
+  });
+  */
+
+}
 
 
 </script>
-
 <div class="container">
   <div class="row">
     <div class="input-group col-md-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         入金日
       </div>
-        <input type="button" class="form-control text-left" name="claim_date" value="{{$dep->dep_date == null ? '' : $dep->dep_date->format('Y-m-d')}}" maxlength="4">
+        <input type="button" class="form-control text-left" name="depo_date" data-uk-datepicker="{format:'YYYY MM/DD'}" value="{{$dep->depo_date == null ? '' : $dep->depo_date->format('Y m/d')}}" data-org="{{$dep->depo_date == null ? '' : $dep->depo_date->format('Y m/d')}}" maxlength="4">
     </div>
     <div class="input-group col-md-6">
       <div class="input-group-prepend input-group-text input-group-sm">
@@ -96,7 +151,14 @@ $(document).ready(function(){
         <input type="text" readonly class="form-control px-0 jpcurrency" name="dept_remain" value="{{number_format($dep->pay_price/10000)}}" maxlength="12">
       </div>
     </div>
-    <div class="row mt-2">
+    <div class="row mt-3 mb-0">
+      <div class="col-10 font-weight-bolder">
+        {{$dep->nickname}} 様宛　請求書一覧
+      </div>
+      <div class="col-2">
+      </div>
+    </div>
+    <div class="row mt-0">
       <table class="table table-bordered table-responsive small" style="table-layout: fixed" id="claimlist">
         <thead class="thead-light">
           <th class="col_date">請求日</th>
@@ -111,6 +173,16 @@ $(document).ready(function(){
         </tbody>
       </table>
     </div>
+    <div class="row">
+      <div class="col-8">
+      </div>
+      <div class="col-4">
+        <div class="row card-header">
+          <input  type="button" class="btn form-control col-6" name="regist" value="登録"></input>
+          <input type="button"  class="btn form-control col-6"name="button" value="キャンセル"></input>
+        </div>
+      </div>
+    </div>
 </div>
 
 
@@ -118,21 +190,18 @@ $(document).ready(function(){
   <table>
     <tbody>
       <tr>
-        <td class="col_date small">#date#</td>
-        <td class="col_date small">#sent_date#</td>
+        <td class="col_date ">#date#</td>
+        <td class="col_date ">#sent_date#</td>
         <td class="text-truncate">#title#</td>
-        <td class="col_price text-right small">#claim_price#</td>
-        <td class="col_price text-right small">#payed_price#</td>
-        <td class="col_price text-right small">#claim_remain#</td>
+        <td class="col_price text-right">#claim_price#</td>
+        <td class="col_price text-right">#payed_price#</td>
+        <td class="col_price text-right">#claim_remain#</td>
         <td class="col_price" data-id="#id" data-org="#price">
-          <input type="text" class="border-0 form-control-plaintext text-right jpcurrency small py-0 " name="price" value="#price#" maxlength="15"/>
+          <input type="text" class="border-0 form-control-plaintext text-right jpcurrency py-0 " name="price" value="#price#" data-org="#price#" maxlength="15"/>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<pre>
-  {{$dep}}
-</pre>
 @endsection
