@@ -182,13 +182,16 @@ class PagesController extends Controller
     //('company','claims.company_id','=','company.company_id')
     public function depositdetail(Request $request){
 
-      $depo = \App\deposit::firstOrNew(['depo_id'=>$request->did]);
-//        ->leftJoin('company','deposit.company_id','=','company.company_id');
+      $depo = \App\deposit::select('deposit.*,company.nickname')
+        ->leftJoin('company','deposit.company_id','=','company.company_id')
+        ->firstOrNew(['depo_id'=>$request->did]);
 
       $disps = \App\depositdisp::select()
-        ->join('claims','deposit_disp.claim_id','claims.claim_id')
-        ->join('users','deposit_disp.user_id','users.id')
-        ->get();
+          ->join('claims','deposit_disp.claim_id','claims.claim_id')
+          ->join('users','deposit_disp.user_id','users.id')
+          ->whereColumn('deposit_disp.claim_id','claims.claim_id')
+          ->whereRaw('deposit_disp.depo_id='.$request->did)
+          ->get();
 
       return view('pages.depositdetail',['did'=>$depo->depo_id, 'dep'=>$depo,'disps'=>$disps]);
     }

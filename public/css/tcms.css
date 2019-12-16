@@ -20,11 +20,13 @@
 }
 
 .col_price{
-  width:8rem;
+  min-width: :7rem;
+  width:7rem;
 }
 
 
 
 .col_date{
+  min-width: :6rem;
   width:6rem;
 }

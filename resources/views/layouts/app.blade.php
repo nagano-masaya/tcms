@@ -33,7 +33,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/js/components/datepicker.min.js"></script>
     <script src="{{ asset('js/BootstrapMenu.min.js') }}"></script>
     <script src="{{ asset('js/toastr.js') }}"></script>
-    <script src="{{ asset('js/tcms.js') }}"></script>
+    <script src="{{ asset('js/tcms.js').'?'.date('Ymd-Hi') }}"></script>
     <script src="{{ asset('js/UltraDate.min.js') }}"></script>
     <script src="{{ asset('js/UltraDate.ja.min.js') }}"></script>
     <script src="https://unpkg.com/v8n/dist/v8n.min.js">
