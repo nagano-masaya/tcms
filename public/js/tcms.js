@@ -14,3 +14,8 @@ function attachNum3(selector){
 $(document).ready( function(){
   attachNum3('.jpcurrency');
 });
+
+function CCSKEY(){
+  var keytime = moment();
+  return CybozuLabs.MD5.calc( keytime.format('YYYYMMDD HH:mm:ss dddd'));
+}

@@ -5,25 +5,44 @@
 <input type="hidden" name="user_id" value="{{$dep->nickname}}"/>
 
 <script type="application/javascript">
-  var claims=[
-      @foreach($disps as $item)
-      {
-         claim_id:{{$item->claim_id}},
-         claim_date:new moment('{{$item->claim_date}}'),
-         claim_sent_date:new moment('{{$item->claim_sent_date}}'),
-         details:[
-           @foreach(json_decode($item->details) as $detail)
-             "{{$detail->text}}",
-           @endforeach
-         ],
-         claim_price:{{$item->price/10000}},
-         payed_amount:{{($item->pay_price - $item->disp_price)/10000}},
-         claim_remain:{{($item->price - $item->pay_price - $item->disp_price)/10000}},
-         disp_price:{{$item->disp_price/10000}}
-      },
-    @endforeach
-  ];
+  var claims=[];
 
+  @foreach($claims as $item)
+  claims['{{$item->claim_id}}'] = {
+     claim_id:{{$item->claim_id}},
+     claim_date:new moment('{{$item->claim_date}}'),
+     claim_sent_date:new moment('{{$item->claim_sent_date}}'),
+     details:[
+       @foreach(json_decode($item->details) as $detail)
+         "{{$detail->text}}",
+       @endforeach
+     ],
+     claim_price:{{$item->price/10000}},
+     payed_amount:{{($item->pay_price)/10000}},
+     claim_remain:{{($item->price - $item->pay_price)/10000}},
+     apply_price:0,
+     is_new:true
+  };
+  @endforeach
+  @foreach($disps as $item)
+  claims['{{$item->claim_id}}'] = {
+     claim_id:{{$item->claim_id}},
+     claim_date:new moment('{{$item->claim_date}}'),
+     claim_sent_date:new moment('{{$item->claim_sent_date}}'),
+     details:[
+       @foreach(json_decode($item->details) as $detail)
+         "{{$detail->text}}",
+       @endforeach
+     ],
+     claim_price:{{$item->price/10000}},
+     payed_amount:{{($item->pay_price - $item->disp_price)/10000}},
+     claim_remain:{{($item->price - $item->pay_price - $item->disp_price)/10000}},
+     apply_price:{{$item->apply_price/10000}},
+     is_new:false
+  };
+  @endforeach
+
+var histText = '{{$dep->history}}';
 var obj;
 var v1;
 
@@ -56,7 +75,7 @@ $(document).ready(function(){
         .replace(/#claim_remain#/g,tcms_num3(v.claim_remain.toString()))
         .replace(/#payed_price#/g,tcms_num3(v.payed_amount.toString()) )
         .replace(/#id#/g,v.claim_id )
-        .replace(/#price#/g,tcms_num3(v.disp_price.toString()) )
+        .replace(/#price#/g,tcms_num3(v.apply_price.toString()) )
 //          .replace('#price#',$this.disp_price)
     ) ;
     $('#claimlist .jpcurrency').on('input',function(){
@@ -70,7 +89,6 @@ $(document).ready(function(){
   history =eval("[]");
 });
 
-  $('input[name="regist"]').click(validate());
 
 
 var postdata;
@@ -79,14 +97,23 @@ var hitem;
 function validate(){
   var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
+  var claims = [];
+  $('#claimlist input[data-id]').each(function(index,elm){
+    claims.push({
+      claim_id:$(elm).attr('data-id'),
+      price:parseInt($(elm).val().replace( /,/g, ''))
+    });
+  });
+
   postdata = {
    _token: CSRF_TOKEN,
    depo_id:parseInt($("input[name='depo_id']").val()),
    company_id:parseInt($("input[name='company_id']").val()),
    user_id:{{Auth::user()->id}},
-   price:parseInt($("input[name='price']").val()),
-   depo_date:$("input[name='depo_date']").val(),
-   history:null
+   price:parseInt($("input[name='price']").val().replace( /,/g, '') ),
+   depo_date:$("input[name='depo_date']").val().replace( /,/g, ''),
+   claims:claims,
+   history:"{{$dep->history}}"
  };
 
   hitem = {
@@ -96,28 +123,23 @@ function validate(){
     user_id:postdata.user_id,
     price:postdata.price,
     depo_date:postdata.depo_date
+
   };
 
-history.push(hitem);
-postdata.history = history;
-
-
-/*  $.ajax({
+  $.ajax({
       url: 'depositdetail',
       type: 'POST',
       data: postdata,
-      dataType: 'JSON',
-      success: function (data) {
-          console.log(data);
-          //toastr.info('登録しました。');
-          alert('登録しました');
-      }
+      dataType: 'JSON'
   }).done(function (data,status,xhr) {
       console.log(data);
       //toastr.info('登録しました。');
       window.alert('登録しました');
-  });
-  */
+  }).success(
+    function(){alert("OK")}
+  ).fail(
+    function(){alert("NG")}
+  )
 
 }
 
@@ -178,7 +200,7 @@ postdata.history = history;
       </div>
       <div class="col-4">
         <div class="row card-header">
-          <input  type="button" class="btn form-control col-6" name="regist" value="登録"></input>
+          <input  type="button" class="btn form-control col-6" name="regist" value="登録" onclick="validate()"></input>
           <input type="button"  class="btn form-control col-6"name="button" value="キャンセル"></input>
         </div>
       </div>
@@ -196,8 +218,8 @@ postdata.history = history;
         <td class="col_price text-right">#claim_price#</td>
         <td class="col_price text-right">#payed_price#</td>
         <td class="col_price text-right">#claim_remain#</td>
-        <td class="col_price" data-id="#id" data-org="#price">
-          <input type="text" class="border-0 form-control-plaintext text-right jpcurrency py-0 " name="price" value="#price#" data-org="#price#" maxlength="15"/>
+        <td class="col_price" >
+          <input type="text" class="border-0 form-control-plaintext text-right jpcurrency py-0 " name="price" value="#price#" data-id="#id#" data-org="#price#" maxlength="15"/>
         </td>
       </tr>
     </tbody>

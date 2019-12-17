@@ -14,10 +14,12 @@
 
   </div>
 <script type="application/javascript">
-  function showDetail(){
-    var cid=$(this).attr('cid');
+ var elm;
+ var param;
+  function showDetail(evt){
+    var cid=evt;
     if( cid!==null ){
-      window.location.href="claimdetail?cid="+cid;
+      window.location.href="claimdetail?cid="+cid+"&t="+CCSKEY();
       return;
     }
     window.location.href="claimdetail";
@@ -40,7 +42,7 @@
         </thead>
         <tbody>
           @foreach($cons as $con)
-            <tr cid="{{$con->claim_id}}" onclick="showDetail()">
+            <tr cid="{{$con->claim_id}}" onclick="showDetail({{$con->claim_id}})">
               <td>{{$con->claim_date->format('Y/m/d')}}</td>
               <td>{{$con->claim_sent_date->format('m/d')}}</td>
               <td>{{$con->nickname}}</td>

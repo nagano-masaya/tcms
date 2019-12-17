@@ -36,6 +36,7 @@
     <script src="{{ asset('js/tcms.js').'?'.date('Ymd-Hi') }}"></script>
     <script src="{{ asset('js/UltraDate.min.js') }}"></script>
     <script src="{{ asset('js/UltraDate.ja.min.js') }}"></script>
+    <script src="{{ asset('js/md5.js') }}"></script>
     <script src="https://unpkg.com/v8n/dist/v8n.min.js">
     import v8n from "v8n"
     moment.locale("ja");
@@ -81,7 +82,7 @@
                           <div class="dropdown-menu" aria-labelledby="navi_dropdownMenuButton" style="z-index:9999">
                                 <a class="dropdown-item" href="{{ url('/claimlist') }}">請求：請求処理</a>
                                 <a class="dropdown-item" href="{{ url('/deposits') }}">請求：入金処理</a>
-                                <a class="dropdown-item" href="#">Menu #3</a>
+                                <a class="dropdown-item" href="{{ url('/ballancesheet') }}">請求：未収一覧</a>
                           </div>
                         </div>
                       </li>
@@ -120,6 +121,9 @@
                 </div>
             </div>
         </nav>
+<script type="application/javascript">
+var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+</script>
 
         <main class="py-4">
             @yield('content')

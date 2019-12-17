@@ -27,5 +27,9 @@ Route::get('claimdetail', 'PagesController@claimdetail')->middleware('auth');
 Route::post('claimdetail', 'PagesController@claimdetailSave')->middleware('auth');
 Route::get('deposits', 'PagesController@deposits')->middleware('auth');
 Route::get('depositdetail', 'PagesController@depositdetail')->middleware('auth');
+Route::post('depositdetail', 'PagesController@depositdetailSave')->middleware('auth');
+
+Route::get('ballancesheet', 'PagesController@ballancesheet')->middleware('auth');
+
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');

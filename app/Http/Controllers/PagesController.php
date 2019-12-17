@@ -101,8 +101,9 @@ class PagesController extends Controller
       }
 */
 
+
       $cons = \App\claims::select()
-          ->join('company','claims.company_id','=','company.company_id')
+          ->join('company','claims.company_id','company.company_id')
           ->whereNull('claims.deleted_at')
           ->get();
 
@@ -115,7 +116,9 @@ class PagesController extends Controller
       if(isset($request->cid)){
         $cid=$request->cid;
       }
-      $con = \App\claims::firstOrNew(['claim_id' => $request->cid]);
+      $con = \App\claims::select()
+        ->leftJoin('company','claims.company_id','company.company_id')
+        ->firstOrNew(['claim_id' => $request->cid]);
       // オリジナルデータとしてセッションに保持させる
       $request->session()->put('claimdetaile_org_data',$con);
 
@@ -170,29 +173,92 @@ class PagesController extends Controller
         ->get();
 
       $coms = \App\company::select()
-        ->whereNull('deleted_at')
         ->get();
 
       return view('pages.deposit',['depos'=>$depos,'coms'=>$coms]);
     }
 
     //==================================================
-    // 支払一覧のリクエスト処理
+    // 支払明細のリクエスト処理
     //==================================================
     //('company','claims.company_id','=','company.company_id')
     public function depositdetail(Request $request){
 
+      //　入金情報を取得
       $depo = \App\deposit::select()
         ->leftJoin('company','deposit.company_id','=','company.company_id')
         ->firstOrNew(['depo_id'=>$request->did]);
 
+      // 登録された分配を取り出す
       $disps = \App\depositdisp::select()
           ->join('claims','deposit_disp.claim_id','claims.claim_id')
           ->join('users','deposit_disp.user_id','users.id')
           ->whereColumn('deposit_disp.claim_id','claims.claim_id')
           ->whereRaw('deposit_disp.depo_id='.$request->did)
+          ->get('deposit_disp.price as disped_price');
+      //　未登録の可能性がある請求を取り出す
+      $claims = \App\claims::select()
+          ->where('price','>','pay_price')
+          ->where('company_id',$depo->company_id)
           ->get();
 
-      return view('pages.depositdetail',['did'=>$depo->depo_id, 'dep'=>$depo,'disps'=>$disps]);
+      $request->session()->put('depositdetaile_org_data',$depo);
+
+      return view('pages.depositdetail',['did'=>$depo->depo_id, 'dep'=>$depo,'disps'=>$disps,'claims'=>$claims]);
     }
+
+/*
+postdata = {
+ _token: CSRF_TOKEN,
+ depo_id:parseInt($("input[name='depo_id']").val()),
+ company_id:parseInt($("input[name='company_id']").val()),
+ user_id:{{Auth::user()->id}},
+ price:parseInt($("input[name='price']").val()),
+ depo_date:$("input[name='depo_date']").val(),
+ history:"{{$dep->history}}"
+};
+*/
+    public function depositdetailSave(Request $request){
+      $depo = $request->session()->get('depositdetaile_org_data');
+
+    return DB::transaction(function () use ($request,$depo) {
+        //------------------------------------------------------
+        // 入金テーブル(deposit)を更新
+        $depo->price = (int)($request->price."0000");
+        $depo->depo_date = strtotime($request->depo_date);
+        $depo->save();
+
+        //------------------------------------------------------
+        // 入金分配テーブル(deposit_disp)を更新
+        foreach($request->claims as $claim) {
+          $recCount = \App\depositdisp::where('claim_id',$claim['claim_id'])
+            ->where('depo_id',$depo->depo_id)
+            ->update([
+              'apply_price' => (int)($claim['price']."0000")
+            ]);
+
+          if($recCount == 0){
+            \App\depositdisp::create([
+              'depo_id'=>$depo->depo_id,
+              'claim_id'=>$claim['claim_id'],
+              'apply_price'=> (int)($claim['price']."0000"),
+              'user_id'=>\Auth::user()->id
+            ]);
+          }
+
+          \App\claims::where('claim_id',$claim['claim_id'])
+            ->update([
+              'pay_date'=>DB::raw('NOW()'),
+              'pay_price'=>DB::raw('(select sum(price) from deposit_disp where claim_id='.$claim['claim_id'].')')
+            ]);
+        }
+
+        return '{status:"OK"}';
+      });
+    }
+
+    public function ballancesheet(Request $request){
+      return view('pages.ballancesheet',[]);
+    }
+
 }
