@@ -30,6 +30,7 @@ Route::get('depositdetail', 'PagesController@depositdetail')->middleware('auth')
 Route::post('depositdetail', 'PagesController@depositdetailSave')->middleware('auth');
 
 Route::get('ballancesheet', 'PagesController@ballancesheet')->middleware('auth');
+Route::get('pdftest.pdf', 'PdfController@pdftest')->middleware('auth');
 
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
