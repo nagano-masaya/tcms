@@ -7,6 +7,9 @@
 <script type="application/javascript">
   var claims=[];
 
+  //-----------------------------------------
+  //  新規分の請求を請求IDをキーとして追加
+  //-----------------------------------------
   @foreach($claims as $item)
   claims['{{$item->claim_id}}'] = {
      claim_id:{{$item->claim_id}},
@@ -24,6 +27,10 @@
      is_new:true
   };
   @endforeach
+  //-----------------------------------------
+  //  既存分の請求を、請求IDをキーとして追加
+  //  ※結果として新規分がオーバーライドされる
+  //-----------------------------------------
   @foreach($disps as $item)
   claims['{{$item->claim_id}}'] = {
      claim_id:{{$item->claim_id}},

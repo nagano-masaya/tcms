@@ -11,5 +11,5 @@ class PdfController extends Controller
         $this->middleware('auth');
     }
 
-    public function pdftest(Request $req){return pdf\PdfTest::generate($req);}
+    public function pdftest(Request $req){return pdf\contclaimlist::generate($req);}
 }
