@@ -24,7 +24,32 @@
   ];//{cont_id,cont_text,text,unit_price,qty,price,tax}
 
 
-
+function newItem(){
+  //$('#constselector').show();
+ var templ=$('#rowbase').html();
+  num = $("#detaillist tbody tr").length;
+  $("#detaillist tbody").append(
+      '<tr data-rowid="'+num+'"><td>'
+    + templ
+    .replace("#clmdid#",0)
+    .replace(/#row#/g,num)
+    .replace("#text#","")
+    .replace("#unit_price#",0)
+    .replace("#qty#",0)
+    .replace("#price#",0)
+    .replace("#cont_text#","")
+    .replace("#cont_id#","")
+    +'</td></tr>'
+  ).find('.jpcurrency').each(function(){
+      $(this).on(
+        'input', function(){
+                              $(this).val(
+                                tcms_num3($(this).val())
+                              );
+        }
+     )
+   });
+}
 
   var objs;
   function initDetails(){
@@ -35,10 +60,10 @@
 
       if(!itm.deleted && templ !== undefined ){
         $("#detaillist tbody").append(
-          '<tr><td>'
+          '<tr data-rowid="'+num+'"><td>'
           + templ
           .replace("#clmdid#",itm.clmdetail_id)
-          .replace("#row#",num)
+          .replace(/#row#/g,num)
           .replace("#text#",itm.text)
           .replace("#unit_price#",itm.unit_price)
           .replace("#qty#",itm.qty)
@@ -220,8 +245,8 @@
     <div class="col-10">
 明細
     </div>
-    <div class="col-2 text-right">
-      <span class="iconify" data-icon="bx:bx-add-to-queue" data-inline="false"></span>
+    <div class="col-2 text-right clickable" onclick="newItem()">
+      <span class="iconify" data-icon="bx:bx-add-to-queue" data-inline="false" ></span>
       <span>新規</span>
     </div>
   </div>
@@ -312,12 +337,19 @@ var conts = [
     caller.text(selected_cont_name);
     caller.attr('cid',selected_cont_id);
   }
+
+  function delete_claim(itm){
+    $('tr[data-rowid="'+itm+'"]').addClass('hidden');
+  }
+
 </script>
 <table class="table table-hover table-striped" id="contlist">
   <tbody>
   </tbody>
 </table>
 @endcomponent
+
+
 
 <div id="rowbase" style="visibility:hidden;width:0px;height:0px">
   <div class="container" data-rowid="#row#" data-id="#clmdid#">
@@ -335,8 +367,9 @@ var conts = [
      <div class="col-1">
        <span class="iconify clickable" data-icon="bx:bx-arrow-from-bottom" data-inline="false"></span>
        <span class="iconify clickable" data-icon="bx:bx-arrow-from-top" data-inline="false"></span>
-       <span class="iconify clickable" data-icon="fa-solid:trash-alt" data-inline="false" onclick="delete_cont('#row#')"></span>
+       <span class="iconify clickable" data-icon="fa-solid:trash-alt" data-inline="false" onclick="delete_claim('#row#')"></span>
      </div>
    </div>
 </div>
+
 @endsection
