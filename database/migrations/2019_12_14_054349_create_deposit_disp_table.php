@@ -14,9 +14,8 @@ class CreateDepositDispTable extends Migration
     public function up()
     {
         Schema::create('deposit_disp', function (Blueprint $table) {
-          $table->bigInteger('depo_id');
-          $table->bigInteger('claim_id');
-          $table->bigInteger('cont_id');
+          $table->bigInteger('clmdetail_id');
+          $table->timestamp('apply_date');
           $table->bigInteger('apply_price');
           $table->bigInteger('user_id');
           $table->softDeletes();

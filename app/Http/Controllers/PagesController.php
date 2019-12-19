@@ -122,12 +122,16 @@ class PagesController extends Controller
       // オリジナルデータとしてセッションに保持させる
       $request->session()->put('claimdetaile_org_data',$con);
 
+      $details = \App\claimdetail::select()
+        ->where('claim_id',$request->cid)
+        ->get();
+
       $conts = \App\contruct::select()
         ->where('cust_company_id','=',$con->company_id)
         ->get();
 
       //return view('Pages.test',['con' => $con,'conts'=>$conts ]);
-      return view('Pages.claimdetail',['con' => $con,'conts'=>$conts ]);
+      return view('Pages.claimdetail',['con' => $con,'conts'=>$conts ,'details'=>$details]);
 
     }
 
@@ -157,6 +161,22 @@ class PagesController extends Controller
       $con->details = $request->details;
       $con->history = $request->history;
       $con->save();
+
+      $details = json_decode($request->details);
+      $idx=0;
+      foreach($details as $itm){
+        $details = \App\claimdetail::updateOrCreate(
+          [
+            'listorder'=>$idx,
+            'cont_id'=>$itm->cont_id,
+            'cont_text'=>$itm->cont_text,
+            'title'=>$itm->text,
+            'unit_price'=>$item->unit_price*10000,
+            'qty'=>$itm->qty*10000,
+            'total_price'=>$itm->price*10000,
+          ])
+          ->where('clmdetail_id',$itm->clmdetail_id);
+      }
 
       return "OK";
 

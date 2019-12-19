@@ -29,7 +29,6 @@ class CreateClaimsTable extends Migration
             $table->bigInteger('taxed_price');
             $table->bigInteger('discount_price');
             $table->bigInteger('offset_price');
-            $table->json('details');
             $table->json('history')->nullable()->defautl('[]');
             $table->softDeletes();
             $table->timestamps();

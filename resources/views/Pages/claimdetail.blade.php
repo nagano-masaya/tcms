@@ -8,14 +8,16 @@
   var company_id = {{$con->company_id}};
   var pay_price = {{$con->pay_price}};
   var details = [
-  @foreach(json_decode($con->details) as $itm)
+  @foreach($details as $itm)
       {
+        clmdetail_id:{{$itm->clmdetail_id}},
+        claim_id:{{$itm->claim_id}},
         cont_id:{{$itm->cont_id}},
         cont_text:"{{$itm->cont_text}}",
         text:"{{$itm->text}}",
         unit_price:{{$itm->unit_price}}/10000,
-        qty:{{$itm->qty}},
-        price:{{$itm->price}}/10000,
+        qty:{{$itm->qty}}/10000,
+        price:{{$itm->total_price}}/10000,
         deleted:false
       },
   @endforeach
@@ -35,6 +37,7 @@
         $("#detaillist tbody").append(
           '<tr><td>'
           + templ
+          .replace("#clmdid#",itm.clmdetail_id)
           .replace("#row#",num)
           .replace("#text#",itm.text)
           .replace("#unit_price#",itm.unit_price)
@@ -70,6 +73,7 @@
     $("#detaillist td").each(function(){
         arr.push(
           {
+            clmdetail_id:parseInt($(this).find('[data-id]').attr('data-id')),
             cont_id:parseInt($(this).find('[cid]').attr('cid')),
             cont_text:$(this).find('[cid]').text(),
             text:$(this).find('.col_text').val(),
@@ -316,7 +320,7 @@ var conts = [
 @endcomponent
 
 <div id="rowbase" style="visibility:hidden;width:0px;height:0px">
-  <div class="container" data-rowid="#row#">
+  <div class="container" data-rowid="#row#" data-id="#clmdid#">
     <div class="row">
       <input type="text" class="form-control col-7 col_text" value="#text#"/>
       <input type="text" class="form-control col-2 col_uprice  text-right jpcurrency" value="#unit_price#"/>

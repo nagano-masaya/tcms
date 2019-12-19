@@ -12,12 +12,12 @@ class ClaimsTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('claims')->delete();
-        
+
         \DB::table('claims')->insert(array (
-            0 => 
+            0 =>
             array (
                 'claim_id' => 1,
                 'company_id' => 1,
@@ -41,7 +41,7 @@ class ClaimsTableSeeder extends Seeder
                 'updated_at' => '2019-12-13 18:06:18',
             ),
         ));
-        
-        
+
+
     }
 }

@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CompanyTableSeeder::class);
         $this->call(DepositTableSeeder::class);
         $this->call(DepositDispTableSeeder::class);
+        $this->call(ClaimdetailTableSeeder::class);
     }
 }
