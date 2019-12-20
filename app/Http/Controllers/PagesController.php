@@ -248,6 +248,7 @@ class PagesController extends Controller
 
       $disps = \App\depositdisp::select()
           ->join('claimdetail','deposit_disp.clmdetail_id','claimdetail.clmdetail_id')
+          ->join('claims','claimdetail.claim_id','claims.claim_id')
           ->join('users','deposit_disp.user_id','users.id')
           ->whereRaw('deposit_disp.depo_id='.$did)
           ->get('deposit_disp.price as disped_price');
