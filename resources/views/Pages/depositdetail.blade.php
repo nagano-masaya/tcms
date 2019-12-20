@@ -3,10 +3,8 @@
 @section('content')
 <input type="hidden" name="depo_id" value="{{$did}}"/>
 <input type="hidden" name="user_id" value="{{$dep->nickname}}"/>
-
 <script type="application/javascript">
   var claims=[];
-
   //-----------------------------------------
   //  新規分の請求を請求IDをキーとして追加
   //-----------------------------------------

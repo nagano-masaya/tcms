@@ -141,45 +141,57 @@ class PagesController extends Controller
 
       if( $con == null){
         return "NULL";
-      }
+      };
+      return DB::transaction(function () use ($request,$con) {
+        //$con->claim_id = $request->claim_id;
+        $con->company_id = $request->company_id;
+        $con->user_id = $request->user_id;
+        $con->price = $request->price*10000;
+        $con->claim_date = $request->claim_date;
+        $con->claim_make_date = $request->claim_make_date;
+        $con->claim_sent_date = $request->claim_sent_date;
+        $con->pay_date = $request->pay_date;
+        $con->pay_price = $request->pay_price*10000;
+        $con->price_total = $request->price_total*10000;
+        $con->tax_rate = $request->tax_rate;
+        $con->tax = $request->tax*10000;
+        $con->taxed_price = $request->taxed_price*10000;
+        $con->discount_price = $request->discount_price*10000;
+        $con->offset_price = $request->offset_price*10000;
+        $con->details = $request->details;
+        $con->history = $request->history;
+        $con->save();
 
-      //$con->claim_id = $request->claim_id;
-      $con->company_id = $request->company_id;
-      $con->user_id = $request->user_id;
-      $con->price = $request->price*10000;
-      $con->claim_date = $request->claim_date;
-      $con->claim_make_date = $request->claim_make_date;
-      $con->claim_sent_date = $request->claim_sent_date;
-      $con->pay_date = $request->pay_date;
-      $con->pay_price = $request->pay_price*10000;
-      $con->price_total = $request->price_total*10000;
-      $con->tax_rate = $request->tax_rate;
-      $con->tax = $request->tax*10000;
-      $con->taxed_price = $request->taxed_price*10000;
-      $con->discount_price = $request->discount_price*10000;
-      $con->offset_price = $request->offset_price*10000;
-      $con->details = $request->details;
-      $con->history = $request->history;
-      $con->save();
+        $details = json_decode($request->details);
+        $idx=0;
+        $res = [];
+        foreach($details as $itm){
+          if($itm->deleted == true){
+            if($itm->clmdetail_id!=0){
+              \App\claimdetail::destroy($itm->clmdetail_id);
+            }
+          }else{
+            $id = \App\claimdetail::updateOrCreate(
+              [
+                'clmdetail_id'=>$itm->clmdetail_id
+              ],
+              [
+                'clmdetail_id'=>$itm->clmdetail_id,
+                'listorder'=>$idx,
+                'claim_id'=>$con->claim_id,
+                'cont_id'=>$itm->cont_id,
+                'cont_text'=>$itm->cont_text,
+                'title'=>$itm->text,
+                'unit_price'=>$itm->unit_price*10000,
+                'qty'=>$itm->qty*10000,
+                'total_price'=>$itm->price*10000,
+              ]);
+          }
+          array_push($res,['rowid'=>$itm->rowid,'clmdetail_id'=>$id->clmdetail_id ]);
+        };
 
-      $details = json_decode($request->details);
-      $idx=0;
-      foreach($details as $itm){
-        $details = \App\claimdetail::updateOrCreate(
-          [
-            'listorder'=>$idx,
-            'cont_id'=>$itm->cont_id,
-            'cont_text'=>$itm->cont_text,
-            'title'=>$itm->text,
-            'unit_price'=>$item->unit_price*10000,
-            'qty'=>$itm->qty*10000,
-            'total_price'=>$itm->price*10000,
-          ])
-          ->where('clmdetail_id',$itm->clmdetail_id);
-      }
-
-      return "OK";
-
+        return '{"status":"OK","data":'.json_encode($res)."}" ;
+      });
     }
 
 
@@ -205,17 +217,41 @@ class PagesController extends Controller
     public function depositdetail(Request $request){
 
       //　入金情報を取得
-      $depo = \App\deposit::select()
-        ->leftJoin('company','deposit.company_id','=','company.company_id')
-        ->firstOrNew(['depo_id'=>$request->did]);
 
       // 登録された分配を取り出す
+      $disps = null;
+      $did=isset($request->did) ? $request->did : 0;
+
+      $depo = \App\deposit::select()
+        ->leftJoin('company','deposit.company_id','=','company.company_id')
+        ->firstOrNew(['depo_id'=>$did]);
+
+      $cid=null;
+      if(isset($request->cid)){
+        $cid=$request->cid;
+        $did=0;
+
+        $cust = \App\company::select()
+        ->where('company_id',$cid)
+        ->first();
+
+        $depo->nickname = $cust->nickname;
+        $depo->company_id = $cid;
+      }
+      if(isset($request->did)){
+        $cid=$depo->company_id;
+        $did=$request->did;
+      }
+
+
+
+
       $disps = \App\depositdisp::select()
-          ->join('claims','deposit_disp.claim_id','claims.claim_id')
+          ->join('claimdetail','deposit_disp.clmdetail_id','claimdetail.clmdetail_id')
           ->join('users','deposit_disp.user_id','users.id')
-          ->whereColumn('deposit_disp.claim_id','claims.claim_id')
-          ->whereRaw('deposit_disp.depo_id='.$request->did)
+          ->whereRaw('deposit_disp.depo_id='.$did)
           ->get('deposit_disp.price as disped_price');
+
       //　未登録の可能性がある請求を取り出す
       $claims = \App\claims::select()
           ->where('price','>','pay_price')

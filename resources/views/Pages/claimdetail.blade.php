@@ -15,9 +15,9 @@
         cont_id:{{$itm->cont_id}},
         cont_text:"{{$itm->cont_text}}",
         text:"{{$itm->text}}",
-        unit_price:{{$itm->unit_price}}/10000,
-        qty:{{$itm->qty}}/10000,
-        price:{{$itm->total_price}}/10000,
+        unit_price:{{$itm->unit_price/10000}},
+        qty:{{$itm->qty/10000}},
+        price:{{$itm->total_price/10000}},
         deleted:false
       },
   @endforeach
@@ -54,7 +54,7 @@ function newItem(){
   var objs;
   function initDetails(){
     $("#detaillist tbody").children().remove();
-    var num=1;
+    var num=0;
     details.forEach(function(itm){
       var templ=$('#rowbase').html();
 
@@ -98,14 +98,15 @@ function newItem(){
     $("#detaillist td").each(function(){
         arr.push(
           {
+            rowid:parseInt($(this).find('[data-rowid]').attr('data-rowid')),
             clmdetail_id:parseInt($(this).find('[data-id]').attr('data-id')),
             cont_id:parseInt($(this).find('[cid]').attr('cid')),
             cont_text:$(this).find('[cid]').text(),
             text:$(this).find('.col_text').val(),
-            unit_price:parseInt($(this).find('.col_uprice').val().replace( /,/g, ''))*10000,
+            unit_price:parseInt($(this).find('.col_uprice').val().replace( /,/g, '')),
             qty:parseInt($(this).find('.col_qty').val()),
-            price:parseInt($(this).find('.col_price').val().replace( /,/g, ''))*10000,
-            deleted:false
+            price:parseInt($(this).find('.col_price').val().replace( /,/g, '')),
+            deleted:$(this).find('[data-rowid]').hasClass('hidden')
           }
         )
     });
@@ -113,12 +114,13 @@ function newItem(){
     $('[name="details"]').val(JSON.stringify(arr));
   }
 
+  var recvData="";
 
   function validate(){
     saveDetails();
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
-    console.log($('input[name="company_id"]').val());
+    //console.log($('input[name="company_id"]').val());
     $.ajax({
         url: 'claimdetail',
         type: 'POST',
@@ -141,19 +143,18 @@ function newItem(){
           details:$("input[name='details']").val(),
           history:$("input[name='history']").val(),
         },
-        dataType: 'JSON',
-        success: function (data) {
-            console.log(data);
-            //toastr.info('登録しました。');
-            alert('登録しました');
-        }
-    }).done(function (data,status,xhr) {
-        console.log(data);
-        //toastr.info('登録しました。');
-        window.alert('登録しました');
-    });
-
-  }
+        dataType: 'JSON'
+    }).always(function(data) {
+        data.data.forEach(function(itm){
+          $('[data-rowid="'+itm.rowid+'"]').attr('data-id',itm.clmdetail_id);
+        });
+        toastr.options = {
+          "positionClass": "toast-bottom-right",
+          "timeOut": "1500",
+        };
+        toastr.info('保存しました。');
+      })
+  };
 
 
 
@@ -284,7 +285,7 @@ function newItem(){
     </div>
     <div class="col-4 input-group-text">
       <input class="form-control" type="button" name="" onclick="validate()" value="　保存　"/>
-      <input class="form-control" type="button" name="" onclick="" value="　保存せずに戻る　"/>
+      <input class="form-control" type="button" name="" onclick="" value="　戻る　"/>
     </div>
   </div>
 </div>
@@ -339,7 +340,7 @@ var conts = [
   }
 
   function delete_claim(itm){
-    $('tr[data-rowid="'+itm+'"]').addClass('hidden');
+    $('[data-rowid="'+itm+'"]').addClass('hidden');
   }
 
 </script>

@@ -1,5 +1,5 @@
 <div class="modal" id="{{$compo_id}}" tabindex="-1">
-  <div class="modal-dialog modal-sm">
+  <div class="modal-dialog modal-sm modal-dialog-scrollable">
 
     <!-- 3.モーダルのコンテンツ -->
     <div class="modal-content">
@@ -15,7 +15,7 @@
       <!-- 6.モーダルのフッタ -->
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="{{$on_click}}">登録</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="{{$on_click}}">OK</button>
       </div>
     </div>
   </div>
