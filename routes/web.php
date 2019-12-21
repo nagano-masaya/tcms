@@ -22,12 +22,18 @@ Route::get('contruct', 'PagesController@contruct')->middleware('auth');
 Route::get('contdetaile', 'PagesController@contDetaile')->middleware('auth');
 Route::post('contdetaile', 'PagesController@conDetailSave')->middleware('auth');
 Route::get('constdetaile', 'PagesController@constDetaile')->middleware('auth');
+
 Route::get('claimlist', 'PagesController@claimlist')->middleware('auth');
 Route::get('claimdetail', 'PagesController@claimdetail')->middleware('auth');
 Route::post('claimdetail', 'PagesController@claimdetailSave')->middleware('auth');
 Route::get('deposits', 'PagesController@deposits')->middleware('auth');
 Route::get('depositdetail', 'PagesController@depositdetail')->middleware('auth');
 Route::post('depositdetail', 'PagesController@depositdetailSave')->middleware('auth');
+
+Route::get('orderlist', 'PagesController@orderlist')->middleware('auth');
+Route::get('orderdetail', 'PagesController@orderdetail')->middleware('auth');
+Route::post('orderdetail', 'PagesController@orderdetailSave')->middleware('auth');
+
 
 Route::get('ballancesheet', 'PagesController@ballancesheet')->middleware('auth');
 Route::get('pdftest.pdf', 'PdfController@pdftest')->middleware('auth');

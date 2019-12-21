@@ -216,12 +216,12 @@ class PagesController extends Controller
     //('company','claims.company_id','=','company.company_id')
     public function depositdetail(Request $request){
 
-      //　入金情報を取得
 
-      // 登録された分配を取り出す
       $disps = null;
       $did=isset($request->did) ? $request->did : 0;
 
+      ///----------------------------------------
+      //　入金情報を取得
       $depo = \App\deposit::select()
         ->leftJoin('company','deposit.company_id','=','company.company_id')
         ->firstOrNew(['depo_id'=>$did]);
@@ -245,7 +245,14 @@ class PagesController extends Controller
 
 
 
-
+      //-----------------------------------------
+      //  工事の総受領額を求めるSQL（サブクエリ）を生成
+      // SELECT *,(select sum(apply_price) from `deposit_disp` as d2 where d2.clmdetail_id=d1.clmdetail_id) as amount  FROM `deposit_disp` as d1 WHERE 1
+      $subSql = \App\depositdisp::select('apply_price')
+          //->sum()
+          ->whereRaw('cont_id = ');
+      ///----------------------------------------
+      // 登録された分配を取り出す
       $disps = \App\depositdisp::select()
           ->join('claimdetail','deposit_disp.clmdetail_id','claimdetail.clmdetail_id')
           ->join('claims','claimdetail.claim_id','claims.claim_id')
@@ -253,15 +260,20 @@ class PagesController extends Controller
           ->whereRaw('deposit_disp.depo_id='.$did)
           ->get('deposit_disp.price as disped_price');
 
+      ///----------------------------------------
       //　未登録の可能性がある請求を取り出す
-      $claims = \App\claims::select()
+      //    ※未登録＝指定取引先の入金履歴にない請求
+      $query = \App\claimdetail::select()
+          ->join('claims','claimdetail.claim_id','claims.claim_id')
           ->where('price','>','pay_price')
-          ->where('company_id',$depo->company_id)
-          ->get();
+          ->where('company_id',$depo->company_id);
+
+      $sql = $query->getQuery();
+      $claimrows = $query->get('claims.price as claim_total_price');
 
       $request->session()->put('depositdetaile_org_data',$depo);
 
-      return view('pages.depositdetail',['did'=>$depo->depo_id, 'dep'=>$depo,'disps'=>$disps,'claims'=>$claims]);
+      return view('pages.depositdetail',['did'=>$depo->depo_id, 'dep'=>$depo,'disps'=>$disps,'claimrows'=>$claimrows,'sql'=>$sql]);
     }
 
 /*
@@ -317,5 +329,44 @@ postdata = {
     public function ballancesheet(Request $request){
       return view('pages.ballancesheet',[]);
     }
+    /*
+    ->select('users.id', 'users.name', 'roles.name AS role')
+                ->joinSub($roles, 'roles', function ($join) {
+                    $join->on('users.role', '=', 'roles.id');
+                })->get();
+    */
+    public function orderlist(Request $request){
+      $orders = \App\orders::select(
+          'orders.order_id',
+          'orders.order_date',
+          'orders.item_name',
+          'orders.order_price',
+          'orders.recept_date',
+          'con1.name as cont_name',
+          'recepter.name as recepter_user_name',
+          'order_users.name as order_user_name'
+        )
+        ->leftJoin('contructs as con1','orders.cont_id','con1.cont_id' )
+        ->leftJoin('users as recepter','orders.order_by','recepter.id' )
+        ->leftJoin('users as order_users','orders.order_by','order_users.id' )
+        ->get();
+
+      return view('pages.orderlist',['orders'=>$orders]);
+    }
+
+    public function orderdetail(Request $request){
+      if(isset($request->cid)){
+        $order = \App\orders::select('orders.*','con1.name as cont_name','recepter.name as recepter_user_name','order_users.name as order_user_name')
+          ->leftJoin('contructs as con1','orders.cont_id','con1.cont_id' )
+          ->leftJoin('users as recepter','orders.order_by','recepter.id' )
+          ->leftJoin('users as order_users','orders.order_by','order_users.id' )
+          ->where('orders.order_id',$request->cid)
+          ->first();
+
+        return view('pages.orderdetail',['order'=>$order]);
+      }
+      return view('/home');
+    }
+
 
 }

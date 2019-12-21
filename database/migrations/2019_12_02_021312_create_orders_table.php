@@ -24,7 +24,10 @@ class CreateOrdersTable extends Migration
             $table->bigInteger('qty');
             $table->integer('tax_rate');
             $table->bigInteger('tax');
-            $table->bigInteger('price');
+            $table->bigInteger('order_price');
+            $table->bigInteger('order_by');
+            $table->timestamp('recept_date');
+            $table->bigInteger('recept_by');
             $table->json('claims');
             $table->json('payments');
             $table->json('history');

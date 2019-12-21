@@ -8,19 +8,15 @@
   //-----------------------------------------
   //  新規分の請求を請求IDをキーとして追加
   //-----------------------------------------
-  @foreach($claims as $item)
-  claims['{{$item->claim_id}}'] = {
-     claim_id:{{$item->claim_id}},
+  @foreach($claimrows as $item)
+  claims['{{$item->clmdetail_id}}'] = {
+     clmdetail_id:{{$item->claim_id}},
      claim_date:new moment('{{$item->claim_date}}'),
      claim_sent_date:new moment('{{$item->claim_sent_date}}'),
-     details:[
-       @foreach(json_decode($item->details) as $detail)
-         "{{$detail->text}}",
-       @endforeach
-     ],
-     claim_price:{{$item->price/10000}},
+     details:"{{$item->title}}",
+     claim_price:{{$item->total_price/10000}},
      payed_amount:{{($item->pay_price)/10000}},
-     claim_remain:{{($item->price - $item->pay_price)/10000}},
+     claim_remain:{{($item->total_price - $item->pay_price)/10000}},
      apply_price:0,
      is_new:true
   };
@@ -30,18 +26,14 @@
   //  ※結果として新規分がオーバーライドされる
   //-----------------------------------------
   @foreach($disps as $item)
-  claims['{{$item->claim_id}}'] = {
-     claim_id:{{$item->claim_id}},
+  claims['{{$item->clmdetail_id}}'] = {
+     clmdetail_id:{{$item->clmdetail_id}},
      claim_date:new moment('{{$item->claim_date}}'),
      claim_sent_date:new moment('{{$item->claim_sent_date}}'),
-     details:[
-       @foreach(json_decode($item->details) as $detail)
-         "{{$detail->text}}",
-       @endforeach
-     ],
-     claim_price:{{$item->price/10000}},
+     details:"{{$item->text}}",
+     claim_price:{{$item->total_price/10000}},
      payed_amount:{{($item->pay_price - $item->disp_price)/10000}},
-     claim_remain:{{($item->price - $item->pay_price - $item->disp_price)/10000}},
+     claim_remain:{{($item->total_price - $item->pay_price - $item->disp_price)/10000}},
      apply_price:{{$item->apply_price/10000}},
      is_new:false
   };
@@ -67,18 +59,14 @@ $(document).ready(function(){
   $('#claimlist tbody').children().remove();
   claims.forEach(function(v){
     var title="";
-    obj = v.details;
-    obj.forEach(function(detail){
-      title = title + detail + '<br>';
-    });
     $('#claimlist tbody').append(
         $('#rowtemplate tbody').html()
         .replace(/#date#/g,v.claim_date.format("Y M/D") )
         .replace(/#sent_date#/g,v.claim_sent_date.format("Y M/D") )
-        .replace(/#title#/g,title )
+        .replace(/#title#/g,v.details )
         .replace(/#claim_price#/g,tcms_num3(v.claim_price.toString()))
         .replace(/#claim_remain#/g,tcms_num3(v.claim_remain.toString()))
-        .replace(/#payed_price#/g,tcms_num3(v.payed_amount.toString()) )
+        .replace(/#payed_price#/g,tcms_num3(v.payed_amount.toString()))
         .replace(/#id#/g,v.claim_id )
         .replace(/#price#/g,tcms_num3(v.apply_price.toString()) )
 //          .replace('#price#',$this.disp_price)
@@ -146,10 +134,13 @@ function validate(){
     function(){alert("NG")}
   )
 
+
+
 }
 
 
 </script>
+
 <div class="container">
   <div class="row">
     <div class="input-group col-md-2">

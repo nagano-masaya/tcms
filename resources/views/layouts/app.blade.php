@@ -83,6 +83,9 @@
                                 <a class="dropdown-item" href="{{ url('/claimlist') }}">請求：請求処理</a>
                                 <a class="dropdown-item" href="{{ url('/deposits') }}">請求：入金処理</a>
                                 <a class="dropdown-item" href="{{ url('/ballancesheet') }}">請求：未収一覧</a>
+                                <a class="dropdown-item" href="{{ url('/orderlist') }}">発注：発注処理</a>
+                                <a class="dropdown-item" href="{{ url('/deposits') }}">発注：支払処理</a>
+                                <a class="dropdown-item" href="{{ url('/ballancesheet') }}">発注：未払一覧</a>
                           </div>
                         </div>
                       </li>
