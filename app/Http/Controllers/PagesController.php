@@ -363,10 +363,17 @@ postdata = {
           ->where('orders.order_id',$request->cid)
           ->first();
 
-        return view('pages.orderdetail',['order'=>$order]);
+          $details = \App\orderdetail::select()
+          ->where('order_id',$request->cid)
+          ->get();
+
+        return view('pages.orderdetail',['order'=>$order,'details'=>$details]);
       }
       return view('/home');
     }
 
+    public function diary(Request $request){
+      return view('pages.diary');
+    }
 
 }

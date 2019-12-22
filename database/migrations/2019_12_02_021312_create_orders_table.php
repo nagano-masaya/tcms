@@ -18,7 +18,6 @@ class CreateOrdersTable extends Migration
             $table->biginteger('cont_id');
             $table->bigInteger('user_id');
             $table->date('order_date');
-            $table->text('item_name');
             $table->text('order_to');
             $table->bigInteger('unit_price');
             $table->bigInteger('qty');

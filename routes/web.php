@@ -34,6 +34,7 @@ Route::get('orderlist', 'PagesController@orderlist')->middleware('auth');
 Route::get('orderdetail', 'PagesController@orderdetail')->middleware('auth');
 Route::post('orderdetail', 'PagesController@orderdetailSave')->middleware('auth');
 
+Route::get('diary', 'PagesController@diary')->middleware('auth');
 
 Route::get('ballancesheet', 'PagesController@ballancesheet')->middleware('auth');
 Route::get('pdftest.pdf', 'PdfController@pdftest')->middleware('auth');
