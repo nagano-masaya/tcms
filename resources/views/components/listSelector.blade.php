@@ -20,22 +20,30 @@
               $('#{{$compo_id}} tbody').children().remove();
               datalist.forEach(function(itm){
                 $('#{{$compo_id}} tbody').append(
-                  '<tr><td><div data-cid="'+itm.id+'">'+itm.title+'</div></td></tr>"'
+                  '<tr><td class="p-0"><div class="border-0 list-group-item" data-cid="'+itm.id+'">'+itm.title+'</div></td></tr>"'
                 );
               });
               $('#{{$compo_id}} [data-cid]').click(function(){
-                $('#{{$compo_id}} tbody').children().removeClas('active');
+                if( $(this).hasClass('active') ){
+                  $('#{{$compo_id}} [data-ok]').click();
+                  return;
+                }
+                $('#{{$compo_id}} tbody .active').removeClass('active');
                 $(this).addClass('active');
+
               });
 
               $('#{{$compo_id}} [data-ok]').click(function(){
-                $('#{{$compo_id}}').fnok("aaaaa");
+                var sel = $('#{{$compo_id}} tbody .active');
+                var id = $(sel).attr('data-cid');
+                $('#{{$compo_id}}').fnok($(sel).attr('data-cid'), $(sel).text());
               });
               $('#{{$compo_id}}').modal('show');
           };
 
+
         </script>
-        <table class="table table-hover table-striped" id="contlist">
+        <table class="table table-hover table-condensed" id="contlist">
           <tbody>
           </tbody>
         </table>
@@ -52,9 +60,6 @@
   @component('components.listSelector')
   @slot('compo_id')
   memoeditor
-  @endslot
-  @slot('on_ok')
-  onMenuEditEnd()
   @endslot
   @endcomponent
 

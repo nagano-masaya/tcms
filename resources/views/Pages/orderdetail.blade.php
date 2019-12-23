@@ -37,9 +37,11 @@
 <div class="container">
   <div class="row">
     <div class="input-group col-md-6 small">
-      <div class="input-group-prepend input-group-text input-group-sm">
+      <div class="input-group-prepend input-group-text input-group-sm clickable">
         発注先
+        <span class="iconify" data-icon="bx:bx-add-to-queue" data-inline="false" onclick="selectCompany()"></span>
       </div>
+        <input type="hidden" name="order_to_id" value="{{$order->company_id}}" maxlength="4">
         <input type="text" class="form-control text-left small" name="order_to_name" value="{{$order->nickname}}" maxlength="4">
     </div>
     <div class="input-group col-2">
@@ -78,19 +80,21 @@
       <div class="input-group-prepend input-group-text input-group-sm">
         支払条件
       </div>
-        <input type="text" class="form-control text-left" name="order_to_name" value="掛け" maxlength="4">
+        <input type="text" class="form-control text-left" name="terms" value="掛け" maxlength="4">
     </div>
     <div class="input-group col-md-2 small">
       <div class="input-group-prepend input-group-text input-group-sm">
         納期
       </div>
-        <input type="button" class="form-control text-left" name="order_to_name" value="2019 02/10" maxlength="4">
+      <input type="button" class="form-control text-left" data-uk-datepicker="{format:'YYYY MM/DD'}" name="delivery_date" value="2019 02/10" maxlength="4">
     </div>
     <div class="input-group col-md-2 small">
       <div class="input-group-prepend input-group-text input-group-sm">
         支払予定日
       </div>
-        <input type="button" class="form-control text-left" name="order_to_name" value="2019 02/10" maxlength="4">
+      <div class="input-group m-0 p-0 flex">
+        <input type="button" class="form-control text-left" data-uk-datepicker="{format:'YYYY MM/DD'}"  name="payment_date" value="2019 02/10" maxlength="4">
+      </div>
     </div>
   </div>
   <div class="row mb-0 mt-3">
@@ -131,29 +135,6 @@
           </tr>
         </thead>
         <tbody class="p-0">
-@foreach($details as $item)
-          <tr data-id="{{$item->odrdetail_id}}">
-            <td>
-                <input type="text" class="form-control " name="item_name" value="{{$item->item_name}}" data-id="{{$item->odrdetail_id}}">
-            </td>
-            <td>
-              <input type="text" class="form-control text-rigjt jpcurrency" name="unit_price" value="{{number_format($item->unit_price/10000)}}">
-            </td>
-            <td>
-              <input type="text" class="form-control text-rigjt jpcurrency" name="qty" value="{{number_format($item->qty/10000)}}">
-            </td>
-            <td>
-              <input type="text" class="form-control text-rigjt jpcurrency" name="total_price" value="{{number_format($item->total_price/10000)}}">
-            </td>
-            <td>
-              <input type="text" class="form-control text-rigjt jpcurrency" name="tax" value="{{number_format($item->tax/10000)}}">
-            </td>
-            <td>
-              <input type="text" class="form-control text-rigjt jpcurrency" name="taxed_price" value="{{number_format($item->taxed_price/10000)}}">
-            </td>
-            <td class="text-center"><span class="iconify clickable" data-icon="fa-solid:trash-alt" data-inline="false"  data-toggle="modal" data-target="#confirmdel"></span></td>
-          </tr>
-@endforeach
         </tbody>
       </table>
     </div>
@@ -162,8 +143,8 @@
     <div class="col-9">
     </div>
     <div class="col-3">
-      <div class="row card-header">
-        <input  type="button" class="btn form-control col-6" name="regist" value="登録" onclick="validate()"></input>
+      <div class="row table-primary p-2 mt-3">
+        <input  type="button" class="btn btn-primary form-control col-6" name="regist" value="登録" onclick="validate()"></input>
         <input type="button"  class="btn form-control col-6"name="button" value="キャンセル"></input>
       </div>
     </div>
@@ -173,40 +154,129 @@
 <script type="application/javascript">
 $(document).ready(function(){
    $('#detaillist input').addClass('border-0');
+   var rows=[
+     @foreach($details as $item)
+     {
+        odrdetail_id:{{$item->odrdetail_id}},
+        item_name:"{{$item->item_name}}",
+        unit_price:{{$item->unit_price/10000}},
+        qty:{{$item->qty/10000}},
+        total_price:{{$item->total_price/10000}},
+        tax:{{$item->tax/10000}},
+        taxed_price:{{$item->taxed_price/10000}}
+      },
+     @endforeach
+   ];
+
+   $('#detaillist tbody').children().remove();
+   rows.forEach(function(itm){
+     row = newrow();
+     row.find('[data-id]').attr('data-id',itm.odrdetail_id);
+     row.find('[name="item_name"]').val(itm.item_name);
+     row.find('[name="unit_price"]').val(tcms_num3(itm.unit_price));
+     row.find('[name="qty"]').val(tcms_num3(itm.qty));
+     row.find('[name="total_price"]').val(tcms_num3(itm.total_price));
+     row.find('[name="tax"]').val(tcms_num3(itm.tax));
+     row.find('[name="taxed_price"]').val(tcms_num3(itm.taxed_price));
+   });
+
+   attachNum3($('#detaillist .jpcurrency'));
 });
 
+
+
+
 function newrow(){
-  console.log($('#rowtemplate tbody').html());
-  $('#detaillist tbody').append(
-    $('#rowtemplate tbody').html()
+  elm = $('#detaillist tbody').append(
+         $('#rowtemplate tbody').html()
+        )
+
+  attachNum3(
+    elm.find('input')
+    .addClass('border-0 px-0')
+    .find('.jpcurrency')
   );
+
+  return elm;
 }
 
 function deleterow(elm){
   $(elm).parents('[data-id]').addClass("hidden");
 }
-</script>
+{{--  --}}
+var complist =[];
+
+
+function selectCompany(){
+  if(complist.length == 0){
+    $.ajax({
+        url: 'orderdetail',
+        type: 'POST',
+        data: {_token: CSRF_TOKEN,cid:'complist',param:""}
+    }).always(function(rdata) {
+        complist = [];
+        data = JSON.parse(rdata);
+        data.data.forEach(function(item){
+          complist.push({id:item.id, title:item.text});
+        });
+        selectCompany(); //{{-- !!!recursive call!!! --}}
+    });
+  };
+
+  $('#compselector').showSelector('取引先の選択',complist,function(id,text){
+    $('[name="order_to_id"]').val(parseInt(id));
+    $('[name="order_to_name"]').val(""+text);
+  });
+}
+
+
+function ObjectException(Obj,message){
+  this.object = obj;
+  this.message = message;
+}
+
+function validate(){
+  $('.bg-danger').removeClass('bg-danger');
+  try{
+    $('.jpcurrency').each(function(elm){
+      if( !elm.val().match(/\b\d{1,3}(,\d{3})*\b/)){
+        throw new ObjectException(elm,'数値を入力してください');
+      }
+    });
+
+  }catch(e){
+    $(e.object).addClass('.bg-danger');
+    toastr.options = {
+      "positionClass": "toast-top-left",
+      "timeOut": "1500",
+    };
+    toastr.error(e.message);
+  }
+}
+
+
+  </script>
 
 <table class="hidden" id="rowtemplate">
   <tr data-id="0">
-    <td>
-        <input type="text" class="form-control " name="item_name" value="">
+    <td class="p-0">
+        <input type="text" class="form-control px-1 border-0" name="item_name" value="">
     </td>
-    <td>
-      <input type="text" class="form-control text-rigjt jpcurrency" name="unit_price" value="0">
+    <td class="p-0">
+      <input type="text" class="form-control text-right p-1 border-0 jpcurrency" name="unit_price" value="0">
     </td>
-    <td>
-      <input type="text" class="form-control text-rigjt jpcurrency" name="qty" value="0">
+    <td class="p-0">
+      <input type="text" class="form-control text-right p-1 border-0 jpcurrency" name="qty" value="0">
     </td>
-    <td>
-      <input type="text" class="form-control text-rigjt jpcurrency" name="total_price" value="0">
+    <td class="p-0">
+      <input type="text" class="form-control text-right p-1 border-0 jpcurrency" name="total_price" value="0">
     </td>
-    <td>
-      <input type="text" class="form-control text-rigjt jpcurrency" name="tax" value="0">
+    <td class="p-0">
+      <input type="text" class="form-control text-right p-1 border-0 jpcurrency" name="tax" value="0">
     </td>
-    <td>
-      <input type="text" class="form-control text-rigjt jpcurrency" name="taxed_price" value="0">
-    </td>
+    <td class="p-0">
+      <input type="text" class="form-control text-right p-1 border-0 jpcurrency" name="taxed_price" value="0">
+    </td class="p-0">
     <td class="text-center">
       <span class="iconify clickable" data-icon="fa-solid:trash-alt" data-inline="false" data-toggle="modal" data-target="#confirmdel"></span>
     </td>
@@ -232,5 +302,12 @@ function deleterow(elm){
     </div>
   </div>
 </div>
+
+@component('components.listSelector')
+@slot('compo_id')
+compselector
+@endslot
+@endcomponent
+
 
 @endsection

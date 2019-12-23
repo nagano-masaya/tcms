@@ -32,7 +32,7 @@ Route::post('depositdetail', 'PagesController@depositdetailSave')->middleware('a
 
 Route::get('orderlist', 'PagesController@orderlist')->middleware('auth');
 Route::get('orderdetail', 'PagesController@orderdetail')->middleware('auth');
-Route::post('orderdetail', 'PagesController@orderdetailSave')->middleware('auth');
+Route::post('orderdetail', 'PagesController@orderdetailPost')->middleware('auth');
 
 Route::get('diary', 'PagesController@diary')->middleware('auth');
 

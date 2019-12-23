@@ -376,4 +376,19 @@ postdata = {
       return view('pages.diary');
     }
 
+    public function orderdetailPost(Request $request){
+      if($request->cid == 'complist'){
+          $data = \App\company::select(['company_id','nickname'])
+            ->get();
+
+          $res = [];
+          foreach ($data as $item) {
+            $res[] = ["id"=>$item->company_id,"text"=>$item->nickname];
+          };
+
+          return '{"status":"OK","data":'.json_encode($res)."}" ;
+      }
+
+
+    }
 }
