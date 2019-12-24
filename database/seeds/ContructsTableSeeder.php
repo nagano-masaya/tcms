@@ -20,7 +20,7 @@ class ContructsTableSeeder extends Seeder
             0 => 
             array (
                 'cont_id' => 1,
-                'name' => '工事１-2',
+                'name' => '工事１-1',
                 'date_from' => '2019-11-15',
                 'date_to' => '2020-01-19',
                 'customer' => '施主11',

@@ -22,5 +22,12 @@ class DatabaseSeeder extends Seeder
         $this->call(DepositDispTableSeeder::class);
         $this->call(ClaimdetailTableSeeder::class);
         $this->call(OrderdetailTableSeeder::class);
+        $this->call(UnitsTableSeeder::class);
+        $this->call(CommentsTableSeeder::class);
+        $this->call(FailedJobsTableSeeder::class);
+        $this->call(MigrationsTableSeeder::class);
+        $this->call(PasswordResetsTableSeeder::class);
+        $this->call(PaymentsTableSeeder::class);
+        $this->call(UnittypesTableSeeder::class);
     }
 }

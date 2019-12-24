@@ -1,0 +1,1 @@
+php artisan iseed --force claimdetail,claims,comments,company,constructs,consttypes,contructs,deposit,deposit_disp,failed_jobs,migrations,orderdetail,orders,password_resets,payments,units,unittypes,users

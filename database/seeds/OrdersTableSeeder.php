@@ -22,7 +22,7 @@ class OrdersTableSeeder extends Seeder
                 'order_id' => 1,
                 'cont_id' => 1,
                 'user_id' => 1,
-                'order_date' => '2019-12-18',
+                'order_date' => '2019-12-18 00:00:00',
                 'order_to_id' => NULL,
                 'order_to' => '時枝商店',
                 'total_price' => 200000000,

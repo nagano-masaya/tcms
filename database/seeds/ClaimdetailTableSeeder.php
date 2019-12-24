@@ -24,13 +24,13 @@ class ClaimdetailTableSeeder extends Seeder
                 'claim_id' => 1,
                 'cont_id' => 1,
                 'cont_text' => '工事１',
-                'title' => '工事１：解体作業',
+                'title' => '工事１－解体',
                 'unit_price' => 20000000000,
                 'qty' => 10000,
                 'total_price' => 20000000000,
                 'deleted_at' => NULL,
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2019-12-21 00:00:29',
             ),
             1 => 
             array (
@@ -39,13 +39,13 @@ class ClaimdetailTableSeeder extends Seeder
                 'claim_id' => 1,
                 'cont_id' => 1,
                 'cont_text' => '工事１',
-                'title' => '工事１：撤去作業',
+                'title' => '工事１－撤去',
                 'unit_price' => 5000000000,
                 'qty' => 10000,
                 'total_price' => 5000000000,
                 'deleted_at' => NULL,
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2019-12-21 00:00:29',
             ),
         ));
         
