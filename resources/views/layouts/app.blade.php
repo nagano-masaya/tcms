@@ -31,13 +31,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/js/uikit.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/css/components/datepicker.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/js/components/datepicker.min.js"></script>
+    <script src="https://cdnjs.com/libraries/1000hz-bootstrap-validator"></script>
     <script src="{{ asset('js/BootstrapMenu.min.js') }}"></script>
     <script src="{{ asset('js/toastr.js') }}"></script>
     <script src="{{ asset('js/tcms.js').'?'.date('Ymd-Hi') }}"></script>
     <script src="{{ asset('js/UltraDate.min.js') }}"></script>
     <script src="{{ asset('js/UltraDate.ja.min.js') }}"></script>
     <script src="{{ asset('js/md5.js') }}"></script>
-    <script src="https://unpkg.com/v8n/dist/v8n.min.js">
+    <script src="https://cdn.jsdelivr.net/npm/v8n/dist/v8n.min.js">
     import v8n from "v8n"
     moment.locale("ja");
     </script>
@@ -84,7 +85,7 @@
                                 <a class="dropdown-item" href="{{ url('/deposits') }}">請求：入金処理</a>
                                 <a class="dropdown-item" href="{{ url('/ballancesheet') }}">請求：未収一覧</a>
                                 <a class="dropdown-item" href="{{ url('/orderlist') }}">発注：発注処理</a>
-                                <a class="dropdown-item" href="{{ url('/deposits') }}">発注：支払処理</a>
+                                <a class="dropdown-item" href="{{ url('/paymentlist') }}">発注：支払処理</a>
                                 <a class="dropdown-item" href="{{ url('/ballancesheet') }}">発注：未払一覧</a>
                           </div>
                         </div>

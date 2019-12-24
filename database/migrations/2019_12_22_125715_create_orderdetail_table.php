@@ -18,6 +18,7 @@ class CreateOrderdetailTable extends Migration
             $table->string('item_name');
             $table->bigInteger('unit_price');
             $table->bigInteger('qty');
+            $table->integer('unit_id')->default(1);
             $table->bigInteger('total_price');
             $table->bigInteger('tax');
             $table->bigInteger('taxed_price');

@@ -34,6 +34,11 @@ Route::get('orderlist', 'PagesController@orderlist')->middleware('auth');
 Route::get('orderdetail', 'PagesController@orderdetail')->middleware('auth');
 Route::post('orderdetail', 'PagesController@orderdetailPost')->middleware('auth');
 
+Route::get('paymentlist', 'PagesController@paymentlist')->middleware('auth');
+Route::get('paymentdetail', 'PagesController@paymentdetail')->middleware('auth');
+Route::post('peymanetdetail', 'PagesController@paymentdetailPost')->middleware('auth');
+
+
 Route::get('diary', 'PagesController@diary')->middleware('auth');
 
 Route::get('ballancesheet', 'PagesController@ballancesheet')->middleware('auth');

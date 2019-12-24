@@ -21,12 +21,54 @@
 
 .col_price{
   min-width: :7rem;
+  max-width: :7rem;
   width:7rem;
 }
 
-
+.col_unit{
+  padding: 0;
+  width:2rem;
+  font-size: 0.7rem;
+}
 
 .col_date{
   min-width: :6rem;
   width:6rem;
+}
+
+
+.dcol-1{
+  width:27.8rem;
+  max-width:27.8rem;
+  min-width:27.8rem;
+}
+.dcol-2{
+  width:8rem;
+  max-width: 8rem;
+  min-width: 8rem;
+}
+.dcol-3{
+  width:8rem;
+  max-width: 8rem;
+  min-width: 8rem;
+}
+.dcol-4{
+  width:8rem;
+  max-width: 8rem;
+  min-width: 8rem;
+}
+.dcol-5{
+  width:8rem;
+  max-width: 8rem;
+  min-width: 8rem;
+}
+.dcol-6{
+  width:6rem;
+  max-width: 6rem;
+  min-width: 6rem;
+}
+.dcol-7{
+  width:4rem;
+  max-width: 4rem;
+  min-width: 4rem;
 }

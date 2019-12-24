@@ -34,7 +34,7 @@
   </div>
 </div>
 --}}
-<div class="container">
+<div class="container" id="mainform">
   <div class="row">
     <div class="input-group col-md-6 small">
       <div class="input-group-prepend input-group-text input-group-sm clickable">
@@ -48,19 +48,19 @@
       <div class="input-group-prepend input-group-text input-group-sm">
         発注額合計
       </div>
-        <input type="input" class="form-control text-left jpcurrency px-1" name="total_price"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="4">
+        <input type="input" class="form-control text-left jpcurrency px-1" name="total_price"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
     </div>
     <div class="input-group col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         消費税
       </div>
-        <input type="input" class="form-control text-left jpcurrency px-1" name="tax"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="12">
+        <input type="input" class="form-control text-left jpcurrency px-1" name="tax"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
     </div>
     <div class="input-group col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         発注金額
       </div>
-        <input type="text" class="form-control text-left jpcurrency px-1" name="taxed_price"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="12">
+        <input type="text" class="form-control text-left jpcurrency px-1" name="order_price"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
     </div>
   </div>
   <div class="row">
@@ -68,7 +68,7 @@
       <div class="input-group-prepend input-group-text input-group-sm">
         発注元
       </div>
-        <input type="button" class="form-control text-left" name="cont_name" value="{{$order->cont_name}}" data-id="{{$order->cont_id}}" data-org-id="{{$order->cont_id}}" data-org="{{$order->cont_name}}" maxlength="4">
+        <input type="button" class="form-control text-left" name="cont_name" value="{{$order->cont_name}}" data-id="{{$order->cont_id}}" data-org-id="{{$order->cont_id}}" data-org="{{$order->cont_name}}" maxlength="64">
     </div>
     <div class="input-group col-md-2">
       <div class="input-group-prepend input-group-text input-group-sm">
@@ -106,32 +106,34 @@
       <span>新規</span>
     </div>
   </div>
+
   <div class="row">
     <div class="">
       <table class="table table-bordered mb-0">
         <thead class="thead-light">
           <tr>
-            <th  style="width:27.8rem">品名</th>
-            <th style="width:8rem">単価</th>
-            <th class="" style="width:6rem">数量</th>
-            <th class="" style="width:8rem">金額</th>
-            <th class="" style="width:8rem">消費税</th>
-            <th class="" style="width:8rem">税込金額</th>
-            <th class="" style="width:4rem"></th>
+            <th class="dcol-1" >品名</th>
+            <th class="dcol-2">単価</th>
+            <th class="dcol-3" colspan="2">数量</th>
+            <th class="dcol-4" >金額</th>
+            <th class="dcol-5" >消費税</th>
+            <th class="dcol-6" >税込金額</th>
+            <th class="dcol-7" ></th>
           </tr>
         </thead>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
       </table>
 
       <table class="table-bordered mt-0 border-top-0 px-1" id="detaillist">
         <thead class="border-top-0">
           <tr>
-            <th class="p-0" style="width:27.8rem"></th>
-            <th class="p-0" style="width:8rem"></th>
-            <th class="p-0" style="width:6rem"></th>
-            <th class="p-0" style="width:8rem"></th>
-            <th class="p-0" style="width:8rem"></th>
-            <th class="p-0" style="width:8rem"></th>
-            <th class="p-0" style="width:4rem"></th>
+            <th class="p-0 dcol-1"></th>
+            <th class="p-0 dcol-2"></th>
+            <th class="p-0 dcol-3" colspan="2"></th>
+            <th class="p-0 dcol-4"></th>
+            <th class="p-0 dcol-5"></th>
+            <th class="p-0 dcol-6"></th>
+            <th class="p-0 dcol-7"></th>
           </tr>
         </thead>
         <tbody class="p-0">
@@ -144,7 +146,7 @@
     </div>
     <div class="col-3">
       <div class="row table-primary p-2 mt-3">
-        <input  type="button" class="btn btn-primary form-control col-6" name="regist" value="登録" onclick="validate()"></input>
+        <input  type="button" class="btn btn-primary form-control col-6" name="regist" value="登録" onclick="save()"></input>
         <input type="button"  class="btn form-control col-6"name="button" value="キャンセル"></input>
       </div>
     </div>
@@ -152,6 +154,8 @@
 </div>
 
 <script type="application/javascript">
+var order_id={{$order->order_id}};
+
 $(document).ready(function(){
    $('#detaillist input').addClass('border-0');
    var rows=[
@@ -161,6 +165,8 @@ $(document).ready(function(){
         item_name:"{{$item->item_name}}",
         unit_price:{{$item->unit_price/10000}},
         qty:{{$item->qty/10000}},
+        unit_id:{{$item->unit_id}},
+        unit_text:{{$item->unit_id}},
         total_price:{{$item->total_price/10000}},
         tax:{{$item->tax/10000}},
         taxed_price:{{$item->taxed_price/10000}}
@@ -175,6 +181,7 @@ $(document).ready(function(){
      row.find('[name="item_name"]').val(itm.item_name);
      row.find('[name="unit_price"]').val(tcms_num3(itm.unit_price));
      row.find('[name="qty"]').val(tcms_num3(itm.qty));
+     row.find('[name="unit"]').attr('data-unit-id',itm.unit_id);
      row.find('[name="total_price"]').val(tcms_num3(itm.total_price));
      row.find('[name="tax"]').val(tcms_num3(itm.tax));
      row.find('[name="taxed_price"]').val(tcms_num3(itm.taxed_price));
@@ -236,24 +243,114 @@ function ObjectException(Obj,message){
 }
 
 function validate(){
-  $('.bg-danger').removeClass('bg-danger');
+  $('.bg-warning').removeClass('bg-warning');
   try{
-    $('.jpcurrency').each(function(elm){
-      if( !elm.val().match(/\b\d{1,3}(,\d{3})*\b/)){
-        throw new ObjectException(elm,'数値を入力してください');
+    if($('[name="order_to_name"]').val().length<1 ){
+      $('[name="order_to_name"]').addClass('bg-warning').focus();
+      throw new Error('発注先を入力してください');
+    }
+
+    if($('[name="cont_name"]').val().length<1 ){
+      $('[name="cont_name"]').addClass('bg-warning').focus();
+      throw new Error('発注元をを入力してください');
+    }
+
+    if($('[name="order_user_name"]').val().length<1 ){
+      $('[name="order_user_name"]').addClass('bg-warning').focus();
+      throw new Error('発注者を入力してください');
+    }
+
+    if($('[name="terms"]').val().length<1 ){
+      $('[name="terms"]').addClass('bg-warning').focus();
+      throw new Error('支払条件を入力してください');
+    }
+
+    var val = $('[name="delivery_date"]').val();
+    if( val.length<1 ){
+      $('[name="delivery_date"]').addClass('bg-warning').focus();
+      throw new Error('納期を入力してください');
+    }
+    if( !moment(val, 'YYYY MM/DD').isValid() ){
+      $('[name="delivery_date"]').addClass('bg-warning').focus();
+      throw new Error('納期に日付を入力してください（'+val+'）');
+    }
+
+    var val = $('[name="payment_date"]').val();
+    if( val.length<1 ){
+      $('[name="payment_date"]').addClass('bg-warning').focus();
+      throw new Error('支払予定日を入力してください');
+    }
+    if( !moment(val, 'YYYY MM/DD').isValid() ){
+      $('[name="payment_date"]').addClass('bg-warning').focus();
+      throw new Error('支払予定日に日付を入力してください');
+    }
+
+    $('#mainform .jpcurrency').each(function(){
+      if( !$(this).val().match(/\b\d{1,3}(,\d{3})*\b/)){
+        $(this).addClass('bg-warning').focus();
+        throw new Error('数値を入力してください('+ $(this).val()+')');
       }
     });
 
-  }catch(e){
-    $(e.object).addClass('.bg-danger');
+    $('#mainform [name="item_name"]').each(function(){
+      if( $(this).val().length<1 ){
+        $(this).addClass('bg-warning').focus();
+        throw new Error('品名を入力してください('+ $(this).val()+')');
+      }
+    });
+
+
+  }catch(err){
     toastr.options = {
       "positionClass": "toast-top-left",
       "timeOut": "1500",
     };
-    toastr.error(e.message);
+    toastr.error(err.message);
+    return false;
   }
+  return true;
 }
 
+var postdata;
+
+function save(){
+  if(!validate()){
+    return;
+  }
+
+  var details=[];
+  $('#detaillist tbody tr').each(function(){
+    details.push({
+      item_name:$(this).find('[name="item_name"]').val(),
+      unit_price:$(this).find('[name="unit_price"]').val(),
+      qty:$(this).find('[name="qty"]').val(),
+      unit_id:$(this).find('[name="unit"]').attr('data-unit-id'),
+      total_price:$(this).find('[name="total_price"]').val(),
+      tax:$(this).find('[name="tax"]').val(),
+      taxed_price:$(this).find('[name="taxed_price"]').val()
+    });
+  });
+
+  postdata = {
+    order_id:order_id,
+    cont_id:$('[name="cont_name"').attr('data-id'),
+    cont_name:$('[name="cont_name"').val(),
+    order_date:$('[name="order_date"').val(),
+    order_to_id:$('[name="order_to_id"').val(),
+    order_to:$('[name="order_to_name"').val(),
+    total_price:$('#mainform [name="total_price"').val(),
+    tax:$('#mainform [name="tax"').val(),
+    order_price:$('#mainform [name="order_price"').val(),
+    order_by:$('#mainform [name="order_user_name"').attr('data-id'),
+    order_user_name:$('#mainform [name="order_user_name"').val(),
+    recept_date:$('#mainform [name="recept_date"').val(),
+    recepted_date:$('#mainform [name="recepted_date"').val(),
+    recepted_user_id:$('#mainform [name="recepted_user_id"').val(),
+    recepted_user_name:$('#mainform [name="recepted_user_name"').val(),
+    rowdata:details
+  }
+
+}
 
   </script>
 
@@ -267,6 +364,9 @@ function validate(){
     </td>
     <td class="p-0">
       <input type="text" class="form-control text-right p-1 border-0 jpcurrency" name="qty" value="0">
+    </td>
+    <td class="p-0">
+      <input type="text" class="form-control text-right p-1 border-0 readonly col_unit" name="unit" data-unit-id="1" value="日">
     </td>
     <td class="p-0">
       <input type="text" class="form-control text-right p-1 border-0 jpcurrency" name="total_price" value="0">

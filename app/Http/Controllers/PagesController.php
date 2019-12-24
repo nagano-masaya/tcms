@@ -335,6 +335,10 @@ postdata = {
                     $join->on('users.role', '=', 'roles.id');
                 })->get();
     */
+
+    //======================================================
+    //  発注処理
+    //======================================================
     public function orderlist(Request $request){
       $orders = \App\orders::select(
           'orders.order_id',
@@ -358,8 +362,8 @@ postdata = {
       if(isset($request->cid)){
         $order = \App\orders::select('orders.*','con1.name as cont_name','recepter.name as recepter_user_name','order_users.name as order_user_name')
           ->leftJoin('contructs as con1','orders.cont_id','con1.cont_id' )
-          ->leftJoin('users as recepter','orders.order_by','recepter.id' )
-          ->leftJoin('users as order_users','orders.order_by','order_users.id' )
+          ->leftJoin('users as recepter','orders.order_user_id','recepter.id' )
+          ->leftJoin('users as order_users','orders.order_user_id','order_users.id' )
           ->where('orders.order_id',$request->cid)
           ->first();
 
@@ -388,7 +392,52 @@ postdata = {
 
           return '{"status":"OK","data":'.json_encode($res)."}" ;
       }
+      if($request->cid == 'contlist'){
+          $data = \App\contruct::select(['cont_id','name'])
+            ->get();
+
+          $res = [];
+          foreach ($data as $item) {
+            $res[] = ["id"=>$item->cont_id,"text"=>$item->name];
+          };
+
+          return '{"status":"OK","data":'.json_encode($res)."}" ;
+      }
 
 
     }
+
+    //======================================================
+    //  支払処理
+    //======================================================
+    public function paymentlist(Request $request)
+    {
+      $data = \App\payments::select()
+        ->join('orders','payments.order_id','orders.order_id' )
+        ->get();
+
+
+      return view('pages.paymentlist',['list'=>$data]);
+    }
+
+    public function paymentdetail(Request $request)
+    {
+      $data = \App\payments::select()
+        ->where('payment_id',$request->pid)
+        ->firstOrNew(['payment_id'=>$request->pid]);
+
+        $order = \App\orders::select('orders.*','con1.name as cont_name','recepter.name as recepter_user_name','order_users.name as order_user_name')
+          ->leftJoin('contructs as con1','orders.cont_id','con1.cont_id' )
+          ->leftJoin('users as recepter','orders.order_user_id','recepter.id' )
+          ->leftJoin('users as order_users','orders.order_user_id','order_users.id' )
+          ->where('orders.order_id',$data->order_id)
+          ->first();
+
+        $details = \App\orderdetail::select()
+          ->where('order_id',$data->order_id)
+          ->get();
+
+      return view('pages.paymentdetail',['data'=>$data,'order'=>$order,'details'=>$details ]);
+    }
+
 }
