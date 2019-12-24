@@ -196,13 +196,13 @@ $(document).ready(function(){
 function newrow(){
   elm = $('#detaillist tbody').append(
          $('#rowtemplate tbody').html()
-        )
+       );
+    $(elm).find('input').focus(function(){
+      $(this).select();
+    }).addClass('border-0 px-0');
+    
+    $(elm).find('.jpcurrency').attachNum3();
 
-  attachNum3(
-    elm.find('input')
-    .addClass('border-0 px-0')
-    .find('.jpcurrency')
-  );
 
   return elm;
 }
@@ -291,14 +291,6 @@ function validate(){
         throw new Error('数値を入力してください('+ $(this).val()+')');
       }
     });
-
-    $('#mainform [name="item_name"]').each(function(){
-      if( $(this).val().length<1 ){
-        $(this).addClass('bg-warning').focus();
-        throw new Error('品名を入力してください('+ $(this).val()+')');
-      }
-    });
-
 
   }catch(err){
     toastr.options = {

@@ -13,8 +13,21 @@ function attachNum3(selector){
   return elm;
 }
 
+var lastAttachedObject;
+
 $(document).ready( function(){
   attachNum3('.jpcurrency');
+
+  jQuery.fn.extend({
+     attachNum3: function(){
+       $(this).on('input',function(){
+           $(this).val(      tcms_num3($(this).val())
+         )}
+       );
+       lastAttachedObject = this;
+       return $(this);
+     }
+   });
 });
 
 function CCSKEY(){

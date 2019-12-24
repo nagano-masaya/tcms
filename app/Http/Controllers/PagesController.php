@@ -343,7 +343,6 @@ postdata = {
       $orders = \App\orders::select(
           'orders.order_id',
           'orders.order_date',
-          'orders.item_name',
           'orders.order_price',
           'orders.recept_date',
           'con1.name as cont_name',
@@ -351,8 +350,8 @@ postdata = {
           'order_users.name as order_user_name'
         )
         ->leftJoin('contructs as con1','orders.cont_id','con1.cont_id' )
-        ->leftJoin('users as recepter','orders.order_by','recepter.id' )
-        ->leftJoin('users as order_users','orders.order_by','order_users.id' )
+        ->leftJoin('users as recepter','orders.recepted_user_id','recepter.id' )
+        ->leftJoin('users as order_users','orders.order_user_id','order_users.id' )
         ->get();
 
       return view('pages.orderlist',['orders'=>$orders]);
