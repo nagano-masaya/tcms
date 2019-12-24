@@ -18,8 +18,8 @@ class CreateOrdersTable extends Migration
             $table->biginteger('cont_id');
             $table->bigInteger('user_id');
             $table->date('order_date');
-            $table->bigInteger('order_to_id');
-            $table->string('order_to');
+            $table->bigInteger('order_to_id')->nullable();
+            $table->string('order_to')->nullable();
             $table->bigInteger('total_price');
             $table->integer('tax_rate');
             $table->bigInteger('tax');

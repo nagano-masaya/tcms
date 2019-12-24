@@ -12,12 +12,12 @@ class OrdersTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('orders')->delete();
-        
+
         \DB::table('orders')->insert(array (
-            0 => 
+            0 =>
             array (
                 'order_id' => 1,
                 'cont_id' => 1,
@@ -36,13 +36,12 @@ class OrdersTableSeeder extends Seeder
                 'recepted_date' => NULL,
                 'recepted_user_id' => NULL,
                 'recepted_user_name' => NULL,
-                'recept_by' => NULL,
                 'deleted_at' => NULL,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
         ));
-        
-        
+
+
     }
 }

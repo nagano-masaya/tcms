@@ -17,8 +17,8 @@ class CratePaymentsTable extends Migration
       Schema::create('payments', function (Blueprint $table) {
           $table->bigIncrements('payment_id');
           $table->bigInteger('order_id');
-          $table->dateTime('claim_date');
-          $table->dateTime('payed_date');
+          $table->timestamp('claim_date')->nullable();
+          $table->timestamp('payed_date')->nullable();
 
           $table->bigInteger('claim_recept_user_id')->nullable();
           $table->string('claim_recept_user_name')->nullable();

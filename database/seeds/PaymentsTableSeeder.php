@@ -12,17 +12,17 @@ class PaymentsTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('payments')->delete();
-        
+
         \DB::table('payments')->insert(array (
-            0 => 
+            0 =>
             array (
                 'payment_id' => 1,
                 'order_id' => 1,
-                'claim_date' => '0000-00-00 00:00:00',
-                'payed_date' => '0000-00-00 00:00:00',
+                'claim_date' => NULL,
+                'payed_date' => NULL,
                 'claim_recept_user_id' => 0,
                 'claim_recept_user_name' => '',
                 'recepted_user_id' => 0,
@@ -35,7 +35,7 @@ class PaymentsTableSeeder extends Seeder
                 'updated_at' => NULL,
             ),
         ));
-        
-        
+
+
     }
 }

@@ -15,6 +15,7 @@ class CreateDepositDispTable extends Migration
     {
         Schema::create('deposit_disp', function (Blueprint $table) {
           $table->bigInteger('clmdetail_id');
+          $table->bigInteger('depo_id');
           $table->timestamp('apply_date');
           $table->bigInteger('apply_price');
           $table->bigInteger('user_id');
