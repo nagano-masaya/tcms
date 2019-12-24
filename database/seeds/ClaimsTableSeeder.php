@@ -12,12 +12,12 @@ class ClaimsTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('claims')->delete();
-        
+
         \DB::table('claims')->insert(array (
-            0 => 
+            0 =>
             array (
                 'claim_id' => 1,
                 'company_id' => 1,
@@ -34,14 +34,13 @@ class ClaimsTableSeeder extends Seeder
                 'taxed_price' => 550000000,
                 'discount_price' => 20000000,
                 'offset_price' => 10000000,
-                'details' => '[{"rowid":0,"clmdetail_id":1,"cont_id":1,"cont_text":"工事１","text":"工事１－解体","unit_price":2000000,"qty":1,"price":2000000,"deleted":false},{"rowid":1,"clmdetail_id":2,"cont_id":1,"cont_text":"工事１","text":"工事１－撤去","unit_price":500000,"qty":1,"price":500000,"deleted":false}]',
                 'history' => NULL,
                 'deleted_at' => NULL,
                 'created_at' => NULL,
                 'updated_at' => '2019-12-21 00:00:29',
             ),
         ));
-        
-        
+
+
     }
 }

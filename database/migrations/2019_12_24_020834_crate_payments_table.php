@@ -23,7 +23,7 @@ class CratePaymentsTable extends Migration
           $table->bigInteger('claim_recept_user_id')->nullable();
           $table->string('claim_recept_user_name')->nullable();
           $table->bigInteger('recepted_user_id')->nullable();
-          $tabke->string('recepted_user_name')->nullable();
+          $table->string('recepted_user_name')->nullable();
 
           $table->json('memo')->nullable();
           $table->json('claims')->nullable();

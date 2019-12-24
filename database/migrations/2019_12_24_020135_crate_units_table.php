@@ -17,7 +17,7 @@ class CrateUnitsTable extends Migration
         Schema::create('units', function (Blueprint $table) {
             $table->Increments('unit_id');
             $table->string('unit_title');
-            $talbe->integer('unit_type');
+            $table->integer('unit_type');
             $table->string('font_size')->default("0.7");
             $table->bigInteger('user_id');
             $table->softDeletes();
