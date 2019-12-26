@@ -359,14 +359,18 @@ postdata = {
 
     public function orderdetail(Request $request){
       if(isset($request->cid)){
-        $order = \App\orders::select('orders.*','con1.name as cont_name','recepter.name as recepter_user_name','order_users.name as order_user_name')
+        $order = \App\orders::select('orders.*',
+              'con1.name as cont_name',
+              'recepter.name as recept_user_name',
+              'order_users.name as order_user_name'
+              )
           ->leftJoin('contructs as con1','orders.cont_id','con1.cont_id' )
           ->leftJoin('users as recepter','orders.order_user_id','recepter.id' )
           ->leftJoin('users as order_users','orders.order_user_id','order_users.id' )
           ->where('orders.order_id',$request->cid)
           ->first();
 
-          $details = \App\orderdetail::select()
+        $details = \App\orderdetail::select()
           ->where('order_id',$request->cid)
           ->get();
 

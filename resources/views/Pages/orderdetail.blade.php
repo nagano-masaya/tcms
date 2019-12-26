@@ -1,7 +1,19 @@
 @extends('layouts.app')
 
-@section('content')
+@push('styles')
+<link href="{{ asset('css/jquery-ui.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/jquery-ui.structure.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/jquery-ui.themes.min.css') }}" rel="stylesheet">
+@endpush
 
+{{--
+@push('scripts')
+<script type="application/javascript" src="{{ asset('js/jquery-ui.min.js') }}"></script>
+<script type="application/javascript" src="{{ asset('js/jquery.fileupload.js') }}"></script>
+@endpush
+--}}
+
+@section('content')
 
 {{--
 
@@ -36,64 +48,254 @@
 --}}
 <div class="container" id="mainform">
   <div class="row">
-    <div class="input-group col-md-6 small">
-      <div class="input-group-prepend input-group-text input-group-sm clickable">
+    <div class="col-6 text-left align-text-bottom pb-0 pl-0">
+      <h4  class="mb-0 align-text-bottom"><span class="iconify mb-1" data-width="18" data-icon="emojione-v1:ballot-box-bold-check" data-inline="false"></span>発注</h4>
+    </div>
+    <div class="col-6 text-right small p-0">
+      最終更新:<span id="last_update">{{$order->updated_at->format('y\'m/d h:i')}}:長野</span>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="input-group col-md-1 small">
+      <div class="small input-group-prepend input-group-text input-group-sm">
+        発注日
+      </div>
+      <input type="button" class="form-control text-center p-1" data-uk-datepicker="{format:'YY\'MM/DD'}" name="order_date" value="{{$order->order_date->format('y\'m/d')}}">
+    </div>
+    <div class="input-group col-md-5 small">
+      <div class="small input-group-prepend input-group-text input-group-sm clickable">
         発注先
         <span class="iconify" data-icon="bx:bx-add-to-queue" data-inline="false" onclick="selectCompany()"></span>
       </div>
-        <input type="hidden" name="order_to_id" value="{{$order->company_id}}" maxlength="4">
-        <input type="text" class="form-control text-left small" name="order_to_name" value="{{$order->nickname}}" maxlength="4">
+        <input type="hidden" name="order_to_id" value="{{$order->company_id}}">
+        <input type="text" class="form-control text-left small" name="order_to_name" value="{{$order->nickname}}" maxlength="128">
     </div>
-    <div class="input-group col-2">
-      <div class="input-group-prepend input-group-text input-group-sm">
-        発注額合計
+    <div class="input-group col-2 small">
+      <div class="small input-group-prepend input-group-text input-group-sm">
+        小計
       </div>
         <input type="input" class="form-control text-left jpcurrency px-1" name="total_price"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
     </div>
-    <div class="input-group col-2">
-      <div class="input-group-prepend input-group-text input-group-sm">
+    <div class="input-group col-2 small">
+      <div class="small input-group-prepend input-group-text input-group-sm">
         消費税
       </div>
         <input type="input" class="form-control text-left jpcurrency px-1" name="tax"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
     </div>
-    <div class="input-group col-2">
-      <div class="input-group-prepend input-group-text input-group-sm">
+    <div class="input-group col-2 small">
+      <div class="small input-group-prepend input-group-text input-group-sm">
         発注金額
       </div>
         <input type="text" class="form-control text-left jpcurrency px-1" name="order_price"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
     </div>
   </div>
   <div class="row">
-    <div class="input-group col-md-3">
-      <div class="input-group-prepend input-group-text input-group-sm">
+    <div class="input-group col-md-3 small">
+      <div class="small input-group-prepend input-group-text input-group-sm">
         発注元
       </div>
         <input type="button" class="form-control text-left" name="cont_name" value="{{$order->cont_name}}" data-id="{{$order->cont_id}}" data-org-id="{{$order->cont_id}}" data-org="{{$order->cont_name}}" maxlength="64">
     </div>
-    <div class="input-group col-md-2">
-      <div class="input-group-prepend input-group-text input-group-sm">
+    <div class="input-group col-md-2 small">
+      <div class="small input-group-prepend input-group-text input-group-sm">
         発注者
       </div>
         <input type="button" class="form-control text-left" name="order_user_name" value="{{$order->order_user_name}}" data-id="{{$order->order_by}}" data-org-id="{{$order->order_by}}" data-org="{{$order->order_user_name}}" maxlength="12">
     </div>
-    <div class="input-group col-md-3">
-      <div class="input-group-prepend input-group-text input-group-sm">
+    <div class="input-group col-md-3 small">
+      <div class="small input-group-prepend input-group-text input-group-sm">
         支払条件
       </div>
-        <input type="text" class="form-control text-left" name="terms" value="掛け" maxlength="4">
+        <input type="text" class="form-control text-left" name="terms" value="掛け" maxlength="64">
     </div>
-    <div class="input-group col-md-2 small">
-      <div class="input-group-prepend input-group-text input-group-sm">
-        納期
+    <div class="input-group col-md-1 small">
+      <div class="small input-group-prepend input-group-text input-group-sm">
+          納期<span class="iconify clickable cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
       </div>
-      <input type="button" class="form-control text-left" data-uk-datepicker="{format:'YYYY MM/DD'}" name="delivery_date" value="2019 02/10" maxlength="4">
+      <input type="button" class="form-control text-center small" data-uk-datepicker="{format:'YY\'MM/DD'}" name="recept_due_date" value="{{$order->recept_due_date==null? "":$order->recept_due_date->format('y\'m/d')}}">
     </div>
-    <div class="input-group col-md-2 small">
-      <div class="input-group-prepend input-group-text input-group-sm">
-        支払予定日
+    <div class="input-group col-md-1 small">
+      <div class="small input-group-prepend input-group-text input-group-sm px-1">
+        支払予定日<span class="iconify clickable cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
       </div>
-      <div class="input-group m-0 p-0 flex">
-        <input type="button" class="form-control text-left" data-uk-datepicker="{format:'YYYY MM/DD'}"  name="payment_date" value="2019 02/10" maxlength="4">
+      <div class="input-group m-0 p-0 small">
+        <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}"  name="payment_due_date" value="{{$order->payment_due_date==null?"":$order->payment_due_date->format('y\'m/d')}}">
+      </div>
+    </div>
+    <div class="input-group col-md-2 small p-1">
+      <div class="row">
+        <div class="col-12">
+          <button type="button" class="col p-0 from-control btn btn-primary">注文書発行</button>
+        </div>
+      </div>
+      <div class="row mt-1">
+        <div class="col-12 small">
+          <button type="button" class="col p-0 from-control btn btn-info " style="font-size:0.4rem">注文書表示・印刷<br>(最新:19'12/20)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col">
+      <div class="row">
+        <span class="iconify" data-icon="ic:baseline-check-box-outline-blank" data-inline="false"></span>受領
+      </div>
+      <div class="row">
+        <div class="input-group col-md-1 small">
+          <div class="small input-group-prepend input-group-text input-group-sm px-1">
+            納品予定日<span class="iconify cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
+          </div>
+          <div class="input-group m-0 p-0 flex">
+              <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}"  name="recept_due_date" value="{{ $order->recept_due_date==null? "":$order->recept_due_date->format('y\'m/d')}}">
+          </div>
+        </div>
+        <div class="input-group col-md-4 small">
+          <div class="small input-group-prepend input-group-text input-group-sm">
+            受領場所
+          </div>
+          <div class="input-group m-0 p-0 flex">
+            <input type="text" class="form-control text-left" name="recept_user_name" value="{{$order->recepted_user_name}}" data-id="{{$order->recepted_user_id}}" maxlength="64">
+          </div>
+        </div>
+        <div class="input-group col-md-1 small">
+          <div class="small input-group-prepend input-group-text input-group-sm">
+            受領日<span class="iconify cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
+          </div>
+          <div class="input-group m-0 p-0 flex">
+            <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}"  name="recepted_date" value="{{$order->recepted_date==null? "": $roder->recepted_date->format('y\'m/d')}}">
+          </div>
+        </div>
+        <div class="input-group col-md-1 small">
+          <div class="small input-group-prepend input-group-text input-group-sm">
+            受領者
+          </div>
+          <div class="input-group m-0 p-0 flex">
+            <input type="text" class="form-control text-left" name="recept_user_name" value="{{$order->recepted_user_name}}" data-id="{{$order->recepted_user_id}}" maxlength="12">
+          </div>
+        </div>
+        <div class="input-group col-md-1 small p-1">
+          <div class="row">
+            <div class="col-12">
+              <button type="button" class="col p-0 from-control btn btn-primary">納品書登録</button>
+            </div>
+          </div>
+          <div class="row mt-1">
+            <div class="col-12 small">
+              <button type="button" class="col p-0 from-control btn btn-info " style="font-size:0.4rem">納品書表示・印刷<br>(最新:19'12/20)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col">
+      <div class="row">
+        <span class="iconify" data-icon="ic:baseline-check-box-outline-blank" data-inline="false"></span>請求
+      </div>
+      <div class="row">
+        <div class="input-group col-md-1 col-1 small">
+          <div class="small input-group-prepend input-group-text input-group-sm">
+            受領日<span class="iconify cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
+          </div>
+          <div class="input-group m-0 p-0 flex">
+            <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}"  name="claim_recepted_date" value="{{$order->claim_recepted_date==null?"":$order->claim_recepted_date->format('y\'m/d')}}">
+          </div>
+        </div>
+        <div class="input-group col-md-1 small">
+          <div class="small input-group-prepend input-group-text input-group-sm">
+            受領者
+          </div>
+          <div class="input-group m-0 p-0 flex">
+            <input type="text" class="form-control text-left p-1" name="payment_date" value="" maxlength="12">
+          </div>
+        </div>
+        <div class="col-5">
+            <div class="row">
+              <div class="input-group col-4 small">
+                <div class="small input-group-prepend input-group-text input-group-sm">
+                  値引額
+                </div>
+                  <input type="text" class="form-control text-left jpcurrency px-1" name="order_price"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
+              </div>
+              <div class="input-group col-4 small">
+                <div class="small input-group-prepend input-group-text input-group-sm">
+                  相殺額
+                </div>
+                  <input type="text" class="form-control text-left jpcurrency px-1" name="order_price"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
+              </div>
+              <div class="input-group col-4 small">
+                <div class="small input-group-prepend input-group-text input-group-sm">
+                  請求額
+                </div>
+                <input type="text" class="form-control text-left jpcurrency px-1" name="order_price"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
+              </div>
+            </div>
+        </div>
+        <div class="input-group col-md-1 small p-1">
+          <div class="row">
+            <div class="col-12">
+              <button type="button" class="col p-0 from-control btn btn-primary" id="uploadclaim" onclick="$('#fileselector').click()">請求書登録</button>
+            </div>
+          </div>
+          <div class="row mt-1">
+            <div class="col-12 small">
+              <button type="button" class="col p-0 from-control btn btn-info " style="font-size:0.4rem">請求書表示・印刷<br>(最新:19'12/20)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col">
+      <div class="row">
+        <span class="iconify" data-icon="ic:baseline-check-box-outline-blank" data-inline="false"></span>支払
+      </div>
+      <div class="row mt-0">
+        <div class="input-group col-md-1 small">
+          <div class="small input-group-prepend input-group-text input-group-sm">
+            処理日<span class="iconify cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
+          </div>
+          <div class="input-group m-0 p-0 flex">
+            <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}" name="payed_date" value="{{$order->payed_date==null? "":$order->payed_date->format('y\'m/d')}}" maxlength="8">
+          </div>
+        </div>
+        <div class="input-group col-md-1 small">
+          <div class="small input-group-prepend input-group-text input-group-sm">
+            承認日<span class="iconify cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
+          </div>
+          <div class="input-group m-0 p-0 flex">
+            <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}" name="payed_date" value="{{$order->payed_date==null? "":$order->payed_date->format('y\'m/d')}}" maxlength="8">
+          </div>
+        </div>
+        <div class="input-group col-md-3 small">
+          <div class="small input-group-prepend input-group-text input-group-sm">
+            支払方法
+          </div>
+          <div class="input-group m-0 p-0 flex">
+            <input type="text" class="form-control text-left" name="payment_date" value="" maxlength="12">
+          </div>
+        </div>
+
+        <div class="input-group col-md-1 small">
+          <div class="small input-group-prepend input-group-text input-group-sm">
+            支払日<span class="iconify cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
+          </div>
+          <div class="input-group m-0 p-0 flex">
+            <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}" name="payed_date" value="{{$order->payed_date==null? "":$order->payed_date->format('y\'m/d')}}" maxlength="8">
+          </div>
+        </div>
+        <div class="input-group col-md-1 small">
+          <div class="small input-group-prepend input-group-text input-group-sm">
+            担当
+          </div>
+          <div class="input-group m-0 p-0 flex">
+            <input type="text" class="form-control text-left" name="payment_date" value="" maxlength="4">
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -106,6 +308,10 @@
       <span>新規</span>
     </div>
   </div>
+
+  <form class="" action="#" method="post">
+    <input type="file" name="" value="" style="display:none"/ id="fileselector">
+  </form>
 
   <div class="row">
     <div class="">
@@ -121,7 +327,6 @@
             <th class="dcol-7" ></th>
           </tr>
         </thead>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
       </table>
 
       <table class="table-bordered mt-0 border-top-0 px-1" id="detaillist">
@@ -154,9 +359,18 @@
 </div>
 
 <script type="application/javascript">
+
+
 var order_id={{$order->order_id}};
 
-$(document).ready(function(){
+
+  $(document).ready(function(){
+
+    $('.cleardate').addClass('clickable');
+    $('.cleardate').click(function(){
+      $(this).parent().parent().find('[data-uk-datepicker]').val("");
+    });
+
    $('#detaillist input').addClass('border-0');
    var rows=[
      @foreach($details as $item)
@@ -196,13 +410,13 @@ $(document).ready(function(){
 function newrow(){
   elm = $('#detaillist tbody').append(
          $('#rowtemplate tbody').html()
-       );
-    $(elm).find('input').focus(function(){
-      $(this).select();
-    }).addClass('border-0 px-0');
-    
-    $(elm).find('.jpcurrency').attachNum3();
+        )
 
+  attachNum3(
+    elm.find('input')
+    .addClass('border-0 px-0')
+    .find('.jpcurrency')
+  );
 
   return elm;
 }
@@ -292,6 +506,14 @@ function validate(){
       }
     });
 
+    $('#mainform [name="item_name"]').each(function(){
+      if( $(this).val().length<1 ){
+        $(this).addClass('bg-warning').focus();
+        throw new Error('品名を入力してください('+ $(this).val()+')');
+      }
+    });
+
+
   }catch(err){
     toastr.options = {
       "positionClass": "toast-top-left",
@@ -329,11 +551,11 @@ function save(){
     cont_name:$('[name="cont_name"').val(),
     order_date:$('[name="order_date"').val(),
     order_to_id:$('[name="order_to_id"').val(),
-    order_to:$('[name="order_to_name"').val(),
+    order_to_name:$('[name="order_to_name"').val(),
     total_price:$('#mainform [name="total_price"').val(),
     tax:$('#mainform [name="tax"').val(),
     order_price:$('#mainform [name="order_price"').val(),
-    order_by:$('#mainform [name="order_user_name"').attr('data-id'),
+    order_user_id:$('#mainform [name="order_user_name"').attr('data-id'),
     order_user_name:$('#mainform [name="order_user_name"').val(),
     recept_date:$('#mainform [name="recept_date"').val(),
     recepted_date:$('#mainform [name="recepted_date"').val(),
@@ -394,6 +616,8 @@ function save(){
     </div>
   </div>
 </div>
+
+
 
 @component('components.listSelector')
 @slot('compo_id')

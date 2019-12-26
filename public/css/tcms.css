@@ -72,3 +72,8 @@
   max-width: 4rem;
   min-width: 4rem;
 }
+
+.cleardate {
+  color:blue;
+  width:"32px";
+}
