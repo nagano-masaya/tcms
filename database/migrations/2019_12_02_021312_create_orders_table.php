@@ -32,7 +32,7 @@ class CreateOrdersTable extends Migration
             $table->bigInteger('payment_due_date')->nullable();
 
             $table->timestamp( 'recept_due_date')->nullable();
-            $table->string(    'recept_palce',120)->nullable();
+            $table->string(    'recept_place',120)->nullable();
             $table->timestamp( 'recepted_date')->nullable();
             $table->bigInteger('recepted_user_id')->nullable();
             $table->string(    'recepted_user_name',32)->nullable();
