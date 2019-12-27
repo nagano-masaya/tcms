@@ -198,20 +198,24 @@
           <tr>
             <th colspan="6">
               <div class="row">
-                <div class="col-6">
+                <div class="col-2">
                   請求
+                </div>
+                <div class="col-6 clickable" onclick="newclaim()">
+                  <span class="iconify" data-icon="bx:bx-add-to-queue" data-inline="false"></span>
+                  <span>追加</span>
                 </div>
 
                 <script type="application/javascript">
                 function newclaim(){
                   var row = $('#claimlist tbody').append(
-                    '<tr data-claimid="0">'
+                    ('<tr data-claimid="0">'
                     +'<td class="p-1">'
                     +'<button type="button" class="from-control btn btn-primary p-1" style="font-size:0.4rem;" name="button" data-files="[]">請求書登録</button>'
                     +'<button type="button" class="from-control btn btn-info p-1 pr-0" style="font-size:0.4rem;" name="button" data-files="[]">表示</button>'
                     +'</td>'
-                    +'<td class="p-0"><input type="button" class="form-control p-0 small" name="orderclaim_recept_date" value="" data-uk-datepicker></td>'
-                    +'<td class="p-0" data-uid="0"></td>'
+                    +'<td class="p-0"><input type="button" class="form-control p-0 small" name="orderclaim_recept_date" value="#claimdate#" data-uk-datepicker></td>'
+                    +'<td class="p-0" data-orderclaim_recept_user_id="#uid#"><input type="button" class="form-control p-0 small" name="orderclaim_recept_user_name" value="#uname#"></td>'
                     +'<td class="p-0"><input type="text" class="form-control p-0 small jpcurrency" name="oderclaim_discount_price" value="" ></td>'
                     +'<td class="p-0"><input type="text" class="form-control p-0 small jpcurrency" name="orderclaim_offset_price" value="" ></td>'
                     +'<td class="p-0"><input type="text" class="form-control p-0 small jpcurrency" name="orderclaim_claim_price" value="" ></td>'
@@ -219,8 +223,11 @@
                     +'<td class="p-0"><input type="button" class="form-control p-0 small" name="pay_confirm_date" value="" data-uk-datepicker></td>'
                     +'<td class="p-0"><input type="text" class="form-control p-0 small" name="pay_method" value="" ></td>'
                     +'<td class="p-0"><input type="button" class="form-control p-0 small" name="payed_date" value="" data-uk-datepicker></td>'
-                    +'<td data-pay-dispose-uid="{{Auth::user()->id}}" class="p-0"><input type="button" class="form-control p-0 small" name="pay_dispose_uname" value="{{Auth::user()->name}}" ></td>'
-                    +'</tr>'
+                    +'<td data-pay-dispose-uid="0" class="p-0"><input type="button" class="form-control p-0 small" name="pay_dispose_uname" value="" ></td>'
+                    +'</tr>')
+                    .replace('#claimdate#',moment().format('YY\'MM/DD') )
+                    .replace('#uid#',"{{Auth::user()->id}}")
+                    .replace('#uname#',"{{Auth::user()->name}}")
                   );
                   $(row).find('[data-uk-datepicker]')
                     .attr('data-uk-datepicker',"{format:'YY\'MM/DD'}");
@@ -236,10 +243,6 @@
                 }
 
                 </script>
-                <div class="col-6 clickable text-right" onclick="newclaim()">
-                  <span class="iconify" data-icon="bx:bx-add-to-queue" data-inline="false"></span>
-                  <span>新規</span>
-                </div>
               </div>
             </th>
             <th colspan="5" class="paymenttitle">支払</th>
