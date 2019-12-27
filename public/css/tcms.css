@@ -19,6 +19,7 @@
   width:12rem;
 }
 
+.col-price,
 .col_price{
   min-width: :7rem;
   max-width: :7rem;
@@ -31,9 +32,10 @@
   font-size: 0.7rem;
 }
 
+.col-date,
 .col_date{
   min-width: :6rem;
-  width:6rem;
+  width:6rem !important;
 }
 
 

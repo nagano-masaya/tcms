@@ -216,7 +216,7 @@
                     +'</td>'
                     +'<td class="p-0"><input type="button" class="form-control p-0 small" name="orderclaim_recept_date" value="#claimdate#" data-uk-datepicker></td>'
                     +'<td class="p-0" data-orderclaim_recept_user_id="#uid#"><input type="button" class="form-control p-0 small" name="orderclaim_recept_user_name" value="#uname#"></td>'
-                    +'<td class="p-0"><input type="text" class="form-control p-0 small jpcurrency" name="oderclaim_discount_price" value="" ></td>'
+                    +'<td class="p-0"><input type="text" class="form-control p-0 small jpcurrency" name="orderclaim_discount_price" value="" ></td>'
                     +'<td class="p-0"><input type="text" class="form-control p-0 small jpcurrency" name="orderclaim_offset_price" value="" ></td>'
                     +'<td class="p-0"><input type="text" class="form-control p-0 small jpcurrency" name="orderclaim_claim_price" value="" ></td>'
                     +'<td class="p-0"><input type="button" class="form-control p-0 small" name="pay_disposal_date" value="" data-uk-datepicker></td>'
@@ -249,16 +249,16 @@
           </tr>
           <tr>
             <th><button type="button" class="col p-0 from-control btn btn-info " style="font-size:0.4rem">納品書表示・印刷<br>(最新:19'12/20)</button></th>
-            <th class="col_date">受領日</th>
-            <th class="col_date">受領者</th>
-            <th class="col_price">値引き額</th>
-            <th class="col_price">相殺額</th>
-            <th class="col_price">請求額</th>
-            <th class="col_date paymenttitle">処理日</th>
-            <th class="col_date paymenttitle">承認日</th>
-            <th class="col_date paymenttitle">支払方法</th>
-            <th class="col_date paymenttitle">支払日</th>
-            <th class="col_date paymenttitle">担当</th>
+            <th class="col-date">受領日</th>
+            <th class="col-date">受領者</th>
+            <th class="col-price">値引き額</th>
+            <th class="col-price">相殺額</th>
+            <th class="col-price">請求額</th>
+            <th class="col-date paymenttitle">処理日</th>
+            <th class="col-date paymenttitle">承認日</th>
+            <th class="col-date paymenttitle">支払方法</th>
+            <th class="col-date paymenttitle">支払日</th>
+            <th class="col-date paymenttitle">担当</th>
           </tr>
         </thead>
         <tbody class="small">
@@ -283,118 +283,8 @@
         </tbody>
       </table>
     </div>
-
   </div>
 
-  <div class="row mt-3">
-    <div class="col">
-      <div class="row">
-        <span class="iconify" data-icon="ic:baseline-check-box-outline-blank" data-inline="false"></span>請求
-      </div>
-      <div class="row">
-        <div class="input-group col-md-1 col-1 small">
-          <div class="small input-group-prepend input-group-text input-group-sm">
-            受領日<span class="iconify cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
-          </div>
-          <div class="input-group m-0 p-0 flex">
-            <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}"  name="claim_recepted_date" value="{{$order->claim_recepted_date==null?"":$order->claim_recepted_date->format('y\'m/d')}}">
-          </div>
-        </div>
-        <div class="input-group col-md-1 small">
-          <div class="small input-group-prepend input-group-text input-group-sm">
-            受領者
-          </div>
-          <div class="input-group m-0 p-0 flex">
-            <input type="text" class="form-control text-left p-1" name="payment_date" value="" maxlength="12">
-          </div>
-        </div>
-        <div class="col-5">
-            <div class="row">
-              <div class="input-group col-4 small">
-                <div class="small input-group-prepend input-group-text input-group-sm">
-                  値引額
-                </div>
-                  <input type="text" class="form-control text-left jpcurrency px-1" name="order_price"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
-              </div>
-              <div class="input-group col-4 small">
-                <div class="small input-group-prepend input-group-text input-group-sm">
-                  相殺額
-                </div>
-                  <input type="text" class="form-control text-left jpcurrency px-1" name="order_price"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
-              </div>
-              <div class="input-group col-4 small">
-                <div class="small input-group-prepend input-group-text input-group-sm">
-                  請求額
-                </div>
-                <input type="text" class="form-control text-left jpcurrency px-1" name="order_price"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
-              </div>
-            </div>
-        </div>
-        <div class="input-group col-md-1 small p-1">
-          <div class="row">
-            <div class="col-12">
-              <button type="button" class="col p-0 from-control btn btn-primary" id="uploadclaim" onclick="$('#fileselector').click()">請求書登録</button>
-            </div>
-          </div>
-          <div class="row mt-1">
-            <div class="col-12 small">
-              <button type="button" class="col p-0 from-control btn btn-info " style="font-size:0.4rem">請求書表示・印刷<br>(最新:19'12/20)</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row mt-3">
-    <div class="col">
-      <div class="row">
-        <span class="iconify" data-icon="ic:baseline-check-box-outline-blank" data-inline="false"></span>支払
-      </div>
-      <div class="row mt-0">
-        <div class="input-group col-md-1 small">
-          <div class="small input-group-prepend input-group-text input-group-sm">
-            処理日<span class="iconify cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
-          </div>
-          <div class="input-group m-0 p-0 flex">
-            <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}" name="payed_date" value="{{$order->payed_date==null? "":$order->payed_date->format('y\'m/d')}}" maxlength="8">
-          </div>
-        </div>
-        <div class="input-group col-md-1 small">
-          <div class="small input-group-prepend input-group-text input-group-sm">
-            承認日<span class="iconify cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
-          </div>
-          <div class="input-group m-0 p-0 flex">
-            <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}" name="payed_date" value="{{$order->payed_date==null? "":$order->payed_date->format('y\'m/d')}}" maxlength="8">
-          </div>
-        </div>
-        <div class="input-group col-md-3 small">
-          <div class="small input-group-prepend input-group-text input-group-sm">
-            支払方法
-          </div>
-          <div class="input-group m-0 p-0 flex">
-            <input type="text" class="form-control text-left" name="payment_date" value="" maxlength="12">
-          </div>
-        </div>
-
-        <div class="input-group col-md-1 small">
-          <div class="small input-group-prepend input-group-text input-group-sm">
-            支払日<span class="iconify cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
-          </div>
-          <div class="input-group m-0 p-0 flex">
-            <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}" name="payed_date" value="{{$order->payed_date==null? "":$order->payed_date->format('y\'m/d')}}" maxlength="8">
-          </div>
-        </div>
-        <div class="input-group col-md-1 small">
-          <div class="small input-group-prepend input-group-text input-group-sm">
-            担当
-          </div>
-          <div class="input-group m-0 p-0 flex">
-            <input type="text" class="form-control text-left" name="payment_date" value="" maxlength="4">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
   <div class="row mb-0 mt-3">
     <div class="col-10 font-weight-bolder">
       品目一覧
@@ -404,7 +294,6 @@
       <span>新規</span>
     </div>
   </div>
-
   <form class="" action="#" method="post">
     <input type="file" name="" value="" style="display:none"/ id="fileselector">
   </form>
@@ -556,6 +445,8 @@ function ObjectException(Obj,message){
   this.message = message;
 }
 
+var lastErr;
+
 function validate(){
   $('.bg-warning').removeClass('bg-warning');
   try{
@@ -579,23 +470,23 @@ function validate(){
       throw new Error('支払条件を入力してください');
     }
 
-    var val = $('[name="delivery_date"]').val();
+    var val = $('[name="recept_due_date"]').val();
     if( val.length<1 ){
-      $('[name="delivery_date"]').addClass('bg-warning').focus();
+      $('[name="recept_due_date"]').addClass('bg-warning').focus();
       throw new Error('納期を入力してください');
     }
     if( !moment(val, 'YYYY MM/DD').isValid() ){
-      $('[name="delivery_date"]').addClass('bg-warning').focus();
+      $('[name="recept_due_date"]').addClass('bg-warning').focus();
       throw new Error('納期に日付を入力してください（'+val+'）');
     }
 
-    var val = $('[name="payment_date"]').val();
+    var val = $('[name="payment_due_date"]').val();
     if( val.length<1 ){
-      $('[name="payment_date"]').addClass('bg-warning').focus();
+      $('[name="payment_due_date"]').addClass('bg-warning').focus();
       throw new Error('支払予定日を入力してください');
     }
     if( !moment(val, 'YYYY MM/DD').isValid() ){
-      $('[name="payment_date"]').addClass('bg-warning').focus();
+      $('[name="payment_due_date"]').addClass('bg-warning').focus();
       throw new Error('支払予定日に日付を入力してください');
     }
 
@@ -613,8 +504,8 @@ function validate(){
       }
     });
 
-
   }catch(err){
+    lastErr = err;
     toastr.options = {
       "positionClass": "toast-top-left",
       "timeOut": "1500",
@@ -635,6 +526,7 @@ function save(){
   var details=[];
   $('#detaillist tbody tr').each(function(){
     details.push({
+      id:$(this).attr('data-id'),
       item_name:$(this).find('[name="item_name"]').val(),
       unit_price:$(this).find('[name="unit_price"]').val(),
       qty:$(this).find('[name="qty"]').val(),
@@ -645,24 +537,63 @@ function save(){
     });
   });
 
+var claims = [];
+$('#claimlist tbody tr').each(function(){
+  var t=$(this);
+  claims.push({
+    order_claim_id:t.attr('[data-claimid]'),
+    orderclaim_recept_date:t.find('[name="orderclaim_recept_date"]').val(),
+    orderclaim_recept_user_id: t.find('[data-orderclaim_recept_user_id]').attr('[data-orderclaim_recept_user_id]'),
+    orderclaim_recept_user_name:t.find('[name="data-orderclaim_recept_user_name"]').val(),
+    orderclaim_discount_price:t.find('[name="orderclaim_discount_price"]').val(),
+    orderclaim_offset_price:t.find('[name="orderclaim_offset_price"]').val(),
+    orderclaim_claim_price:t.find('[name="orderclaim_claim_price"]').val(),
+    pay_disposal_date:t.find('[name="pay_disposal_date"]').val(),
+    pay_confirm_date:t.find('[name="pay_confirm_date"]').val(),
+    pay_method:t.find('[name="pay_method"]').val(),
+    payed_date:t.find('[name="payed_date"]').val(),
+    pay_dispose_uid:t.find('[data-pay-dispose-uid]').attr('data-pay-dispose-uid'),
+    pay_dispose_uname:t.find('[name="pay_dispose_uname"]').val()
+  });
+});
+
   postdata = {
     order_id:order_id,
-    cont_id:$('[name="cont_name"').attr('data-id'),
-    cont_name:$('[name="cont_name"').val(),
-    order_date:$('[name="order_date"').val(),
-    order_to_id:$('[name="order_to_id"').val(),
-    order_to_name:$('[name="order_to_name"').val(),
-    total_price:$('#mainform [name="total_price"').val(),
-    tax:$('#mainform [name="tax"').val(),
-    order_price:$('#mainform [name="order_price"').val(),
-    order_user_id:$('#mainform [name="order_user_name"').attr('data-id'),
-    order_user_name:$('#mainform [name="order_user_name"').val(),
-    recept_date:$('#mainform [name="recept_date"').val(),
-    recepted_date:$('#mainform [name="recepted_date"').val(),
-    recepted_user_id:$('#mainform [name="recepted_user_id"').val(),
-    recepted_user_name:$('#mainform [name="recepted_user_name"').val(),
-    rowdata:details
+    cont_id:$('[name="cont_name"]').attr('data-id'),
+    cont_name:$('[name="cont_name"]').val(),
+    order_date:$('[name="order_date"]').val(),
+    order_to_id:$('[name="order_to_id"]').val(),
+    order_to_name:$('[name="order_to_name"]').val(),
+    total_price:$('#mainform [name="total_price"]').val(),
+    tax:$('#mainform [name="tax"]').val(),
+    order_price:$('#mainform [name="order_price"]').val(),
+    order_user_id:$('#mainform [name="order_user_name"]').attr('data-id'),
+    order_user_name:$('#mainform [name="order_user_name"]').val(),
+    recept_date:$('#mainform [name="recept_date"]').val(),
+    recepted_date:$('#mainform [name="recepted_date"]').val(),
+    recepted_user_id:$('#mainform [name="recepted_user_id"]').val(),
+    recepted_user_name:$('#mainform [name="recepted_user_name"]').val(),
+    rowdata:details,
+    claims:claims
   }
+
+  $.ajax({
+      url: 'claimdetail',
+      type: 'POST',
+      data: {_token: CSRF_TOKEN,cid:"datasave",
+        data:postdata,
+        dataType:'JSON'}
+      }).always(function(data){
+        toastr.options = {
+          "positionClass": "toast-bottom-right",
+          "timeOut": "1500",
+        };
+        toastr.info('保存しました。');
+      });
+
+
+
+
 
 }
 

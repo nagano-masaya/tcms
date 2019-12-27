@@ -36,6 +36,6 @@ class CreateOrderclaimsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('oderclaims');
+        Schema::dropIfExists('orderclaims');
     }
 }

@@ -46,7 +46,7 @@
         {{--/* Initialize Datepickers date format */--}}
         UIkit.on('beforeready.uk.dom', function() {
         $.extend(UIkit.components.datepicker.prototype.defaults, {
-          format: 'YY\'MM /DD'
+          format: 'YY\'MM/DD'
         });
       });
 

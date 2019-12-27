@@ -412,9 +412,52 @@ postdata = {
           return '{"status":"OK","data":'.json_encode($res)."}" ;
       }
 
+      if($request->cid!='datasave'){
+        return '{"status":"SOBY","data":'.json_encode($res)."}" ;
+      }
 
-    }
+      $ret = DB::transaction(function () use ($request) {
+        $postdata = $requst->data;
+        $update = [
+                  'order_id'=>parseInt($postdata->order_id),
+                  'order_to_id'=>$postdata->order_to_id,
+                  'order_to'=>$postdata->order_to,
+                  'total_price'=>intval(str_replace(',','',$postdata->total_price))*10000,
+                  'tax'=>intval(str_replace(',','',$postdata->tax))*10000,
+                  'tax_rate'=>intval(str_replace(',','',$postdata->tax_rate))*10000,
+                  'order_price'=>intval(str_replace(',','',$postdata->order_price))*10000,
+                  'cont_id'=>parseInt($postdata->cont_id),
+                  'order_user_id'=>parseInt($postdata->order_user_id),
+                  'order_user_name'=>$postdata->order_user_name,
+                  'term'=>$postdata->term,
+                  'recept_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->recept_date)),
+                  'payment_due_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->payment_due_date)),
+                  'recept_due_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->recept_due_date)),
+                  'recept_place'=>$postdata->recept_place,
 
+                  'recepted_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->recepted_date)),
+                  'recepted_user_id'=>parseInt($postdata->recepted_user_id),
+                  'recepted_user_name'=>$postdata->recepted_user_name,
+
+                  'claim_recepted_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->claim_recepted_date)),
+                  'claim_discount'=>intval(str_replace(',','',$postdata->claim_discount))*10000,
+                  'claim_offset'=>intval(str_replace(',','',$postdata->claim_offset))*10000,
+                  'claim_price'=>intval(str_replace(',','',$postdata->claim_price))*10000,
+                  'claim_recepted_user_id'=>parseInt($postdata->claim_recepted_user_id),
+                  'claim_recepted_user_name'=>$postdata->claim_recepted_user_name,
+
+                  'payed_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->payed_date)),
+                  'payed_user_id'=>parseInt($postdata->payed_user_id),
+                  'payed_user_name'=>$postdata->payed_user_name,
+                  'user_id'=>Auth::user()->id
+              ];
+
+
+        return '{"status":"OK","data":'.json_encode($update)."}" ;
+      }
+    );
+    return '{"status":"NG","data":'.json_encode($update)."}" ;
+}
     //======================================================
     //  支払処理
     //======================================================
