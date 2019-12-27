@@ -190,6 +190,99 @@
       </div>
     </div>
   </div>
+
+  <div class="row mt-3">
+    <div class="col px-0">
+      <table class="table table-responsive table-bordered table-striped" id="claimlist" style="width:64rem;">
+        <thead class="thead-light small">
+          <tr>
+            <th colspan="6">
+              <div class="row">
+                <div class="col-6">
+                  請求
+                </div>
+
+                <script type="application/javascript">
+                function newclaim(){
+                  var row = $('#claimlist tbody').append(
+                    '<tr data-claimid="0">'
+                    +'<td class="p-1">'
+                    +'<button type="button" class="from-control btn btn-primary p-1" style="font-size:0.4rem;" name="button" data-files="[]">請求書登録</button>'
+                    +'<button type="button" class="from-control btn btn-info p-1 pr-0" style="font-size:0.4rem;" name="button" data-files="[]">表示</button>'
+                    +'</td>'
+                    +'<td class="p-0"><input type="button" class="form-control p-0 small" name="orderclaim_recept_date" value="" data-uk-datepicker></td>'
+                    +'<td class="p-0" data-uid="0"></td>'
+                    +'<td class="p-0"><input type="text" class="form-control p-0 small jpcurrency" name="oderclaim_discount_price" value="" ></td>'
+                    +'<td class="p-0"><input type="text" class="form-control p-0 small jpcurrency" name="orderclaim_offset_price" value="" ></td>'
+                    +'<td class="p-0"><input type="text" class="form-control p-0 small jpcurrency" name="orderclaim_claim_price" value="" ></td>'
+                    +'<td class="p-0"><input type="button" class="form-control p-0 small" name="pay_disposal_date" value="" data-uk-datepicker></td>'
+                    +'<td class="p-0"><input type="button" class="form-control p-0 small" name="pay_confirm_date" value="" data-uk-datepicker></td>'
+                    +'<td class="p-0"><input type="text" class="form-control p-0 small" name="pay_method" value="" ></td>'
+                    +'<td class="p-0"><input type="button" class="form-control p-0 small" name="payed_date" value="" data-uk-datepicker></td>'
+                    +'<td data-pay-dispose-uid="{{Auth::user()->id}}" class="p-0"><input type="button" class="form-control p-0 small" name="pay_dispose_uname" value="{{Auth::user()->name}}" ></td>'
+                    +'</tr>'
+                  );
+                  $(row).find('[data-uk-datepicker]')
+                    .attr('data-uk-datepicker',"{format:'YY\'MM/DD'}");
+
+                  $(row).find('input').addClass('border-0')
+                    .attachNum3();
+
+                  UIkit.datepicker($(row).find('[name="orderclaim_recept_date"]') );
+                  UIkit.datepicker($(row).find('[name="pay_disposal_date"]') );
+                  UIkit.datepicker($(row).find('[name="pay_confirm_date"]') );
+                  UIkit.datepicker($(row).find('[name="payed_date"]'));
+                  return $(row);
+                }
+
+                </script>
+                <div class="col-6 clickable text-right" onclick="newclaim()">
+                  <span class="iconify" data-icon="bx:bx-add-to-queue" data-inline="false"></span>
+                  <span>新規</span>
+                </div>
+              </div>
+            </th>
+            <th colspan="5" class="paymenttitle">支払</th>
+          </tr>
+          <tr>
+            <th><button type="button" class="col p-0 from-control btn btn-info " style="font-size:0.4rem">納品書表示・印刷<br>(最新:19'12/20)</button></th>
+            <th class="col_date">受領日</th>
+            <th class="col_date">受領者</th>
+            <th class="col_price">値引き額</th>
+            <th class="col_price">相殺額</th>
+            <th class="col_price">請求額</th>
+            <th class="col_date paymenttitle">処理日</th>
+            <th class="col_date paymenttitle">承認日</th>
+            <th class="col_date paymenttitle">支払方法</th>
+            <th class="col_date paymenttitle">支払日</th>
+            <th class="col_date paymenttitle">担当</th>
+          </tr>
+        </thead>
+        <tbody class="small">
+@foreach($claims as $item)
+          <tr data-claimid="{{$item->orderclaim_id}}">
+            <td>
+              <button type="button" class="from-control btn btn-primary p-1" style="font-size:0.4rem;" name="button" data-files="[]">請求書登録</button>
+              <button type="button" class="from-control btn btn-info p-1 pr-0" style="font-size:0.4rem;" name="button" data-files="[]">表示</button>
+            </td>
+            <td>{{$item->orderclaim_recept_date==null?"":$item->orderclaim_recept_date->format('y\'m/d')}}</td>
+            <td data-uid="{{$item->orderclaim_recept_user_id}}">{{$item_orderclaim_user_name}}</td>
+            <td class="jpcurrency">{{number_format($item->orderclaim_discount_price)}}</td>
+            <td class="jpcurrency">{{number_format($item->orderclaim_offset_price)}}</td>
+            <td class="jpcurrency">{{number_format($item->orderclaim_claim_price)}}</td>
+            <td class="">{{$item->pay_disposal_date==null?"":$item->pay_disposal_date->format('y\'m/d')}}</td>
+            <td class="">{{$item->pay_confirm_date==null?"":$item->pay_confirm_date->format('y\'m/d')}}</td>
+            <td class="">{{$item->payed_date==null?"":$item->payed_date->format('y\'m/d')}}</td>
+            <td data-dispose-uid=>{{$item->pay_dispose_uname}}</td>
+            <td></td>
+          </tr>
+  @endforeach
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
   <div class="row mt-3">
     <div class="col">
       <div class="row">
@@ -402,6 +495,10 @@ var order_id={{$order->order_id}};
    });
 
    attachNum3($('#detaillist .jpcurrency'));
+
+
+
+
 });
 
 

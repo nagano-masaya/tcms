@@ -15,18 +15,15 @@ class CratePaymentsTable extends Migration
   {
       //
       Schema::create('payments', function (Blueprint $table) {
-          $table->bigIncrements('payment_id');
-          $table->bigInteger('order_id');
-          $table->timestamp('claim_date')->nullable();
+          $table->bigIncrements('payment_id');                /* 支払ID  */
+          $table->bigInteger('orderclaim_id');                /* 支払請求ID */
+          $table->timestamp('pay_disposal_date')->nullable(); /* 処理日 */
+          $table->timestamp('pay_comfirm_date')->nullable();  /* 承認日 */
           $table->timestamp('payed_date')->nullable();
+          $table->string('pay_method')->nullable();
+$table->bigInteger('pay_dsipose_uid')->nullable();
+          $table->string('pay_dispaose_uname')->nullable();   /* 支払担当者名 */
 
-          $table->bigInteger('claim_recept_user_id')->nullable();
-          $table->string('claim_recept_user_name')->nullable();
-          $table->bigInteger('recepted_user_id')->nullable();
-          $table->string('recepted_user_name')->nullable();
-
-          $table->json('memo')->nullable();
-          $table->json('claims')->nullable();
           $table->bigInteger('user_id');
           $table->softDeletes();
           $table->timestamps();

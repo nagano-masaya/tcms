@@ -73,6 +73,11 @@
   min-width: 4rem;
 }
 
+.paymenttitle{
+  background-color: #dfefdf !important;
+  font-size:0.8rem;
+}
+
 .cleardate {
   color:blue;
   width:"32px";

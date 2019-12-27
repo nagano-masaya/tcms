@@ -18,17 +18,17 @@ class CreateOrdersTable extends Migration
             $table->date('order_date');
 
             $table->bigInteger('order_to_id')->nullable();
-            $table->string('order_to')->nullable();
+            $table->string(    'order_to')->nullable();
             $table->bigInteger('total_price');
             $table->bigInteger('tax');
-            $table->integer('tax_rate');
+            $table->integer(   'tax_rate');
             $table->bigInteger('order_price');
 
             $table->biginteger('cont_id');
             $table->bigInteger('order_user_id');
-            $table->string('order_user_name');
-            $table->json('term')->nullable();
-            $table->timestamp('recept_date')->nullable();
+            $table->string(    'order_user_name');
+            $table->json(      'term')->nullable();
+            $table->timestamp( 'recept_date')->nullable();
             $table->bigInteger('payment_due_date')->nullable();
 
             $table->timestamp( 'recept_due_date')->nullable();

@@ -374,7 +374,12 @@ postdata = {
           ->where('order_id',$request->cid)
           ->get();
 
-        return view('pages.orderdetail',['order'=>$order,'details'=>$details]);
+        $claims = \App\orderclaims::select()
+          ->leftJoin('payments','orderclaims.oderclaim_id','payments.orderclaim_id')
+          ->where('orderclaims.order_id',$request->cid)
+          ->get();
+
+        return view('pages.orderdetail',['order'=>$order,'details'=>$details,'claims'=>$claims]);
       }
       return view('/home');
     }

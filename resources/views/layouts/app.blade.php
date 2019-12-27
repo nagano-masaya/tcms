@@ -42,6 +42,15 @@
     import v8n from "v8n"
     moment.locale("ja");
     </script>
+    <script type="application/javascript">
+        {{--/* Initialize Datepickers date format */--}}
+        UIkit.on('beforeready.uk.dom', function() {
+        $.extend(UIkit.components.datepicker.prototype.defaults, {
+          format: 'YY\'MM /DD'
+        });
+      });
+
+    </script>
 
 </head>
 <body>
