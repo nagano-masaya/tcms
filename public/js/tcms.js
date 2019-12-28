@@ -1,5 +1,12 @@
+
+
+
+
 function tcms_num3(v){
-  return v.toString()
+  if(v==null ){
+    return "";
+  }
+    return v.toString()
   .replace( /[^0-9]/g, '')
   .replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
 }

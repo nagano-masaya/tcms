@@ -18,7 +18,7 @@ class CreateOrdersTable extends Migration
             $table->date('order_date');
 
             $table->bigInteger('order_to_id')->nullable();
-            $table->string(    'order_to')->nullable();
+            $table->string(    'order_to_name')->nullable();
             $table->bigInteger('total_price');
             $table->bigInteger('tax');
             $table->integer(   'tax_rate');
@@ -29,24 +29,13 @@ class CreateOrdersTable extends Migration
             $table->string(    'order_user_name');
             $table->json(      'term')->nullable();
             $table->timestamp( 'recept_date')->nullable();
-            $table->bigInteger('payment_due_date')->nullable();
+            $table->timestamp('payment_due_date')->nullable();
 
             $table->timestamp( 'recept_due_date')->nullable();
             $table->string(    'recept_place',120)->nullable();
             $table->timestamp( 'recepted_date')->nullable();
             $table->bigInteger('recepted_user_id')->nullable();
             $table->string(    'recepted_user_name',32)->nullable();
-
-            $table->timestamp( 'claim_recepted_date')->nullable();
-            $table->bigInteger('claim_discount')->nullable();
-            $table->bigInteger('claim_offset')->nullable();
-            $table->bigInteger('claim_price')->nullable();
-            $table->bigInteger('claim_recepted_user_id')->nullable();
-            $table->string(    'claim_recepted_user_name',32)->nullable();
-
-            $table->timestamp( 'payed_date')->nullable();
-            $table->bigInteger('payed_user_id')->nullable();
-            $table->string(    'payed_user_name',32)->nullable();
 
             $table->bigInteger('user_id');
             $table->softDeletes();

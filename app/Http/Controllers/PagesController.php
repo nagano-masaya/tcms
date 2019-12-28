@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
@@ -388,6 +389,11 @@ postdata = {
       return view('pages.diary');
     }
 
+    //=============================================================
+    //
+    //  発注処理POST
+    //
+    //=============================================================
     public function orderdetailPost(Request $request){
       if($request->cid == 'complist'){
           $data = \App\company::select(['company_id','nickname'])
@@ -413,82 +419,81 @@ postdata = {
       }
 
       if($request->cid!='datasave'){
-        return '{"status":"SOBY","data":'.json_encode($res)."}" ;
+        return '{"status":"SOBY","data":'.$request->data."}" ;
       }
 
-      $ret = DB::transaction(function () use ($request) {
-        $postdata = $requst->data;
+
+      return DB::transaction(function () use ($request) {
+
+        $postdata = json_decode($request->data);
         $update = [
-                  'order_id'=>parseInt($postdata->order_id),
-                  'order_to_id'=>$postdata->order_to_id,
-                  'order_to'=>$postdata->order_to,
-                  'total_price'=>intval(str_replace(',','',$postdata->total_price))*10000,
-                  'tax'=>intval(str_replace(',','',$postdata->tax))*10000,
-                  'tax_rate'=>intval(str_replace(',','',$postdata->tax_rate))*10000,
-                  'order_price'=>intval(str_replace(',','',$postdata->order_price))*10000,
-                  'cont_id'=>parseInt($postdata->cont_id),
-                  'order_user_id'=>parseInt($postdata->order_user_id),
-                  'order_user_name'=>$postdata->order_user_name,
-                  'term'=>$postdata->term,
-                  'recept_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->recept_date)),
-                  'payment_due_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->payment_due_date)),
-                  'recept_due_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->recept_due_date)),
-                  'recept_place'=>$postdata->recept_place,
+            'order_id'=>intval($postdata->order_id),
+            'order_date'=>strtotime("20".preg_replace("/[^\d]/",'',$postdata->order_date)),
 
-                  'recepted_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->recepted_date)),
-                  'recepted_user_id'=>parseInt($postdata->recepted_user_id),
-                  'recepted_user_name'=>$postdata->recepted_user_name,
+            'order_to_id'=>$postdata->order_to_id,
+            'order_to_name'=>$postdata->order_to_name,
+            'total_price'=>intval(str_replace(',','',$postdata->total_price))*10000,
+            'tax'=>intval(str_replace(',','',$postdata->tax))*10000,
+            'tax_rate'=>10*10000,
+            'order_price'=>intval(str_replace(',','',$postdata->order_price))*10000,
 
-                  'claim_recepted_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->claim_recepted_date)),
-                  'claim_discount'=>intval(str_replace(',','',$postdata->claim_discount))*10000,
-                  'claim_offset'=>intval(str_replace(',','',$postdata->claim_offset))*10000,
-                  'claim_price'=>intval(str_replace(',','',$postdata->claim_price))*10000,
-                  'claim_recepted_user_id'=>parseInt($postdata->claim_recepted_user_id),
-                  'claim_recepted_user_name'=>$postdata->claim_recepted_user_name,
+            'cont_id'=>intval($postdata->cont_id),
+            'order_user_id'=>intval($postdata->order_user_id),
+            'order_user_name'=>$postdata->order_user_name,
+            'term'=>["title"=>$term],
+            'recept_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->recept_date)),
+            'payment_due_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->payment_due_date)),
 
-                  'payed_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->payed_date)),
-                  'payed_user_id'=>parseInt($postdata->payed_user_id),
-                  'payed_user_name'=>$postdata->payed_user_name,
-                  'user_id'=>Auth::user()->id
-              ];
+            'recept_due_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->recept_due_date)),
+            'recept_place'=>$postdata->recept_place,
+            'recepted_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->recepted_date)),
+            'recepted_user_id'=>intval($postdata->recepted_user_id),
+            'recepted_user_name'=>$postdata->recepted_user_name,
 
+            'user_id'=>Auth::user()->id
+        ];
+
+        \App\orders::updateOrCreate(
+          ['order_id'=>$postdata->order_id],
+          $update
+        );
+
+
+        $rows = $postdata->rows;
+
+        foreach($rows as $itm){
+          \App\orderdetails::updateOrCreate(
+            ['odrdetail_id'=>$itm->odrdetail_id],
+            [
+              'item_name'=>$itm->item_name,
+              'unit_price'=>intval($itm->unit_price)*10000,
+              'qty'=>intval($itm->qty)*10000,
+              'unit_id'=>intval($itm->unit_id),
+              'total_price'=>intval($itm->total_price)*10000,
+              'tax'=>intval($itm->tax)*10000,
+              'taxed_price'=>intval($itm->taxed_price)*10000
+            ]
+          );
+        };
+
+        $claims = $postdata->claims;
+        foreach($claims as $itm){
+          \App\orderclaims::updateOrCreate(
+            ['orderclaim_id'=>$itm->orderclaim_id],
+            [
+              'order_id'=>intval($postdata->order_id),
+              'orderclaim_recept_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $itm->orderclaim_recept_date)),
+              'orderclaim_recept_user_id'=>intval($itm->orderclaim_recept_user_id),
+              'orderclaim_recept_user_name'=>$itm->orderclaim_recept_user_name,
+              'oderclaim_discount_price'=>intval($itm->oderclaim_discount_price)*10000,
+              'orderclaim_offset_price'=>intval($itm->orderclaim_offset_price)*10000,
+              'orderclaim_claim_price'=>intaval($itm->orderclaim_claim_price)*10000
+            ]
+          );
+        };
 
         return '{"status":"OK","data":'.json_encode($update)."}" ;
       }
     );
-    return '{"status":"NG","data":'.json_encode($update)."}" ;
-}
-    //======================================================
-    //  支払処理
-    //======================================================
-    public function paymentlist(Request $request)
-    {
-      $data = \App\payments::select()
-        ->join('orders','payments.order_id','orders.order_id' )
-        ->get();
-
-
-      return view('pages.paymentlist',['list'=>$data]);
-    }
-
-    public function paymentdetail(Request $request)
-    {
-      $data = \App\payments::select()
-        ->where('payment_id',$request->pid)
-        ->firstOrNew(['payment_id'=>$request->pid]);
-
-        $order = \App\orders::select('orders.*','con1.name as cont_name','recepter.name as recepter_user_name','order_users.name as order_user_name')
-          ->leftJoin('contructs as con1','orders.cont_id','con1.cont_id' )
-          ->leftJoin('users as recepter','orders.order_user_id','recepter.id' )
-          ->leftJoin('users as order_users','orders.order_user_id','order_users.id' )
-          ->where('orders.order_id',$data->order_id)
-          ->first();
-
-        $details = \App\orderdetail::select()
-          ->where('order_id',$data->order_id)
-          ->get();
-
-      return view('pages.paymentdetail',['data'=>$data,'order'=>$order,'details'=>$details ]);
-    }
-
+  }
 }

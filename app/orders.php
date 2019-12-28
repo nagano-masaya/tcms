@@ -11,7 +11,9 @@ class orders extends Model
   protected $guarded = ['order_id'];
   //DateTime型でデータを取得するため、$datesに登録
   protected $dates = [
-    'order_date','recept_date'
+    'order_date','recept_date','payment_due_date',
+    'recept_due_date','recepted_date','claim_recepted_date',
+    'payed_date',
   ];
     //
 }

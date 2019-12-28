@@ -29,5 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PasswordResetsTableSeeder::class);
         $this->call(PaymentsTableSeeder::class);
         $this->call(UnittypesTableSeeder::class);
+        $this->call(OrderclaimsTableSeeder::class);
+        $this->call(OrdertypeTableSeeder::class);
     }
 }

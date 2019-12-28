@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class FailedJobsTableSeeder extends Seeder
+class OrdertypeTableSeeder extends Seeder
 {
 
     /**
@@ -14,7 +14,7 @@ class FailedJobsTableSeeder extends Seeder
     {
         
 
-        \DB::table('Failed_jobs')->delete();
+        \DB::table('ordertype')->delete();
         
         
         

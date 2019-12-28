@@ -69,7 +69,7 @@
         <span class="iconify" data-icon="bx:bx-add-to-queue" data-inline="false" onclick="selectCompany()"></span>
       </div>
         <input type="hidden" name="order_to_id" value="{{$order->company_id}}">
-        <input type="text" class="form-control text-left small" name="order_to_name" value="{{$order->nickname}}" maxlength="128">
+        <input type="text" class="form-control text-left small" name="order_to_name" value="{{$order->order_to_name}}" maxlength="128">
     </div>
     <div class="input-group col-2 small">
       <div class="small input-group-prepend input-group-text input-group-sm">
@@ -81,13 +81,14 @@
       <div class="small input-group-prepend input-group-text input-group-sm">
         消費税
       </div>
-        <input type="input" class="form-control text-left jpcurrency px-1" name="tax"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
+      <input type="hidden" name="tax_rate" value="{{$order->tax_rate/10000}}">
+      <input type="input" class="form-control text-left jpcurrency px-1" name="tax"  value="{{number_format($order->order_price/10000)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
     </div>
     <div class="input-group col-2 small">
       <div class="small input-group-prepend input-group-text input-group-sm">
         発注金額
       </div>
-        <input type="text" class="form-control text-left jpcurrency px-1" name="order_price"  value="{{number_format($order->order_price)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
+        <input type="text" class="form-control text-left jpcurrency px-1" name="order_price"  value="{{number_format($order->order_price/10000)}}" data-org="{{number_format($order->order_price)}}" maxlength="15">
     </div>
   </div>
   <div class="row">
@@ -95,32 +96,34 @@
       <div class="small input-group-prepend input-group-text input-group-sm">
         発注元
       </div>
+        <input type="hidden" name="cont_id" value="{{$order->cont_id}}">
         <input type="button" class="form-control text-left" name="cont_name" value="{{$order->cont_name}}" data-id="{{$order->cont_id}}" data-org-id="{{$order->cont_id}}" data-org="{{$order->cont_name}}" maxlength="64">
     </div>
     <div class="input-group col-md-2 small">
       <div class="small input-group-prepend input-group-text input-group-sm">
         発注者
       </div>
+        <input type="hidden" name="order_user_id" value="{{$order->order_user_id}}">
         <input type="button" class="form-control text-left" name="order_user_name" value="{{$order->order_user_name}}" data-id="{{$order->order_by}}" data-org-id="{{$order->order_by}}" data-org="{{$order->order_user_name}}" maxlength="12">
     </div>
     <div class="input-group col-md-3 small">
       <div class="small input-group-prepend input-group-text input-group-sm">
         支払条件
       </div>
-        <input type="text" class="form-control text-left" name="terms" value="掛け" maxlength="64">
+        <input type="text" class="form-control text-left" name="term" value="掛け" maxlength="64">
     </div>
     <div class="input-group col-md-1 small">
       <div class="small input-group-prepend input-group-text input-group-sm">
           納期<span class="iconify clickable cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
       </div>
-      <input type="button" class="form-control text-center small" data-uk-datepicker="{format:'YY\'MM/DD'}" name="recept_due_date" value="{{$order->recept_due_date==null? "":$order->recept_due_date->format('y\'m/d')}}">
+      <input type="button" class="form-control text-center small" data-uk-datepicker name="recept_date" value="{{$order->recept_date==null? "":$order->recept_date->format('y\'m/d')}}">
     </div>
     <div class="input-group col-md-1 small">
       <div class="small input-group-prepend input-group-text input-group-sm px-1">
         支払予定日<span class="iconify clickable cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
       </div>
       <div class="input-group m-0 p-0 small">
-        <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}"  name="payment_due_date" value="{{$order->payment_due_date==null?"":$order->payment_due_date->format('y\'m/d')}}">
+        <input type="button" class="form-control text-center" data-uk-datepicker  name="payment_due_date" value="{{$order->payment_due_date==null?"":$order->payment_due_date->format('y\'m/d')}}">
       </div>
     </div>
     <div class="input-group col-md-2 small p-1">
@@ -136,7 +139,6 @@
       </div>
     </div>
   </div>
-
   <div class="row mt-3">
     <div class="col">
       <div class="row">
@@ -150,13 +152,14 @@
           <div class="input-group m-0 p-0 flex">
               <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}"  name="recept_due_date" value="{{ $order->recept_due_date==null? "":$order->recept_due_date->format('y\'m/d')}}">
           </div>
+
         </div>
         <div class="input-group col-md-4 small">
           <div class="small input-group-prepend input-group-text input-group-sm">
             受領場所
           </div>
           <div class="input-group m-0 p-0 flex">
-            <input type="text" class="form-control text-left" name="recept_user_name" value="{{$order->recepted_user_name}}" data-id="{{$order->recepted_user_id}}" maxlength="64">
+            <input type="text" class="form-control text-left" name="recept_place" value="{{$order->recept_place}}" maxlength="64">
           </div>
         </div>
         <div class="input-group col-md-1 small">
@@ -164,7 +167,7 @@
             受領日<span class="iconify cleardate" data-icon="bx:bxs-eraser" data-inline="false" ></span>
           </div>
           <div class="input-group m-0 p-0 flex">
-            <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}"  name="recepted_date" value="{{$order->recepted_date==null? "": $roder->recepted_date->format('y\'m/d')}}">
+            <input type="button" class="form-control text-center" data-uk-datepicker="{format:'YY\'MM/DD'}"  name="recepted_date" value="{{$order->recepted_date==null? "": $order->recepted_date->format('y\'m/d')}}">
           </div>
         </div>
         <div class="input-group col-md-1 small">
@@ -172,7 +175,8 @@
             受領者
           </div>
           <div class="input-group m-0 p-0 flex">
-            <input type="text" class="form-control text-left" name="recept_user_name" value="{{$order->recepted_user_name}}" data-id="{{$order->recepted_user_id}}" maxlength="12">
+            <input type="hidden" name="recepted_user_id" value="{{$order->recepted_user_id}}">
+            <input type="text" class="form-control text-left" name="recepted_user_name" value="{{$order->recepted_user_name}}" maxlength="12">
           </div>
         </div>
         <div class="input-group col-md-1 small p-1">
@@ -190,7 +194,8 @@
       </div>
     </div>
   </div>
-
+</DIV>
+<div class="container">
   <div class="row mt-3">
     <div class="col px-0">
       <table class="table table-responsive table-bordered table-striped" id="claimlist" style="width:64rem;">
@@ -223,7 +228,7 @@
                     +'<td class="p-0"><input type="button" class="form-control p-0 small" name="pay_confirm_date" value="" data-uk-datepicker></td>'
                     +'<td class="p-0"><input type="text" class="form-control p-0 small" name="pay_method" value="" ></td>'
                     +'<td class="p-0"><input type="button" class="form-control p-0 small" name="payed_date" value="" data-uk-datepicker></td>'
-                    +'<td data-pay-dispose-uid="0" class="p-0"><input type="button" class="form-control p-0 small" name="pay_dispose_uname" value="" ></td>'
+                    +'<td class="p-0"><input type="button" class="form-control p-0 small" data-pay-dispose-uid="0" name="pay_dispose_uname" value="" ></td>'
                     +'</tr>')
                     .replace('#claimdate#',moment().format('YY\'MM/DD') )
                     .replace('#uid#',"{{Auth::user()->id}}")
@@ -241,6 +246,7 @@
                   UIkit.datepicker($(row).find('[name="payed_date"]'));
                   return $(row);
                 }
+
 
                 </script>
               </div>
@@ -262,24 +268,6 @@
           </tr>
         </thead>
         <tbody class="small">
-@foreach($claims as $item)
-          <tr data-claimid="{{$item->orderclaim_id}}">
-            <td>
-              <button type="button" class="from-control btn btn-primary p-1" style="font-size:0.4rem;" name="button" data-files="[]">請求書登録</button>
-              <button type="button" class="from-control btn btn-info p-1 pr-0" style="font-size:0.4rem;" name="button" data-files="[]">表示</button>
-            </td>
-            <td>{{$item->orderclaim_recept_date==null?"":$item->orderclaim_recept_date->format('y\'m/d')}}</td>
-            <td data-uid="{{$item->orderclaim_recept_user_id}}">{{$item_orderclaim_user_name}}</td>
-            <td class="jpcurrency">{{number_format($item->orderclaim_discount_price)}}</td>
-            <td class="jpcurrency">{{number_format($item->orderclaim_offset_price)}}</td>
-            <td class="jpcurrency">{{number_format($item->orderclaim_claim_price)}}</td>
-            <td class="">{{$item->pay_disposal_date==null?"":$item->pay_disposal_date->format('y\'m/d')}}</td>
-            <td class="">{{$item->pay_confirm_date==null?"":$item->pay_confirm_date->format('y\'m/d')}}</td>
-            <td class="">{{$item->payed_date==null?"":$item->payed_date->format('y\'m/d')}}</td>
-            <td data-dispose-uid=>{{$item->pay_dispose_uname}}</td>
-            <td></td>
-          </tr>
-  @endforeach
         </tbody>
       </table>
     </div>
@@ -387,10 +375,45 @@ var order_id={{$order->order_id}};
    });
 
    attachNum3($('#detaillist .jpcurrency'));
+@if($claims->count())
+   var claims = [
+   @foreach($claims as $item)
+      {
+        orderclaim_id:{{$item->orderclaim_id}},
+        orderclaim_recept_user_id:{{$item->orderclaim_recept_user_id}},
+        orderclaim_recept_user_name:"{{$item->orderclaim_recept_user_name}}",
+        oderclaim_discount_price:{{$item->oderclaim_discount_price/10000}},
+        orderclaim_offset_price:{{$item->orderclaim_offset_price/10000}},
+        orderclaim_claim_price:{{$item->orderclaim_claim_price/10000}},
+        payment_id:{{$item->payment_id}},
+        pay_disposal_date:{{$item->pay_disposal_date==null? "null" : 'moment("'.$item->pay_disposal_date->format('Ymd').'")' }},
+        pay_comfirm_date:{{$item->pay_comfirm_date==null? "null" : 'moment("'.$item->pay_comfirm_date->format('Ymd').'")' }},
+        payed_date:{{$item->payed_date==null? "null" : 'moment("'.$item->payed_date->format('Ymd').'")' }},
+        pay_method:"{{$item->pay_method}}",
+        pay_dsipose_uid:{{$item->pay_dsipose_uid==null? "null" : $item->pay_dsipose_uid}},
+        pay_dispaose_uname:"{{$item->pay_dispaose_uname}}"
+       },
+     @endforeach
+   ];
 
-
-
-
+   $('#claimlist tbody tr').remove();
+   claims.forEach(function(itm){
+     row = newclaim();
+     row.find('[data-claimid]').attr('data-claimid',itm.orderclaim_id);
+     row.find('[name="orderclaim_recept_date"]').val(itm.orderclaim_recept_date);
+     row.find('[name="orderclaim_recept_user_name"]').val(itm.orderclaim_recept_user_name);
+     row.find('[name="orderclaim_discount_price"]').val(tcms_num3(itm.orderclaim_discount_price));
+     row.find('[name="orderclaim_offset_price"]').val(tcms_num3(itm.orderclaim_offset_price));
+     row.find('[name="orderclaim_claim_price"]').val(tcms_num3(itm.orderclaim_claim_price));
+     row.find('[name="pay_disposal_date"]').val(itm.pay_disposal_date);
+     row.find('[name="pay_confirm_date"]').val(itm.pay_confirm_date);
+     row.find('[name="pay_method"]').val(itm.pay_method);
+     row.find('[name="payed_date"]').val(itm.payed_date);
+     row.find('[name="pay_dispose_uname"]')
+      .attr('pay_dispose_uname',itm.pay_dispose_uid)
+      .val(itm.pay_dispose_uname);
+   });
+@endif
 });
 
 
@@ -465,8 +488,8 @@ function validate(){
       throw new Error('発注者を入力してください');
     }
 
-    if($('[name="terms"]').val().length<1 ){
-      $('[name="terms"]').addClass('bg-warning').focus();
+    if($('[name="term"]').val().length<1 ){
+      $('[name="term"]').addClass('bg-warning').focus();
       throw new Error('支払条件を入力してください');
     }
 
@@ -514,6 +537,7 @@ function validate(){
     return false;
   }
   return true;
+
 }
 
 var postdata;
@@ -559,29 +583,37 @@ $('#claimlist tbody tr').each(function(){
 
   postdata = {
     order_id:order_id,
-    cont_id:$('[name="cont_name"]').attr('data-id'),
-    cont_name:$('[name="cont_name"]').val(),
     order_date:$('[name="order_date"]').val(),
+
     order_to_id:$('[name="order_to_id"]').val(),
     order_to_name:$('[name="order_to_name"]').val(),
-    total_price:$('#mainform [name="total_price"]').val(),
-    tax:$('#mainform [name="tax"]').val(),
-    order_price:$('#mainform [name="order_price"]').val(),
-    order_user_id:$('#mainform [name="order_user_name"]').attr('data-id'),
-    order_user_name:$('#mainform [name="order_user_name"]').val(),
-    recept_date:$('#mainform [name="recept_date"]').val(),
-    recepted_date:$('#mainform [name="recepted_date"]').val(),
-    recepted_user_id:$('#mainform [name="recepted_user_id"]').val(),
-    recepted_user_name:$('#mainform [name="recepted_user_name"]').val(),
+    total_price:$('[name="total_price"]').val(),
+    tax:$('[name="tax"]').val(),
+    tax_rate:$('[name="tax_rate"]').val(),
+    order_price:$('[name="order_price"]').val(),
+
+    cont_id:$('[name="cont_id"]').val(),
+    order_user_id:$('[name="order_user_id"]').val(),
+    order_user_name:$('[name="order_user_name"]').val(),
+    term:$('[name="term"]').val(),
+    recept_date:$('[name="recept_date"]').val(),
+    payment_due_date:$('[name="payment_due_date"]').val(),
+
+    recept_due_date:$('[name="recept_due_date"]').val(),
+    recept_place:$('[name="recept_place"]').val(),
+    recepted_date:$('[name="recepted_date"]').val(),
+    recepted_user_id:$('[name="recepted_user_id"]').val(),
+    recepted_user_name:$('[name="recepted_user_name"]').val(),
+
     rowdata:details,
     claims:claims
   }
 
   $.ajax({
-      url: 'claimdetail',
+      url: 'orderdetail',
       type: 'POST',
       data: {_token: CSRF_TOKEN,cid:"datasave",
-        data:postdata,
+        data:JSON.stringify(postdata),
         dataType:'JSON'}
       }).always(function(data){
         toastr.options = {
