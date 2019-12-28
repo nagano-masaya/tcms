@@ -565,7 +565,7 @@ var claims = [];
 $('#claimlist tbody tr').each(function(){
   var t=$(this);
   claims.push({
-    order_claim_id:t.attr('[data-claimid]'),
+    orderclaim_id:t.attr('[data-claimid]'),
     orderclaim_recept_date:t.find('[name="orderclaim_recept_date"]').val(),
     orderclaim_recept_user_id: t.find('[data-orderclaim_recept_user_id]').attr('[data-orderclaim_recept_user_id]'),
     orderclaim_recept_user_name:t.find('[name="data-orderclaim_recept_user_name"]').val(),

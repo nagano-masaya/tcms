@@ -440,7 +440,7 @@ postdata = {
             'cont_id'=>intval($postdata->cont_id),
             'order_user_id'=>intval($postdata->order_user_id),
             'order_user_name'=>$postdata->order_user_name,
-            'term'=>["title"=>$term],
+            'term'=>["title"=>$postdata->term],
             'recept_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->recept_date)),
             'payment_due_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $postdata->payment_due_date)),
 
@@ -459,11 +459,11 @@ postdata = {
         );
 
 
-        $rows = $postdata->rows;
+        $rows = $postdata->rowdata;
 
         foreach($rows as $itm){
-          \App\orderdetails::updateOrCreate(
-            ['odrdetail_id'=>$itm->odrdetail_id],
+          \App\orderdetail::updateOrCreate(
+            ['odrdetail_id'=>$itm->id],
             [
               'item_name'=>$itm->item_name,
               'unit_price'=>intval($itm->unit_price)*10000,
