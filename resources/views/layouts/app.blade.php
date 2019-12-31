@@ -44,11 +44,13 @@
     </script>
     <script type="application/javascript">
         {{--/* Initialize Datepickers date format */--}}
-        UIkit.on('beforeready.uk.dom', function() {
+      UIkit.on('beforeready.uk.dom', function() {
         $.extend(UIkit.components.datepicker.prototype.defaults, {
           format: 'YY\'MM/DD'
         });
       });
+
+      $('jpcurrency').on('focus',$(this).select());
 
     </script>
 

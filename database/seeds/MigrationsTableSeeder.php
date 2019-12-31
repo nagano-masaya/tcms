@@ -19,115 +19,115 @@ class MigrationsTableSeeder extends Seeder
         \DB::table('migrations')->insert(array (
             0 => 
             array (
-                'id' => 59,
+                'id' => 81,
                 'migration' => '2014_10_12_000000_create_users_table',
                 'batch' => 1,
             ),
             1 => 
             array (
-                'id' => 60,
+                'id' => 82,
                 'migration' => '2014_10_12_100000_create_password_resets_table',
                 'batch' => 1,
             ),
             2 => 
             array (
-                'id' => 61,
+                'id' => 83,
                 'migration' => '2019_08_19_000000_create_failed_jobs_table',
                 'batch' => 1,
             ),
             3 => 
             array (
-                'id' => 62,
+                'id' => 84,
                 'migration' => '2019_11_28_013128_create_contructs_table',
                 'batch' => 1,
             ),
             4 => 
             array (
-                'id' => 63,
+                'id' => 85,
                 'migration' => '2019_12_02_021009_create_constructs_table',
                 'batch' => 1,
             ),
             5 => 
             array (
-                'id' => 64,
+                'id' => 86,
                 'migration' => '2019_12_02_021228_create_claims_table',
                 'batch' => 1,
             ),
             6 => 
             array (
-                'id' => 65,
+                'id' => 87,
                 'migration' => '2019_12_02_021251_create_comments_table',
                 'batch' => 1,
             ),
             7 => 
             array (
-                'id' => 66,
+                'id' => 88,
                 'migration' => '2019_12_02_021312_create_orders_table',
                 'batch' => 1,
             ),
             8 => 
             array (
-                'id' => 67,
+                'id' => 89,
                 'migration' => '2019_12_11_081827_create_consttypes_table',
                 'batch' => 1,
             ),
             9 => 
             array (
-                'id' => 68,
+                'id' => 90,
                 'migration' => '2019_12_12_043548_create_company_table',
                 'batch' => 1,
             ),
             10 => 
             array (
-                'id' => 69,
+                'id' => 91,
                 'migration' => '2019_12_14_054243_create_deposit_table',
                 'batch' => 1,
             ),
             11 => 
             array (
-                'id' => 70,
+                'id' => 92,
                 'migration' => '2019_12_14_054349_create_deposit_disp_table',
                 'batch' => 1,
             ),
             12 => 
             array (
-                'id' => 71,
+                'id' => 93,
                 'migration' => '2019_12_19_060215_create_claimdetail_table',
                 'batch' => 1,
             ),
             13 => 
             array (
-                'id' => 72,
+                'id' => 94,
                 'migration' => '2019_12_22_125715_create_orderdetail_table',
                 'batch' => 1,
             ),
             14 => 
             array (
-                'id' => 73,
+                'id' => 95,
                 'migration' => '2019_12_24_020135_crate_units_table',
                 'batch' => 1,
             ),
             15 => 
             array (
-                'id' => 74,
+                'id' => 96,
                 'migration' => '2019_12_24_020834_crate_payments_table',
                 'batch' => 1,
             ),
             16 => 
             array (
-                'id' => 75,
+                'id' => 97,
                 'migration' => '2019_12_24_025233_create_unittypes_table',
                 'batch' => 1,
             ),
             17 => 
             array (
-                'id' => 76,
+                'id' => 98,
                 'migration' => '2019_12_26_142512_create_ordertype_table',
                 'batch' => 1,
             ),
             18 => 
             array (
-                'id' => 77,
+                'id' => 99,
                 'migration' => '2019_12_27_055837_create_orderclaims_table',
                 'batch' => 1,
             ),

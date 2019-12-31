@@ -16,7 +16,7 @@
           function(title,datalist,fnOk){
               $.fn.fnok=fnOk;
               //$('#{{$compo_id}}').fnok = function(){alert("55")};
-              $('#modal-label').html(title);
+              $('#{{$compo_id}} .modal-label').html(title);
               $('#{{$compo_id}} tbody').children().remove();
               datalist.forEach(function(itm){
                 $('#{{$compo_id}} tbody').append(

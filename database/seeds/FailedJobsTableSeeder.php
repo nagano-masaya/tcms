@@ -14,7 +14,7 @@ class FailedJobsTableSeeder extends Seeder
     {
         
 
-        \DB::table('Failed_jobs')->delete();
+        \DB::table('failed_jobs')->delete();
         
         
         

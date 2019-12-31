@@ -19,7 +19,7 @@ class OrderclaimsTableSeeder extends Seeder
         \DB::table('orderclaims')->insert(array (
             0 => 
             array (
-                'oderclaim_id' => 1,
+                'orderclaim_id' => 1,
                 'order_id' => 1,
                 'orderclaim_recept_date' => '2019-12-28 11:10:34',
                 'orderclaim_recept_user_id' => 1,

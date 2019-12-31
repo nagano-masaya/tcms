@@ -36,4 +36,11 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+//-------------------------------------------------------------
+//  ログイン画面をWelcome画面に変更
+//-------------------------------------------------------------
+    public function showLoginForm(){
+      return view('/welcome');
+    }
 }

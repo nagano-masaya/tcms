@@ -31,5 +31,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UnittypesTableSeeder::class);
         $this->call(OrderclaimsTableSeeder::class);
         $this->call(OrdertypeTableSeeder::class);
+        $this->call(PersonTableSeeder::class);
     }
 }

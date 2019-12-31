@@ -343,6 +343,7 @@ postdata = {
     public function orderlist(Request $request){
       $orders = \App\orders::select(
           'orders.order_id',
+          'orders.order_title',
           'orders.order_date',
           'orders.order_price',
           'orders.recept_date',
@@ -375,8 +376,20 @@ postdata = {
           ->where('order_id',$request->cid)
           ->get();
 
-        $claims = \App\orderclaims::select()
-          ->leftJoin('payments','orderclaims.oderclaim_id','payments.orderclaim_id')
+        $claims = \App\orderclaims::select(
+          [
+          'orderclaims.*',
+          'payments.payment_id',
+          'payments.pay_dispose_date',
+          'payments.pay_confirm_date',
+          'payments.payed_date',
+          'payments.pay_method',
+          'payments.pay_dispose_uid',
+          'payments.pay_dispose_uname'
+        ]
+
+          )
+          ->leftJoin('payments','orderclaims.orderclaim_id','payments.orderclaim_id')
           ->where('orderclaims.order_id',$request->cid)
           ->get();
 
@@ -388,6 +401,15 @@ postdata = {
     public function diary(Request $request){
       return view('pages.diary');
     }
+
+
+  public function DBDate(string $s){
+     return $s=="" ? null : "20".preg_replace('/[^\d]/','-', $s);
+  }
+
+ public function DBInt(string $s){
+   return intval( preg_replace("/[^0-9]+/","",$s ) );
+ }
 
     //=============================================================
     //
@@ -423,11 +445,12 @@ postdata = {
       }
 
 
-      return DB::transaction(function () use ($request) {
+      return  DB::transaction(function () use ($request) {
 
         $postdata = json_decode($request->data);
         $update = [
             'order_id'=>intval($postdata->order_id),
+            'order_title'=>$postdata->order_title,
             'order_date'=>strtotime("20".preg_replace("/[^\d]/",'',$postdata->order_date)),
 
             'order_to_id'=>$postdata->order_to_id,
@@ -453,7 +476,7 @@ postdata = {
             'user_id'=>Auth::user()->id
         ];
 
-        \App\orders::updateOrCreate(
+        $order_result = \App\orders::updateOrCreate(
           ['order_id'=>$postdata->order_id],
           $update
         );
@@ -461,39 +484,63 @@ postdata = {
 
         $rows = $postdata->rowdata;
 
+        $orderdetail_result = [];
         foreach($rows as $itm){
-          \App\orderdetail::updateOrCreate(
+          $ret =\App\orderdetail::updateOrCreate(
             ['odrdetail_id'=>$itm->id],
             [
               'item_name'=>$itm->item_name,
-              'unit_price'=>intval($itm->unit_price)*10000,
-              'qty'=>intval($itm->qty)*10000,
+              'unit_price'=>$this->DBInt($itm->unit_price)*10000,
+              'qty'=>$this->DBInt($itm->qty)*10000,
               'unit_id'=>intval($itm->unit_id),
-              'total_price'=>intval($itm->total_price)*10000,
-              'tax'=>intval($itm->tax)*10000,
-              'taxed_price'=>intval($itm->taxed_price)*10000
+              'total_price'=>$this->DBInt($itm->total_price)*10000,
+              'tax'=>$this->DBInt($itm->tax)*10000,
+              'taxed_price'=>$this->DBInt($itm->taxed_price)*10000
             ]
           );
+          $orderdetail_result[] = ["idx"=>$itm->idx, "result"=>$ret];
         };
 
         $claims = $postdata->claims;
+        $claims_result = [];
+        $payments_result = [];
+
         foreach($claims as $itm){
-          \App\orderclaims::updateOrCreate(
+          $ret = \App\orderclaims::updateOrCreate(
             ['orderclaim_id'=>$itm->orderclaim_id],
             [
               'order_id'=>intval($postdata->order_id),
-              'orderclaim_recept_date'=>strtotime(  "20".preg_replace('/[^\d]/','', $itm->orderclaim_recept_date)),
+              'orderclaim_recept_date'=>$itm->orderclaim_recept_date==""  ? null : strtotime(  "20".preg_replace('/[^\d]/','', $itm->orderclaim_recept_date)),
               'orderclaim_recept_user_id'=>intval($itm->orderclaim_recept_user_id),
               'orderclaim_recept_user_name'=>$itm->orderclaim_recept_user_name,
-              'oderclaim_discount_price'=>intval($itm->oderclaim_discount_price)*10000,
-              'orderclaim_offset_price'=>intval($itm->orderclaim_offset_price)*10000,
-              'orderclaim_claim_price'=>intaval($itm->orderclaim_claim_price)*10000
+              'oderclaim_discount_price'=>(isset($itm->oderclaim_discount_price)  ?  $this->DBInt($itm->oderclaim_discount_price)*10000 : null),
+              'orderclaim_offset_price'=>(isset($itm->orderclaim_offset_price)  ?  $this->DBInt($itm->orderclaim_offset_price)*10000 : null),
+              'orderclaim_claim_price'=>(isset($itm->orderclaim_claim_price)  ?  $this->DBInt($itm->orderclaim_claim_price)*10000 : null),
             ]
           );
+          $claims_result[]= ["idx"=>$itm->idx, "result"=>$ret];
+
+          $ret = \App\payments::updateOrCreate(
+            ['payment_id'=>$itm->payment_id],
+            [
+              'orderclaim_id'=>$itm->orderclaim_id,
+              'pay_dispose_date'=>$this->DBDate($itm->pay_dispose_date),
+              'pay_confirm_date'=>$itm->pay_confirm_date == "" ? null : $itm->pay_confirm_date,
+              'payed_date'=>$itm->payed_date == "" ? null : $itm->payed_date,
+              'pay_method'=>$itm->pay_method,
+              'pay_dispose_uid'=>$itm->pay_dispose_uid,
+              'pay_dispose_uname'=>$itm->pay_dispose_uname,
+
+              'user_id'=>Auth::user()->id
+
+            ]
+          );
+          $payments_result[]= ["idx"=>$itm->idx, "result"=>$ret];
+
+
         };
 
-        return '{"status":"OK","data":'.json_encode($update)."}" ;
-      }
-    );
+        return response()->json(["status"=>"OK","order"=>$order_result,"detail"=>$orderdetail_result,"claim"=>$claims_result,"payment"=>$payments_result ]);
+      });
   }
 }

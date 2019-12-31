@@ -14,14 +14,14 @@ class CreateOrderclaimsTable extends Migration
     public function up()
     {
         Schema::create('orderclaims', function (Blueprint $table) {
-            $table->bigIncrements('oderclaim_id');
+            $table->bigIncrements('orderclaim_id');
             $table->bigInteger('order_id');
-            $table->timestamp('orderclaim_recept_date');
-            $table->integer('orderclaim_recept_user_id');
-            $table->string('orderclaim_recept_user_name');
-            $table->bigInteger('oderclaim_discount_price');
-            $table->bigInteger('orderclaim_offset_price');
-            $table->bigInteger('orderclaim_claim_price');
+            $table->timestamp('orderclaim_recept_date')->nullable();
+            $table->integer('orderclaim_recept_user_id')->nullable();
+            $table->string('orderclaim_recept_user_name')->nullable();
+            $table->bigInteger('oderclaim_discount_price')->nullable();
+            $table->bigInteger('orderclaim_offset_price')->nullable();
+            $table->bigInteger('orderclaim_claim_price')->nullable();
             $table->json('claim_files')->nullable();
 
             $table->softDeletes();

@@ -35,7 +35,7 @@
         <thead>
           <th class="card-header" style="width:6rem"><span>発注日</span></th>
           <th class="card-header" style="width:8rem"><span>工事</span></th>
-          <th class="card-header" style="width:auto"><span>品名</span></th>
+          <th class="card-header" style="width:auto"><span>タイトル</span></th>
           <th class="card-header" style="width:6rem"><span>金額</span></th>
           <th class="card-header" style="width:6rem"><span>納品日</span></th>
           </th>
@@ -45,7 +45,7 @@
             <tr cid="{{$con->order_id}}" onclick="showDetail({{$con->order_id}})">
               <td>{{$con->order_date->format('Y/m/d')}}</td>
               <td>{{$con->cont_name }}</td>
-              <td>{{$con->item_name}}</td>
+              <td>{{$con->order_title}}</td>
               <td class="text-right">{{$con->price/10000}}</td>
               <td class="text-right">{{$con->recept_date == null ? "-" : $con->recept_date->format('Y/m/d')}}</td>
             </tr>

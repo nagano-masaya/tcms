@@ -11,6 +11,6 @@ class payments extends Model
   protected $guarded = ['payment_id'];
   //DateTime型でデータを取得するため、$datesに登録
   protected $dates = [
-    'claim_date','payed_date'
+    'disposal_date','payed_date','pay_confirm_date'
   ];
 }

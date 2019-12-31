@@ -15,6 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -46,3 +47,5 @@ Route::get('pdftest.pdf', 'PdfController@pdftest')->middleware('auth');
 
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
+
+Route::post('listpersons', 'listController@listpersons');
