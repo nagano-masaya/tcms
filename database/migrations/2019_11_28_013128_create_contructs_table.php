@@ -24,7 +24,7 @@ class CreateContructsTable extends Migration
             $table->string('cust_person')->nullable();
             $table->bigInteger('price');
             $table->bigInteger('budget_remain');
-            $table->integer('state');
+            $table->string('state',10);
             $table->bigInteger('exec_budget');
             $table->bigInteger('price_taxed');
             $table->bigInteger('claim_remain');

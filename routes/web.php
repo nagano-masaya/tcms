@@ -48,4 +48,8 @@ Route::get('pdftest.pdf', 'PdfController@pdftest')->middleware('auth');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
 
+
 Route::post('listpersons', 'listController@listpersons');
+/**/
+Route::get('upload', 'fileController@check');
+Route::post('upload', 'fileController@upload');

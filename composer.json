@@ -12,6 +12,7 @@
         "barryvdh/laravel-debugbar": "^3.2",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
+        "flowjs/flow-php-server": "^1.0",
         "laravel/framework": "^6.2",
         "laravel/tinker": "^1.0",
         "laravel/ui": "^1.1",

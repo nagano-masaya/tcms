@@ -1,3 +1,5 @@
 *
 !public/
+!tnp/
+!chunks/
 !.gitignore

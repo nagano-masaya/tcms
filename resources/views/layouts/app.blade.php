@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta http-equiv="Cache-Control" content="no-cache">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Tsujita-Group') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}" ></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -18,41 +18,30 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/toastr.css') }}" rel="stylesheet">
     <link href="{{ asset('css/tcms.css').'?'.date('Ymd-Hi')  }}" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
     <!-- icons from https://iconify.design/ -->
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/ja.js"></script>
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
     <script src="https://code.iconify.design/1/1.0.3/iconify.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/css/uikit.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/js/uikit.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/css/components/datepicker.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/js/components/datepicker.min.js"></script>
-    <script src="https://cdnjs.com/libraries/1000hz-bootstrap-validator"></script>
-    <script src="{{ asset('js/BootstrapMenu.min.js') }}"></script>
     <script src="{{ asset('js/toastr.js') }}"></script>
+
+
+    <script src="{{ asset('js/moment-with-locales.js') }}"></script>
     <script src="{{ asset('js/tcms.js').'?'.date('Ymd-Hi') }}"></script>
     <script src="{{ asset('js/UltraDate.min.js') }}"></script>
     <script src="{{ asset('js/UltraDate.ja.min.js') }}"></script>
     <script src="{{ asset('js/md5.js') }}"></script>
+
+    <link href="{{ asset('css/pikaday/pikaday.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/pikaday/theme.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/pikaday/triangle.css') }}" rel="stylesheet">
+
+    <script src="{{ asset('js/pikaday.js') }}" defer></script>
+    <script src="{{ asset('js/pikaday.jquery.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/v8n/dist/v8n.min.js">
-    import v8n from "v8n"
-    moment.locale("ja");
     </script>
-    <script type="application/javascript">
-        {{--/* Initialize Datepickers date format */--}}
-      UIkit.on('beforeready.uk.dom', function() {
-        $.extend(UIkit.components.datepicker.prototype.defaults, {
-          format: 'YY\'MM/DD'
-        });
-      });
 
-      $('jpcurrency').on('focus',$(this).select());
-
-    </script>
 
 </head>
 <body>
@@ -136,9 +125,6 @@
                 </div>
             </div>
         </nav>
-<script type="application/javascript">
-var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-</script>
 
         <main class="py-4">
             @yield('content')

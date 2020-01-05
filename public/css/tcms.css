@@ -39,6 +39,13 @@
 }
 
 
+.font10p{  font-size: 10%;}
+.font20p{  font-size: 20%;}
+.font30p{  font-size: 30%;}
+.font40p{  font-size: 40%;}
+.font50p{  font-size: 50%;}
+.font60p{  font-size: 60%;}
+
 .dcol-1{
   width:27.8rem;
   max-width:27.8rem;
@@ -80,7 +87,90 @@
   font-size:0.8rem;
 }
 
+.font06{
+  font-size:0.6rem;
+}
+.font07{
+  font-size:0.7rem;
+}
+.font08{
+  font-size:0.8rem;
+}
+.font09{
+  font-size:0.9rem;
+}
+.font10{
+  font-size:1rem;
+}
+
 .cleardate {
   color:blue;
   width:"32px";
+}
+
+.cell-title {
+  padding: 0.375rem 0.75rem;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #495057;
+  text-align: center;
+  white-space: nowrap;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+
+.memoframe {
+  background-color: #ffffc0;
+}
+
+#memo .title{
+  background-color: #ffffa0;
+  color: #495057;
+  padding: 0.375rem 0.75rem;
+}
+#memo td{
+  padding : 3px;
+}
+.memoframe textarea {
+  resize : vertical;
+  background-color: transparent;
+  border: none;
+  outline:none;
+  width: 100%;
+}
+
+.vscroll-only {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.modal-backdrop.fade.show, .modal-backdrop.fade.in {
+opacity: 0.6;
+filter: alpha(opacity=60);
+background: #0;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+.row-small td{
+  padding: 2px;
+}
+
+.hidden-row{
+  display: :none;
+}
+
+.dropdown-menu {
+  background-color: #e8f0f2;
+  border-top-left-radius: : 0;
+  border-top-right-radius: : 0;
+  border-bottom-left-radius: : 0.5rem;
+  border-bottom-right-radius: : 0.5rem;
 }

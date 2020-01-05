@@ -42,7 +42,12 @@ class PagesController extends Controller
       // オリジナルデータとしてセッションに保持させる
       $request->session()->put('contdetaile_org_data',$con);
 
-      return view('pages.contdetaile',['con' => $con]);
+      // 工事一覧取得
+      $const = \App\construct::select()
+          ->where("cont_id", $request->cont)
+          ->get();
+
+      return view('pages.contdetaile',['con' => $con, 'consts'=>$const]);
     }
 
     function bint(string $s){
@@ -56,26 +61,66 @@ class PagesController extends Controller
         $con = $request->session()->get('contdetaile_org_data');
         $msg = "OK";
 
-        $con->name = $request->name;
-        $con->date_from = $request->date_from;
-        $con->date_to = $request->date_to;
-        $con->customer = $request->customer;
-        $con->cust_company = $request->cust_company;
-        $con->cust_person = $request->cust_person;
-        $con->price = intval(str_replace(',','',$request->price))*10000;
-        $con->budget_remain = intval(str_replace(',','',$request->budget_remain))*10000;
-        $con->state = $request->state;
-        $con->exec_budget =intval(str_replace(',','',$request->exec_budget))*10000;
-        $con->price_taxed = intval(str_replace(',','',$request->price_taxed))*10000;
-        $con->claim_remain = intval(str_replace(',','',$request->claim_remain))*10000;
-        $con->deposit_remain = intval(str_replace(',','',$request->deposit_remain))*10000;
-        $con->sales_person = $request->sales_person;
-        $con->const_admin = $request->const_admin;
-        $con->update_by = 0;
+        return  DB::transaction(function () use ($request,$con) {
+            $con->name = $request->name;
+            $con->date_from = $request->date_from;
+            $con->date_to = $request->date_to;
+            $con->customer = $request->customer;
+            $con->cust_company = $request->cust_company;
+            $con->cust_person = $request->cust_person;
+            $con->price = intval(str_replace(',','',$request->price))*10000;
+            $con->budget_remain = intval(str_replace(',','',$request->budget_remain))*10000;
+            $con->state = $request->state;
+            $con->exec_budget =intval(str_replace(',','',$request->exec_budget))*10000;
+            $con->price_taxed = intval(str_replace(',','',$request->price_taxed))*10000;
+            $con->claim_remain = intval(str_replace(',','',$request->claim_remain))*10000;
+            $con->deposit_remain = intval(str_replace(',','',$request->deposit_remain))*10000;
+            $con->sales_person = $request->sales_person;
+            $con->const_admin = $request->const_admin;
+            $con->update_by = 0;
+            $con->save();
 
-        $con->save();
-        return "OK";
+            $const_list = array();
 
+
+            foreach ($request->consts  as $const) {
+              $id = intval($const->const_id);
+              if($const->deleted>0 ){
+                  if($id>0){
+                    \App\construct::delete('const_id',$id);
+                  }
+              }else{
+                $ret = \App\construct::updateOrCreate(
+                    ['const_id',$id],
+                    [
+                      'cont_id'=>$this->DBInt($con->cont_id),
+                      'user_id'=>Auth::user()->id,
+                      'const_type_id'=>0,
+                      'const_type_name'=>$const->const_type,
+                      'title'=>$const->const_name,
+                      'date_from'=>$const->const_date_from,
+                      'date_to'=>$const->const_date_to,
+                      'date_start'=>$const->const_date_start,
+                      'date_end'=>$const->const_date_end,
+                      'person_id'=>$this->DBInt($const->const_person_id),
+                      'person_name'=>$const->const_person_name,
+                      'state' => $const->state,
+                      'progress' => $this->DBInt($const->const_progress),
+                      'exec_budget' => $this->DBInt($const->exec_budget)*10000,
+                      'resource_cost' => $this->DBInt($const->resource_cost)*10000,
+                      'person_cost' => $this->DBInt($const->person_cost)*10000
+                    ]
+                  );
+                  $const_list[$const->row_id] = $ret->const_id;
+              }
+            }
+
+            return response()->json([
+              "status"=>"OK",
+              "cont_id"=>$con->cont_id,       /* 追加されたレコードのIDを返却*/
+              "consts"=>$const_list
+            ]);
+          });
     }
 
     //==================================================
@@ -540,7 +585,12 @@ postdata = {
 
         };
 
-        return response()->json(["status"=>"OK","order"=>$order_result,"detail"=>$orderdetail_result,"claim"=>$claims_result,"payment"=>$payments_result ]);
+        return response()->json([
+              "status"=>"OK",
+              "order"=>$order_result,
+              "detail"=>$orderdetail_result,
+              "claim"=>$claims_result,
+              "payment"=>$payments_result ]);
       });
   }
 }

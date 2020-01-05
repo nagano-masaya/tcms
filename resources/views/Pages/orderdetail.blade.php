@@ -1,51 +1,12 @@
 @extends('layouts.app')
 
-@push('styles')
-<link href="{{ asset('css/jquery-ui.min.css') }}" rel="stylesheet">
-<link href="{{ asset('css/jquery-ui.structure.min.css') }}" rel="stylesheet">
-<link href="{{ asset('css/jquery-ui.themes.min.css') }}" rel="stylesheet">
-@endpush
 
-{{--
-@push('scripts')
-<script type="application/javascript" src="{{ asset('js/jquery-ui.min.js') }}"></script>
-<script type="application/javascript" src="{{ asset('js/jquery.fileupload.js') }}"></script>
+@push('exscripts')
+<script type="application/javascript" src="{{ asset('js/flow.js') }}"></script>
 @endpush
---}}
 
 @section('content')
 
-{{--
-
-<div class="container">
-  <div class="row card-header text-center table-bordered">
-    <div class="input-group col-1 table-info">1
-    </div>
-    <div class="input-group col-1">2
-    </div>
-    <div class="input-group col-1 table-info">3
-    </div>
-    <div class="input-group col-1">4
-    </div>
-    <div class="input-group col-1 table-info">5
-    </div>
-    <div class="input-group col-1">6
-    </div>
-    <div class="input-group col-1 table-info">7
-    </div>
-    <div class="input-group col-1">8
-    </div>
-    <div class="input-group col-1 table-info">9
-    </div>
-    <div class="input-group col-1">10
-    </div>
-    <div class="input-group col-1 table-info">11
-    </div>
-    <div class="input-group col-1">12
-    </div>
-  </div>
-</div>
---}}
 <div class="container" id="mainform">
   <div class="row">
     <div class="col-6 text-left align-text-bottom pb-0 pl-0">
@@ -192,7 +153,7 @@
         <div class="input-group col-md-1 small p-1">
           <div class="row">
             <div class="col-12">
-              <button type="button" class="col p-0 from-control btn btn-primary">納品書登録</button>
+              <button type="button" class="col p-0 from-control btn btn-primary flow-browse">納品書登録</button>
             </div>
           </div>
           <div class="row mt-1">
@@ -345,9 +306,8 @@
 
 
 var order_id={{$order->order_id}};
-
-
-  $(document).ready(function(){
+var flowInit=false;
+$(document).ready(function(){
 
     $('.cleardate').addClass('clickable');
     $('.cleardate').click(function(){
@@ -427,7 +387,129 @@ var order_id={{$order->order_id}};
       .val(itm.pay_dispose_uname);
    });
 @endif
+
+  initUploaderDlv(); {{--/*  納品書アップローダ初期化 */--}}
+
 });
+
+var upfile ;
+
+var dlvFlow;
+var dlvNewFiles = [];   {{--/*  追加された納品書ファイルの一覧 */ --}}
+var dlvRegisteredFiles = []; {{--/* ページ読み込み時点で、登録済みの納品書ファイルの一覧 */ --}}
+var dlvRemoveFiles = [];
+
+{{--/*  納品書ファイルアップローダ初期化 */ --}}
+function initUploaderDlv(){
+  if(flowInit){
+    return;
+  }
+  flowInit=true;  // initialize once
+
+  var flow = new Flow({
+          simultaneousUploads : 1,
+          target: 'upload',
+          permanentErrors:[404, 500, 501],
+          headers: { 'X-CSRF-TOKEN': '{{csrf_token()}}'},
+          testChunks:false
+    });
+    dlvFlow = flow;
+    // Flow.js isn't supported, fall back on a different method
+    if (flow.support) {
+      flow.assignBrowse($('.flow-browse')[0]);
+    }
+    flow.on('fileSuccess', function(file,message){
+      // アップロード完了したときの処理
+      toastr.options = {
+        "positionClass": "toast-top-left",
+        "timeOut": "1500",
+      };
+      toastr.info('ファイルを登録しました');
+    });
+
+    flow.on('fileAdded',function(file){
+        ext = file.name.match("/\.\w+/");
+        if( ".pdf|.jpeg|.jpg|.png" ){
+          toastr.options = {
+            "positionClass": "toast-top-full-width",
+            "closeButton" : true,
+          };
+          toastr.warning('画像(jpeg,png)と pdfのみ登録できす');
+          return false;
+        }
+        return true;
+    });
+
+    flow.on('filesSubmitted', function(file) {
+      // アップロード実行 （FlowFile object file)
+      //      file.name : file name
+      //    file.size: file size
+      upfile = file;
+      flow.upload();
+    });
+    flow.on('progress',function(){
+      //プログレスバーの実行
+      //flow.progress() で進捗が取得できるのでそれを利用してプログレスバーを設定
+      $('.bar').css({width:Math.floor(flow.progress()*100) + '%'});
+    });
+}
+
+var clmNewFiles = [];   {{--/*  追加された納品書ファイルの一覧 */ --}}
+var clmRegisteredFiles = []; {{--/* ページ読み込み時点で、登録済みの納品書ファイルの一覧 */ --}}
+var clmRemoveFiles = [];
+
+function initUploaderClm(){
+  if(flowInit){
+    return;
+  }
+  flowInit=true;  // initialize once
+
+  var flow = new Flow({
+          simultaneousUploads : 1,
+          target: 'upload',
+          permanentErrors:[404, 500, 501],
+          headers: { 'X-CSRF-TOKEN': '{{csrf_token()}}'},
+          testChunks:false
+    });
+    // Flow.js isn't supported, fall back on a different method
+    if (flow.support) {
+      flow.assignBrowse($('.flow-browse')[0]);
+    }
+    flow.on('fileSuccess', function(file,message){
+      // アップロード完了したときの処理
+      toastr.options = {
+        "positionClass": "toast-top-left",
+        "timeOut": "1500",
+      };
+      toastr.info('ファイルを登録しました');
+    });
+
+    flow.on('fileAdded',function(file,event){
+        ext = file.name.match("/\.\w+/");
+        if( ".pdf|.jpeg|.jpg|.png" ){
+          toastr.options = {
+            "positionClass": "toast-top-full-width",
+            "closeButton" : true,
+          };
+          toastr.warning('画像(jpeg,png)と pdfのみ登録できす');
+          return false;
+        }
+        return true;
+    });
+
+    flow.on('filesSubmitted', function(file) {
+      // アップロード実行 （FlowFile object file)
+      //      file.name : file name
+      //    file.size: file size
+      upfile = file;
+      flow.upload();
+    });
+    flow.on('progress',function(){
+      //プログレスバーの実行
+      //flow.progress() で進捗が取得できるのでそれを利用してプログレスバーを設定
+      $('.bar').css({width:Math.floor(flow.progress()*100) + '%'});
+    });
+}
 
 function toDateString(p){
   ret = moment(p);
@@ -452,11 +534,20 @@ function newrow(){
   return elm;
 }
 
+{{--
+      //==================================
+       //取引先選択
+       //==================================
+ --}}
 function deleterow(elm){
   $(elm).parents('[data-id]').addClass("hidden");
 }
-{{--  --}}
 
+{{--
+      //==================================
+       //社員選択
+       //==================================
+ --}}
 var personlist=[];
 var callelm;
 var recvdata;
@@ -484,9 +575,11 @@ function selectPerson(elm){
   });
 }
 
-{{-- //==================================
+{{--
+      //==================================
        //取引先選択
-       //  --}}
+       //==================================
+ --}}
 var complist =[];
 function selectCompany(){
   if(complist.length == 0){
@@ -671,7 +764,7 @@ $('#claimlist tbody tr').each(function(){
 
     rowdata:details,
     claims:claims
-  }
+  };
 
   $.ajax({
       url: 'orderdetail',
@@ -699,13 +792,9 @@ $('#claimlist tbody tr').each(function(){
         };
         toastr.info('保存しました。');
       });
-
-
-
-
 }
 
-  </script>
+</script>
 
 <table class="hidden" id="rowtemplate">
   <tr data-id="0">

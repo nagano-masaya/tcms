@@ -1,6 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+
+<script type="application/javascript">
+
+$(document).ready(function(){
+  var elm = document.createElement('script');
+  elm.src = "js/jquery.fileupload.js";
+  document.body.appendChild(elm);
+})
+
+</script>
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
