@@ -1,5 +1,14 @@
 @extends('layouts.app')
 
+@push('style')
+<style media="screen">
+
+table th,td{
+  padding: 0;
+}
+</style>
+@endpush
+
 @section('content')
 <script type="application/javascript">
   var claim_date = new moment('{{$con->claim_date}}');
@@ -176,67 +185,67 @@ function newItem(){
 <input type="hidden" name="claim_sent_date" value="{{$con->claim_sent_date->format('Y-m-d')}}"/>
 <div class="container">
   <div class="row">
-    <div class="input-group col-md-2">
+    <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         請求日
       </div>
       <input type="button" class="form-control text-left" name="claim_date" value="{{$con->claim_date->format('Y-m-d')}}" maxlength="128">
     </div>
-    <div class="input-group col-md-6">
+    <div class="px-0 col-6">
       <div class="input-group-prepend input-group-text input-group-sm">
         請求先
       </div>
       <input type="button" class="form-control text-left" name="cont_name" value="{{$con->nickname}}" maxlength="128">
     </div>
-    <div class="input-group col-md-2">
+    <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         請求額
       </div>
-      <input type="text" class="form-control jpcurrency" name="price" value="{{$con->price/10000}}" maxlength="15">
+      <input type="text" class="form-control jpcurrency" name="price" value="{{$con->price/10000}}" maxlength="15" autocomplete="off">
     </div>
-    <div class="input-group col-md-2">
+    <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         受領額
       </div>
-      <input type="text" readonly class="form-control jpcurrency" name="pay_price" value="{{$con->pay_price/10000}}" maxlength="15">
+      <input type="text" readonly class="form-control jpcurrency" name="pay_price" value="{{$con->pay_price/10000}}" maxlength="15"  autocomplete="off">
     </div>
   </div>
   <div class="row">
-    <div class="input-group col-md-2">
+    <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         合計金額
       </div>
-      <input type="text" class="form-control text-right jpcurrency" name="price_total" value="{{$con->price_total/10000}}" maxlength="15">
+      <input type="text" class="form-control text-right jpcurrency" name="price_total" value="{{$con->price_total/10000}}" maxlength="15"  autocomplete="off">
     </div>
-    <div class="input-group col-md-2">
+    <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         消費税率(%)
       </div>
-      <input type="text" class="form-control text-left" name="tax_rate" value="{{$con->tax_rate}}" maxlength="3">
+      <input type="text" class="form-control text-left" name="tax_rate" value="{{$con->tax_rate}}" maxlength="3"  autocomplete="off">
     </div>
-    <div class="input-group col-md-2">
+    <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         消費税
       </div>
-      <input type="text" class="form-control text-right jpcurrency" name="tax" value="{{$con->tax/10000}}" maxlength="15">
+      <input type="text" class="form-control text-right jpcurrency" name="tax" value="{{$con->tax/10000}}" maxlength="15" autocomplete="off">
     </div>
-    <div class="input-group col-md-2">
+    <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         税込金額
       </div>
-      <input type="text" class="form-control text-right jpcurrency" name="taxed_price" value="{{$con->taxed_price/10000}}" maxlength="15">
+      <input type="text" class="form-control text-right jpcurrency" name="taxed_price" value="{{$con->taxed_price/10000}}" maxlength="15" autocomplete="off">
     </div>
-    <div class="input-group col-md-2">
+    <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         相殺
       </div>
-      <input type="text" class="form-control text-right jpcurrency" name="offset_price" value="{{$con->offset_price/10000}}" maxlength="15">
+      <input type="text" class="form-control text-right jpcurrency" name="offset_price" value="{{$con->offset_price/10000}}" maxlength="15" autocomplete="off">
     </div>
-    <div class="input-group col-md-2">
+    <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         値引
       </div>
-      <input type="text" class="form-control text-right jpcurrency" name="discount_price" value="{{$con->discount_price/10000}}" maxlength="15">
+      <input type="text" class="form-control text-right jpcurrency" name="discount_price" value="{{$con->discount_price/10000}}" maxlength="15" autocomplete="off">
     </div>
   </div>
 </div>
@@ -252,7 +261,7 @@ function newItem(){
     </div>
   </div>
   <div class="row">
-    <table class="">
+    <table class="list-table table py-0 my-0">
       <thead  class="card-header">
         <tr>
           <th>
@@ -273,7 +282,7 @@ function newItem(){
         </tr>
       </thead>
     </table>
-    <table class="table table-striped" id="detaillist">
+    <table class="list-table table table-striped" id="detaillist">
       <tbody>
       </tbody>
     </table>

@@ -30,4 +30,13 @@ class listController extends Controller
         }
         public function persons(Request $req){
         }
+
+        public function listconstructs(Request $req){
+          $list = \App\construct::select(
+            ['const_id','const_name','constructs.cont_id','contructs.name'])
+            ->join('contructs','constructs.cont_id','contructs.cont_id')
+            ->get();
+          return response()->json(["status"=>"OK","data"=>$list]);
+        }
+
 }

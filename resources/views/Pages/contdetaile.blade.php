@@ -2,9 +2,9 @@
 
 
 @section('content')
-
-
-
+<script type="application/javascript">
+/* {{ $DATEFORMAT=config('app.dateformat')}} */
+</script>
 <input type="hidden" class="form-control" name="cont_id" value="{{$con->cont_id}}">
 <div class="container shadow">
 <div class="row mt-3 p-2">
@@ -41,8 +41,8 @@
                 工期
               </div>
               <div class="input-group">
-                  <input type="button" class="form-control datepicker" name="condate_from">
-                  <input type="button" class="form-control datepicker" name="condate_to" value="">
+                  <input type="button" class="form-control datepicker" name="condate_from" value="{{$con->date_from->format($DATEFORMAT)}}">
+                  <input type="button" class="form-control datepicker" name="condate_to" value="{{$con->date_to->format($DATEFORMAT)}}">
               </div>
           </div>
           <div class="col-2  p-0">
@@ -87,7 +87,7 @@
             <div class="input-group-prepend input-group-text">
               予算残
             </div>
-            <input type="text" class="form-control jpcurrency" name="budget_remain" value="{{ number_format($con->budget_remain/10000)}}" style="text-align: right; ">
+            <input type="text" class="form-control jpcurrency" name="budget_remain" value="{{ number_format($con->budget_remain/10000)}}" style="text-align: right;">
           </div>
         </div>
         <div class="row">
@@ -139,7 +139,7 @@
 </div>
 </div>
 
-{{-- 工事一覧 --}}
+{{-- /*工事一覧*/ --}}
 <div class="container shadow mt-2 pt-3">
   <div class="row">
     <div class="col-10 ">
@@ -191,10 +191,15 @@
   </div>
 </div>
 
+
 <script type="application/javascript" id="initialdata">
+/*
+{{var_dump($consts)}}
+*/
+var fmt = "{{$DATEFORMAT}}";
 var consts = {
 @foreach($consts as $item)
-  "{{ $key = md5( date('YMdhis').$item->title. number_format($item->const_id) )  }}":{
+  "{{ $key = md5( date('YMdhis').$item->title.number_format($item->const_id) )  }}":{
         row_id: "{{ $key  }}",
         const_id:"{{$item->const_id}}",
         const_name:"{{$item->const_name}}",
@@ -202,12 +207,12 @@ var consts = {
         const_person_id:"{{$item->person_id}}",
         const_person_name:"{{$item->person_name}}",
         const_progress:"{{ $item->progress}}",
-        const_date_from: moment("{{ $item->date_from->format('Y-m-d'  )}}").format(DATEFORMAT),
-        const_date_to:moment("{{ $item->date_to->format('Y-m-d')}}").format(DATEFORMAT),
-        const_date_start:moment("{{ $item->date_start->format('Y-m-d')}}").format(DATEFORMAT),
-        const_date_end:moment("{{ $item->date_end->format('Y-m-d')}}").format(DATEFORMAT),
+        const_date_from: "{{ $item->date_from == null  ? '' : $item->date_from->format($DATEFORMAT) }}",
+        const_date_to:   "{{ $item->date_to == null    ? '' : $item->date_to->format($DATEFORMAT) }}",
+        const_date_start:"{{ $item->date_start == null ? '' : $item->date_start->format($DATEFORMAT) }}",
+        const_date_end:  "{{ $item->date_end == null   ? '' : $item->date_end->format($DATEFORMAT) }}",
         exec_budget:"{{ number_format($item->exec_budget/10000) }}",
-        resource_const:"{{ number_format($item->resource_cost/10000) }}",
+        resource_cost:"{{ number_format($item->resource_cost/10000) }}",
         person_cost:"{{ number_format($item->person_cost/10000) }}",
         deleted:false
   },
@@ -251,7 +256,7 @@ $(document).ready(function(){
           .replace('#const_term#',itm.const_date_from +" <br>  - "+itm.const_date_to  )
           .replace('#state#',"" )
           .replace('#progress#',itm.const_progress )
-          .replace('#resource#',itm.resource_const )
+          .replace('#resource#',itm.resource_cost )
           .replace('#person#',itm.person_cost )
         )
     };
@@ -263,12 +268,10 @@ $(document).ready(function(){
     })
 
     CONTSTATE.forEach(function(itm){
-      console.log(itm.text);
       $('<li>' + itm.text+ '</li>')
             .attr({"role":"presentation","data-id":itm.id})
             .addClass("dropdown-item")
             .on('click',function(){
-              console.log($(this).attr('data-id') + ":" +$(this).text());
               $('input[name="cont_state"]')
                   .val($(this).text())
                   .attr('data-id',$(this).attr('data-id') );
@@ -279,7 +282,7 @@ $(document).ready(function(){
 });
 
 
-
+var ret_data;
 
 function validate(){
   var  numTest = v8n()
@@ -328,18 +331,30 @@ function validate(){
         comment:$("input[name='comment']").val(),
         sales_person:$("input[name='sales_person']").val(),
         update_by:$("input[name='cont_id']").val(),
-        consts : consts
+        consts : JSON.stringify(consts)
       },
       dataType: 'JSON',
       success: function (data) {
-          console.log(data);
-          //toastr.info('登録しました。');
-          alert('登録しました');
+        $("input[name='cont_id']").val(data.cont_id);
+        ret_data = data;
+        for(key in data.consts){
+          console.log(key +":" + data.consts[key] );
+          console.log('[data_rowid="'+key+'"]');
+
+          consts[key]=data.consts[key];
+          $('[data-rowid="'+key+'"]').attr("data-id" , data.consts[key]);
+        }
+//        data.consts.forEach(function(itm){
+//          console.log(itm);
+//
+//        });
+        toastr.options = {
+          "positionClass": "toast-bottom-right",
+          "timeOut": "1500",
+        };
+        toastr.info('保存しました。');
       }
   }).done(function (data,status,xhr) {
-      console.log(data);
-      //toastr.info('登録しました。');
-      window.alert('登録しました');
   });
 
 }
@@ -414,6 +429,7 @@ function onConstEditEnd(){
         return;
       }
 
+
       tds = $('[data-rowid="'+ constdata.row_id +'"]').children();
       $(tds.get(0)).html(constdata.const_type );
       $(tds.get(1)).html(constdata.const_name);
@@ -423,6 +439,7 @@ function onConstEditEnd(){
       $(tds.get(5)).html(constdata.resource_cost);
       $(tds.get(6)).html(constdata.person_cost);
 }
+
 </script>
 @component('components.constdetaile')
 @slot('title')

@@ -11,7 +11,6 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" ></script>
-
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -40,8 +39,8 @@
     <script src="{{ asset('js/pikaday.js') }}" defer></script>
     <script src="{{ asset('js/pikaday.jquery.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/v8n/dist/v8n.min.js">
-    </script>
 
+    </script>
 
 </head>
 <body>
@@ -70,16 +69,15 @@
                           <a href="{{ url('/home') }}">Home</a>
                         </div>
                       </li>
-                      <li class="nav-item"><div class="card-header">日報</div></li>
+                      <li class="nav-item"><div class="card-header"><a href="{{ url('/diary') }}">日報</a></div></li>
                       <li class="nav-item">
                         <div class="card-header">
                         <a href="{{ url('/contruct') }}">工事</a>
                         </div>
                       </li>
-                      <li class="nav-item"><div class="card-header">日報</div></li>
                       <li class="nav-item">
                         <div class="card-header dropdown">
-                          <a clas="btn dropdown-toggle" id="navi_dropdownMenuButton"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">請求/支払</a>
+                          <a clas="btn dropdown-toggle clickable" id="navi_dropdownMenuButton"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">請求/支払</a>
                           <div class="dropdown-menu" aria-labelledby="navi_dropdownMenuButton" style="z-index:9999">
                                 <a class="dropdown-item" href="{{ url('/claimlist') }}">請求：請求処理</a>
                                 <a class="dropdown-item" href="{{ url('/deposits') }}">請求：入金処理</a>

@@ -13,6 +13,7 @@ class contruct extends Model
     protected $table = 'contructs';
     protected $primaryKey = 'cont_id';
     protected $guarded = ['cont_id'];
+    protected $dates = ['date_from','date_to'];
     protected function rules(){
 
       $num3 = [

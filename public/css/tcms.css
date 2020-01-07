@@ -174,3 +174,18 @@ background: #0;
   border-bottom-left-radius: : 0.5rem;
   border-bottom-right-radius: : 0.5rem;
 }
+
+.list-table th,td{
+  padding:0 !important;
+}
+
+
+tr.hidden{
+  display: none;
+}
+
+
+#itemlist div {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}

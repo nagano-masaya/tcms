@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PagesController extends Controller
+class PagesController extends CommonController
 {
     public function __construct()
     {
@@ -63,27 +63,27 @@ class PagesController extends Controller
 
         return  DB::transaction(function () use ($request,$con) {
             $con->name = $request->name;
-            $con->date_from = $request->date_from;
-            $con->date_to = $request->date_to;
+            $con->price = $this->db_int($request->price)*10000;
+            $con->date_from = $this->db_date($request->date_from);
+            $con->date_to = $this->db_date($request->date_to);
             $con->customer = $request->customer;
             $con->cust_company = $request->cust_company;
             $con->cust_person = $request->cust_person;
-            $con->price = intval(str_replace(',','',$request->price))*10000;
-            $con->budget_remain = intval(str_replace(',','',$request->budget_remain))*10000;
+            $con->budget_remain = $this->db_int($request->budget_remain)*10000;
             $con->state = $request->state;
-            $con->exec_budget =intval(str_replace(',','',$request->exec_budget))*10000;
-            $con->price_taxed = intval(str_replace(',','',$request->price_taxed))*10000;
-            $con->claim_remain = intval(str_replace(',','',$request->claim_remain))*10000;
-            $con->deposit_remain = intval(str_replace(',','',$request->deposit_remain))*10000;
+            $con->exec_budget = $this->db_int($request->exec_budget)*10000;
+            $con->price_taxed = $this->db_int($request->price_taxed)*10000;
+            $con->claim_remain = $this->db_int($request->claim_remain)*10000;
+            $con->deposit_remain = $this->db_int($request->deposit_remain)*10000;
             $con->sales_person = $request->sales_person;
             $con->const_admin = $request->const_admin;
             $con->update_by = 0;
             $con->save();
 
             $const_list = array();
+            $consts = json_decode($request->consts);
 
-
-            foreach ($request->consts  as $const) {
+            foreach ($consts as $const) {
               $id = intval($const->const_id);
               if($const->deleted>0 ){
                   if($id>0){
@@ -91,24 +91,24 @@ class PagesController extends Controller
                   }
               }else{
                 $ret = \App\construct::updateOrCreate(
-                    ['const_id',$id],
+                    ['const_id'=>$id],
                     [
-                      'cont_id'=>$this->DBInt($con->cont_id),
+                      'cont_id'=>$this->db_int($con->cont_id),
                       'user_id'=>Auth::user()->id,
                       'const_type_id'=>0,
                       'const_type_name'=>$const->const_type,
-                      'title'=>$const->const_name,
-                      'date_from'=>$const->const_date_from,
-                      'date_to'=>$const->const_date_to,
-                      'date_start'=>$const->const_date_start,
-                      'date_end'=>$const->const_date_end,
-                      'person_id'=>$this->DBInt($const->const_person_id),
+                      'const_name'=>$const->const_name,
+                      'date_from'=>$this->db_date($const->const_date_from),
+                      'date_to'=>$this->db_date($const->const_date_to),
+                      'date_start'=>$this->db_date($const->const_date_start),
+                      'date_end'=>$this->db_date($const->const_date_end),
+                      'person_id'=>$this->db_int($const->const_person_id),
                       'person_name'=>$const->const_person_name,
-                      'state' => $const->state,
-                      'progress' => $this->DBInt($const->const_progress),
-                      'exec_budget' => $this->DBInt($const->exec_budget)*10000,
-                      'resource_cost' => $this->DBInt($const->resource_cost)*10000,
-                      'person_cost' => $this->DBInt($const->person_cost)*10000
+                      //'state' => $const->state,
+                      'progress' => $this->db_int($const->const_progress),
+                      'exec_budget' => $this->db_int($const->exec_budget)*10000,
+                      'resource_cost' => $this->db_int($const->resource_cost)*10000,
+                      'person_cost' => $this->db_int($const->person_cost)*10000
                     ]
                   );
                   $const_list[$const->row_id] = $ret->const_id;

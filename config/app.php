@@ -2,6 +2,7 @@
 
 return [
 
+    'dateformat' => env('DATEFORMAT', 'y.m/d'),
     /*
     |--------------------------------------------------------------------------
     | Application Name
