@@ -39,4 +39,13 @@ class listController extends Controller
           return response()->json(["status"=>"OK","data"=>$list]);
         }
 
+        public function listunits(Request $req){
+          $list = \App\units::select(
+            ['unit_id','unit_title','unittypes.unittype_title'])
+            ->join('unittypes','units.unittype_id','unittypes.unittype_id')
+            ->get();
+          return response()->json(["status"=>"OK","data"=>$list]);
+        }
+
+
 }
