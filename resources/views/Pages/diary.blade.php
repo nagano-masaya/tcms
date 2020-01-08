@@ -21,10 +21,8 @@
         </div>
       </div>
     </div>
-    <div class="card-header py-0 dropdown col-9">
-      <input type="text" class="form-control bg-transparent border-0 dropdown-toggle" data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false" value="" readonly>
+    <div class="card-header py-0 col-9">
+      <input type="text" class="form-control bg-transparent" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="" readonly>
       <div class="dropdown-menu" aria-labelledby="dropdown1" id="constmenu">
       </div>
     </div>
@@ -33,47 +31,95 @@
   var parents=[];
 
   var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-  function initConstMenu(){
-    $('#constmenu').children().remove();
-
+  function initUnitMenu(){
+    $('#unitmenu').children().remove();
     $.ajax({
-        url: 'listconstructs',
+        url: 'listunits',
         type: 'POST',
         data: {_token: CSRF_TOKEN
         },
         dataType: 'JSON'
-    }).always(function(data) {
-        var cont_id="";
-        var root = $('#constmenu');
+    }).done(function(data) {
+        var unittype="";
+        var utype ="";
+        var root = $('#unitmenu');
         var parent = null;
+        var submenu = null;
         data.data.forEach(function(itm){
-          console.log(itm.name + " : " + itm.const_name);
-          if(cont_id != itm.cont_id){
+          console.log(itm.unit_title + " : " + itm.unittype_title);
+          if(unittype != itm.unittype_title){
             if( parent !== null ){
               parents.push(parent);
               root.append(parent);
             }
-            parent = $('<div>'+ itm.name +'</div>')
-              .attr("data-toggle","collapse")
-              .attr("role","button");
+            submenu = $('<ul></ul>').addClass('dropdown-menu');
+            parent = $('<li class="dropdown-submenu"></li>')
+            .append($('<a class="dropdown-item dropdown-toggle" href="#">'+ itm.unittype_title +'</a>'))
+            .append(submenu)
             ;
-            cont_id = itm.cont_id;
+            unittype = itm.unittype_title;
           }
-          parent.append(
-            $('<div>'+ itm.const_name +'<div>')
-              .attr('data-id', itm.const_id)
-              .attr('data-cont', itm.name)
-              .attr('data-parent',"#constmenu")
-              .attr('role',"button")
-              .addClass("collapse")
-          )
+          submenu.append(
+            $('<li></li>')
+              .append(
+                $('<a>'+itm.unit_title+'</a>')
+                  .addClass('dropdown-item')
+                  .attr('href',"#")
+                  .attr('data-id',itm.unit_id)
+                  .on('click',onClickUnitMenu)
+              )
+          );
         });
         if( parent !== null ){
           parents.push(parent);
           root.append(parent)
         }
-        root.children().collapse();
+
+        $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
+          if (!$(this).next().hasClass('show')) {
+            $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
+          }
+          var $subMenu = $(this).next('.dropdown-menu');
+          $subMenu.toggleClass('show');
+
+
+          $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
+            $('.dropdown-submenu .show').removeClass('show');
+          });
+
+
+          return false;
+        });
+
+        $('#unitmenu')
+          .dropdown('hide')
     });
+
+  }
+
+  function onClickUnitMenu(){
+    console.log("click:" + $(this).text());
+    $('input[name="unit"]')
+    .val( $(this).text() )
+    .attr( "data-id",$(this).attr('data-id') );
+  }
+
+  function initSubjectMenu(){
+    var parent = $('ul[name="subjectmenu"]');
+    SUBJECTS.forEach(function(itm){
+      parent.append(
+        $('<li>'+ itm.text +'</li>')
+          .attr('data-id',itm.id)
+          .on('click',function(){
+            $('[name=subject]').val($(this).text())
+              .attr($(this).attr('data-id'))
+          })
+      )
+    });
+    parent.dropdown();
+  }
+
+  function initSupplierMenu(){
 
   }
 </script>
@@ -101,8 +147,10 @@
           <tr>
             <td>
               <div class="row">
-                <div class="col-2 border ">
-                  <input class="form-control" type="button" name="subject" value="">
+                <div class="col-2 border dropdown">
+                  <input class="form-control dropdown-toggle" type="button" name="subject" value="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <ul class="dropdown-menu" name="subjectmenu">
+                  </ul>
                 </div>
                 <div class="col-7 border ">
                   <input class="form-control" type="text" name="item_name" value="">
@@ -110,16 +158,18 @@
                 <div class="col-2 border  text-right" name="">
                   <input class="form-control" type="text" name="qty" value="">
                 </div>
-                <div class="col-1 border text-left">
-                  <input class="form-control" type="button" name="unit" value="">
+                <div class="col-1 border text-left dropdown dropleft">
+                  <input class="form-control dropdown-toggle" type="button" name="unit" value="" data-toggle="dropdown">
+                  <ul class="dropdown-menu" id="unitmenu">
+                  </ul>
                 </div>
               </div>
               <div class="row">
-                <div class="col-4 border">
-                  <input class="form-control jpcurrency" type="button" name="order_to" data-id="" value="">
+                <div class="col-4 border dropdown">
+                  <input class="p-1 form-control dropdown-toggle dropdown-toggle-split" type="text" name="order_to" data-id="" value="" placeholder="発注先↓キーで一覧表示">
                 </div>
                 <div class="col-2 border text-right">
-                  <input class="form-control jpcurrency" type="text" name="unit_price" value="">
+                  <input class="form-control jpcurrency" type="text" name="unit_price" value="" placeholder="単価">
                 </div>
                 <div class="col-2 border text-right">
                   <input class="form-control jpcurrency" type="text" name="sub_total" value="">
@@ -144,9 +194,16 @@ var rowtepl;
 
 $(window).on('load',function(){
   rowtempl = $('#itemlist tbody').html();
-  initConstMenu();
+  initUnitMenu();
+  initSubjectMenu();
+  initSupplierMenu();
+
+  $('.dropdown-item').addClass('clickable');
 });
 
 </script>
+
+
+
 
 @endsection

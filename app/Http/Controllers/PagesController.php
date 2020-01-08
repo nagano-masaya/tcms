@@ -444,7 +444,11 @@ postdata = {
     }
 
     public function diary(Request $request){
-      return view('pages.diary');
+      $supplier = \App\company::select()
+        ->where('is_subcon',1)
+        ->get();
+
+      return view('pages.diary',['supplier'=>$supplier]);
     }
 
 
