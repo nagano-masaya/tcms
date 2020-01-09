@@ -12,15 +12,16 @@ class OrdersTableSeeder extends Seeder
      */
     public function run()
     {
-
+        
 
         \DB::table('orders')->delete();
-
+        
         \DB::table('orders')->insert(array (
-            0 =>
+            0 => 
             array (
                 'order_id' => 1,
-                'order_date' => '2019-12-18 00:00:00',
+                'order_title' => '',
+                'order_date' => '2019-12-18',
                 'order_to_id' => 1,
                 'order_to_name' => '時枝商店',
                 'total_price' => 200000000,
@@ -44,7 +45,7 @@ class OrdersTableSeeder extends Seeder
                 'updated_at' => '2019-12-25 14:37:30',
             ),
         ));
-
-
+        
+        
     }
 }
