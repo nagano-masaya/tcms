@@ -443,12 +443,25 @@ postdata = {
       return view('/home');
     }
 
+
+    //======================================================
+    //  日報入力
+    //======================================================
     public function diary(Request $request){
       $supplier = \App\company::select()
         ->where('is_subcon',1)
         ->get();
+      $units = \App\units::select(
+          ['unit_id','unit_title','unittypes.unittype_title'])
+          ->join('unittypes','units.unit_type','unittypes.unittype_id')
+          ->orderBy('unittypes.unittype_id')
+          ->get();
+      $consts = \App\construct::select(['const_id','constructs.cont_id','const_type_name','const_name','contructs.name as cont_name'])
+          ->join('contructs','constructs.cont_id','contructs.cont_id')
+          ->whereNull('date_end')
+          ->get();
 
-      return view('pages.diary',['supplier'=>$supplier]);
+      return view('pages.diary',['supplier'=>$supplier,'units'=>$units,'consts'=>$consts ]);
     }
 
 

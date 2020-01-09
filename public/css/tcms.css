@@ -179,6 +179,14 @@ background: #0;
   padding:0 !important;
 }
 
+.list-table .row{
+  width: 100% !important;
+  margin: 0 !important;
+}
+.list-table div{
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
 
 tr.hidden{
   display: none;
