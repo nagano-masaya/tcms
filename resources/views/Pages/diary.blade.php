@@ -274,11 +274,11 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     });
     menu.dropdown();
     {{--/* 最初のアイテムを選択状態にする*/--}}
-    elm = menu.children().first();
+    elm = menu.find('a').first();
     $('#dropdown_const')
       .attr('data-id',$(elm).attr('data-id'))
       .html($(elm).text());
-    console.log("initConstMenu " + $(elm).attr('data-id') + "" +$(elm).text() + " - " + elm.html())
+    console.log("initConstMenu " + $(elm).attr('data-id') + ":" +$(elm).text() + " - " + elm.html())
     initDialy();
   }
 
@@ -293,7 +293,7 @@ function initDialy(){
 
 
   var dt = moment("20" + strval.replace(/[^0-9]*/g,""));
-  console.log(const_id + ":" + dt);
+  console.log(const_id + ":" + dt.format());
 
 }
 
