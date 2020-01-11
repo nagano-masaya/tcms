@@ -31,11 +31,11 @@
 /*****/ ];
 
 /*****/const SUBJECTS = [
-/*****/ {id:1,text:"材料費"},
-/*****/ {id:1,text:"労務費"},
-/*****/ {id:1,text:"外注費"},
-/*****/ {id:1,text:"機械（自社"},
-/*****/ {id:1,text:"機械（リース"},
+/*****/ {id:100,text:"材料費"},
+/*****/ {id:200,text:"労務費"},
+/*****/ {id:300,text:"外注費"},
+/*****/ {id:400,text:"機械（自社"},
+/*****/ {id:401,text:"機械（リース"},
 /*****/];
 
 /*****/const CONTSTATE =[
@@ -61,7 +61,8 @@ function attachNum3(selector) {
     var elm = $(selector)
     elm.on('input', function() {
         $(this).val(tcms_num3($(this).val()));
-    });
+    })
+    .attr('ime-mode','disabled');
     return elm;
 }
 

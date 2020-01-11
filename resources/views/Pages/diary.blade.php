@@ -87,9 +87,9 @@
   </div>
   <div class="row">
     <table class="list-table table py-0 my-0">
-      <thead  class="">
+      <thead>
         <tr>
-          <th>
+          <th class="small text-gray">
             <div class="row text-center">
               <div class="col-3 p-0 border">発注先</div>
               <div class="col-8 p-0 border">名称</div>
@@ -115,18 +115,34 @@
         <tr data-id="#daily_id#" data-uid="#user_id#">
           <td>
               <div class="row">
-                <div class="col-3 p-0"><input type="text" class="form-control p-1" name="supplier" data-id="#supplier_id#" value="#supplier_text#" placeholder="発注先"></div>
+                <div class="col-2 p-0 dropdown">
+                  <input type="button" class="form-control dropdown-toggle p-1" name="subject" data-toggle="dropdown" data-id="#subject_id#" value="#subject#" placeholder="科目">
+                  <ul class="dropdown-menu">
+                    #subject_menu_item#
+                  </ul>
+                </div>
+                <div class="col-3 p-0 input-group">
+                  <div class="input-group-prepend align-text-bottom">
+                    <span class="fas fa-home px-1 pt-2 align-text-bottom text-gray"></span>
+                  </div>
+                  <input type="text" class="form-control p-1" name="supplier" data-id="#supplier_id#" value="#supplier_text#" placeholder="発注先">
+                </div>
                 <div class="col-7 p-0"><input type="text" class="form-control p-1" name="item_name" value="#item_name#" placeholder="名称"></div>
-                <div class="col-2 p-0"><input type="text" class="form-control p-1" name="subject" data-id="#subject_id#" value="#subject#" placeholder="科目"></div>
               </div>
-              <div class="row">
-                <div class="col-2 p-0"><input type="text" class="form-control p-1" name="qty" value="#qty#" placeholder="数量"></div>
+              <div class="row rowbreak">
+                <div class="col-2 p-0 input-group">
+                  <input type="text" class="form-control p-1 jpcurrency" name="qty" value="#qty#" placeholder="数量">
+                  <div class="input-group-apped" style="line-height:2.1rem">
+<!--                    <span class="px-1 small" style="line-height:0.6rem;vertical-align:bottom">ダース</span> -->
+                    <input type="button" class="small border-0" name="unit" data-id="" value="台">
+                  </div>
+                </div>
                 <div class="col-10 p-0">
                   <div class="row">
-                    <div class="col-3 p-0"><input type="text" class="form-control p-1" name="unit_price" value="#unit_price#" placeholder="単価"></div>
-                    <div class="col-3 p-0"><input type="text" class="form-control p-1" name="sub_total" value="#sub_total#" placeholder="小計"></div>
-                    <div class="col-3 p-0"><input type="text" class="form-control p-1" name="tax" value="#tax#" placeholder="消費税"></div>
-                    <div class="col-3 p-0"><input type="text" class="form-control p-1" name="total_price" value="#total_price#" placeholder="計"></div>
+                    <div class="col-3 p-0"><input type="text" class="form-control jpcurrency p-1" name="unit_price" value="#unit_price#" placeholder="単価" autocomplete="off"></div>
+                    <div class="col-3 p-0"><input type="text" class="form-control jpcurrency p-1" name="sub_total" value="#sub_total#" placeholder="小計"></div>
+                    <div class="col-3 p-0"><input type="text" class="form-control jpcurrency p-1" name="tax" value="#tax#" placeholder="消費税"></div>
+                    <div class="col-3 p-0"><input type="text" class="form-control jpcurrency p-1" name="total_price" value="#total_price#" placeholder="計"></div>
                   </div>
                 </div>
               </div>
@@ -147,6 +163,15 @@
   </div>
 </div>
 
+<div class="dropdown" style="position:relative;" id="complist">
+  <ul class="dropdown-menu" style="position:absolute;" id="compmenu">
+  </ul>
+</div>
+
+
+<div class="popper" id="testbtn">
+
+</div>
 
 <script type="application/javascript">
 
@@ -177,6 +202,7 @@ var consts = [
 ];
 
 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
 
   function initUnitMenu(root){
     $(root).children().remove();
@@ -219,6 +245,13 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     $('input[name="unit"]')
     .val( $(this).text() )
     .attr( "data-id",$(this).attr('data-id') );
+  }
+
+  function onClickSubject(elm){
+    console.log("click " +$(elm).text() + " id" + $(elm).attr('data-id'));
+    $(elm).parent().parent().find('input')
+        .attr('data-id',$(elm).attr('data-id'))
+        .val($(elm).text());
   }
 
   function initSubjectMenu(){
@@ -281,20 +314,78 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     console.log("initConstMenu " + $(elm).attr('data-id') + ":" +$(elm).text() + " - " + elm.html())
     initDialy();
   }
-
+var recvdata;
 function initDialy(){
   var strval = $('#dropdown_const').attr('data-id');
   if(strval.match(/^[0-9]+$/g) === null){
     return ;
   }
   const_id = parseInt(strval);
+  var strdate = $('[name="daily_date"]').val();
+  if(!moment(strval,DATEFORMAT).isValid())
+    return ;
 
-  var strval = $('[name="daily_date"]').val();
+  parent = $('#detaillist tbody');
+  parent.children().remove();
 
+  $.ajax({
+      url: 'listdaily',
+      type: 'POST',
+      data: {_token: CSRF_TOKEN,
+        const_id:const_id,
+        daily_date:strdate
+      },
+      dataType: 'JSON'
+  }).done(function(data){
+    recvdata = data;
+    var parent = $('#detaillist tbody');
+    data.data.forEach(function(data){
+      templ = rowtempl.replace("#daily_id#",data.daily_id)
+              .replace("#subject_id#",data.subject_id)
+              .replace("#subject#",data.subject)
+              .replace("#item_name#",data.item_name)
+              .replace("#qty#",data.qty)
+              .replace("#unit_id#",data.unit_id)
+              .replace("#unit_text#",data.unit_text)
+              .replace("#supplier_id#",data.supplier_id)
+              .replace("#supplier_text#",data.supplier_text)
+              .replace("#unit_price#",data.unit_price)
+              .replace("#sub_total#",data.sub_total)
+              .replace("#tax#",data.tax)
+              .replace("#total_price#",data.total_price)
+              .replace("#user_id#",data.user_id);
+      $(templ).appendTo(parent);
+    })
+  })
+}
 
-  var dt = moment("20" + strval.replace(/[^0-9]*/g,""));
-  console.log(const_id + ":" + dt.format());
+function onBottomPopper(){
 
+}
+
+var companies=[
+@foreach($companies as $item)
+     {!! json_encode($item) !!} ,
+@endforeach
+];
+
+function onclickCompMenu(elm)
+{
+  if( compMenuCaller===null)
+    return;
+
+  $(compMenuCaller).attr('data-id',$(elm).attr('data-id') )
+    .val($(elm).text());
+}
+
+var compMenuCaller=null;
+function initCompMenu(){
+  parent = $('#compmenu');
+  companies.forEach(function(item){
+    $('<li class="dropdown-item px-1 " data-id="'+ item.company_id +'">'+item.nickname+'</li>')
+      .appendTo(parent)
+      .on('click',onclickCompMenu)
+  });
 }
 
 </script>
@@ -302,9 +393,21 @@ function initDialy(){
 <script type="text/javascript">
 var rowtepl;
 
-$(window).on('load',function(){
+{{--/*==========================*/--}}
+{{--/*                          */--}}
+{{--/* Initialize               */--}}
+{{--/*                          */--}}
+{{--/*==========================*/--}}
+$(window).on('DOMContentLoaded',function(){
   rowtempl = $('#detaillist tbody').html();
              $('#detaillist tbody').html('');
+  subjectitems = "";
+  SUBJECTS.forEach(function(item){
+    subjectitems += '<li class="dropdown-item small clickable px-1" data-id="'+item.id+'" onclick="onClickSubject(this)">'+item.text+'</li>';
+  });
+  rowtempl = rowtempl.replace('#subject_menu_item#',subjectitems);
+
+  $('[name="daily_date"]').val(moment().format(DATEFORMAT));
 
   $('[name="daily_date"]').on('change',function(e){
     initDialy();
@@ -314,9 +417,40 @@ $(window).on('load',function(){
   initSubjectMenu();
   initSupplierMenu();
   initContMenu();
+  initCompMenu();
+
 
   $('.dropdown-item').addClass('clickable');
+  $('.jpcurrency').attachNum3();
+
+
 });
+
+function recalcrow(){
+  cells = $(this).parentsUntil('td','.rowbreak').find('.jpcurrency');
+  qty = parseInt($(cells[0]).val().replace(/[^0-9]+/g,""));
+  unitprice = parseInt($(cells[1]).val().replace(/[^0-9]+/g,""));
+  v1 = "";
+  v2 = "";
+  try{
+  console.log('q:'+qty + " u:" + unitprice);
+  if(isNaN(qty) || isNaN(unitprice))
+    throw new Exception();
+  v1 = tcms_num3(qty*unitprice);
+
+  tax=parseInt($(cells[3]).val().replace(/[^0-9]+/g,""));
+  console.log('t:'+tax);
+  if(isNaN(tax))
+    throw new Exeption();
+
+  v2 = tcms_num3(qty*unitprice+tax);
+
+  }catch(e){
+  }
+  $(cells[2]).val(v1);
+  $(cells[4]).val(v2);
+
+}
 
 function newrow(data){
   templ = rowtempl;
@@ -341,15 +475,86 @@ function newrow(data){
   }
 
   row = $(templ)
+  row.find('.jpcurrency')
+    .on('input',recalcrow)
+    .attachNum3();
 
   $('#detaillist tbody').append(row);
+  initSubjectMenu(  row.find('[name="subject"]')  );
+
 }
+
+
 
 function newItem(){
-  newrow();
+  try{
+    var cont_id = parseInt($('#dropdown_cont').attr('data-id'));
+    if(!(cont_id>0)){
+      throw "工事を選択してください";
+    }
+
+    var const_id = parseInt($('#dropdown_const').attr('data-id'));
+    if(!(const_id>0)){
+      throw "現場を選択してください";
+    }
+    var dt = moment($('[name="daily_date"]').val(),DATEFORMAT);
+    if(!dt.isValid()){
+      throw "日付を指定してください"
+    }
+    newrow();
+  }catch(e){
+    toastr.options = {
+      "positionClass": "toast-top-left",
+      "timeOut": "1500",
+    };
+    toastr.error(e);
+  }
+}
+
+var postdata;
+function validate(){
+  crnum = v8n()
+    .not.null()
+    .pattern(/^-?[0-9]{1,3}(,[0-9]{3})*.?\d{0,2}$/);
+  crtxt = v8n()
+    .not.null();
+
+    src = "[";
+    delim = "";
+
+    var const_id = parseInt($('#dropdown_const').attr('data-id'));
+    var dt = $('[name="daily_date"]').val();
+    $('#detaillist tr').each(function(){
+      src += delim + "{"
+        +'"disp_order":'+this.rowIndex + ','
+        +'"const_id":'+const_id + ','
+        +'"daily_id":'+$(this).attr("data-id") + ','
+        +'"daily_date":"' + dt + '"'
+      $(this).find('[name]').each(function(){
+        src +=  ',"' + $(this).attr("name") + '":"' + escape($(this).val()) + '"';
+        if($(this).is('[data-id]')){
+          src +=  ',"' + $(this).attr("name") + '_id":"' + $(this).attr('data-id') + '"';
+        }
+      });
+      src += "}";
+      delim = ","
+    })
+    src += "]";
+    console.log(src);
+    postdata = JSON.parse(src);
+
+    $.ajax({
+        url: 'diary',
+        type: 'POST',
+        data: {_token: CSRF_TOKEN,
+          data:postdata
+        },
+        dataType: 'JSON'
+    }).done(function(data){
+
+    })
 }
 </script>
-
 
 
 

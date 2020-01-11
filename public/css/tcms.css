@@ -193,12 +193,23 @@ tr.hidden{
   display: none;
 }
 
+.fas:before{
+  line-height: inherit;
+}
 
 #itemlist div {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
 
+input::placeholder{
+  margin: 0;
+  padding: 0;
+  color:#e8e8e8;
+  font-size:0.5rem;
+  text-align: bottom;
+  vertical-align:bottom;
+}
 /*==================================================
  * Bootstrap dropdown multiplier
  *
@@ -221,4 +232,12 @@ tr.hidden{
   left: 100%;
   margin-left: .1rem;
   margin-right: .1rem;
+}
+
+.input-group-prepend i{
+  color:gray !important;
+}
+
+.text-glay {
+  color:gray;
 }

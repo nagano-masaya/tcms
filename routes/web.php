@@ -41,6 +41,8 @@ Route::post('peymanetdetail', 'PagesController@paymentdetailPost')->middleware('
 
 
 Route::get('diary', 'PagesController@diary')->middleware('auth');
+Route::post('diary', 'PagesController@diaryPost')->middleware('auth');
+Route::post('listdaily', 'listController@listdaily')->middleware('auth');
 
 Route::get('ballancesheet', 'PagesController@ballancesheet')->middleware('auth');
 Route::get('pdftest.pdf', 'PdfController@pdftest')->middleware('auth');

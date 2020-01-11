@@ -16,7 +16,7 @@ class listController extends Controller
         }
 
         //==================================================
-        // 工事一覧のリクエスト処理
+        // 社員一覧の取得
         //==================================================
         public function listpersons(Request $req){
           $list = \App\person::get();
@@ -48,5 +48,26 @@ class listController extends Controller
           return response()->json(["status"=>"OK","data"=>$list]);
         }
 
+        //==============================================================
+        //  取引先一覧の取得
+        //==============================================================
+        public function listcompany(Request $req){
+          $list = \App\company::select()
+            ->where('is_subcon',"1")
+            ->orderBy('nickname')
+            ->get();
+          return response()->json(["status"=>"OK","data"=>$list]);
+        }
 
+        //==============================================================
+        //  取引先一覧の取得
+        //==============================================================
+        public function listdaily(Request $req){
+          $list = \App\dailydetail::select()
+            ->where('daily_date',$req->daily_date)
+            ->where('const_id',$req->const_id)
+            ->orderBy('disp_order')
+            ->get();
+            return response()->json(["status"=>"OK","data"=>$list]);
+        }
 }

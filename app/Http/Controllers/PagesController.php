@@ -460,17 +460,61 @@ postdata = {
           ->join('contructs','constructs.cont_id','contructs.cont_id')
           ->whereNull('date_end')
           ->get();
+      $companies = \App\company::select()
+          ->where('is_subcon',"1")
+          ->orderBy('nickname')
+          ->get();
 
-      return view('pages.diary',['supplier'=>$supplier,'units'=>$units,'consts'=>$consts ]);
+      return view('pages.diary',['supplier'=>$supplier,'units'=>$units,'consts'=>$consts,'companies'=>$companies ]);
     }
 
-
-  public function DBDate(string $s){
-     return $s=="" ? null : "20".preg_replace('/[^\d]/','-', $s);
+  function unicode_decode($str) {
+      return preg_replace_callback('/\\\\u([0-9a-f]{4})/i', 'replace_unicode_escape_sequence', $str);
   }
 
- public function DBInt(string $s){
-   return intval( preg_replace("/[^0-9]+/","",$s ) );
+  public function diaryPost(Request $request){
+    return utf8_decode('%{u52B4}%u52D9%u8CBB');
+
+    $list=[];
+    $data = $request->data;
+    $ret = DB::transaction(function () use ($request,$data,$list) {
+      foreach ($data as $item) {
+        $rec = \App\dailydetail::updateOrCreate(
+          ['daily_id'=>$item['daily_id']],
+          [
+            'const_id'=>$this->DBInt($item['const_id']),
+            'disp_order'=>$this->DBInt($item['disp_order']),
+            'daily_date'=>$this->DBDate($item['daily_date']),
+            'subject_id'=>$this->DBInt($item['subject_id']),
+            'subject'=>unicode_decode($item['subject']),
+            'item_name'=>rawurldecode ($item['item_name']),
+            'qty'=>$this->DBInt($item['qty']),
+            'unit_id'=>$this->DBInt($item['unit_id']),
+            'unit_text'=>rawurldecode ($item['unit']),
+            'supplier_id'=>$this->DBInt($item['supplier_id']),
+            'supplier_text'=>rawurldecode ($item['supplier']),
+            'unit_price'=>$this->DBInt($item['unit_price']),
+            'sub_total'=>$this->DBInt($item['sub_total']),
+            'tax'=>$this->DBInt($item['tax']),
+            'total_price'=>$this->DBint($item['total_price']),
+            'user_id'=>Auth::user()->id
+          ]
+        );
+      }
+    });
+
+    return response()->json(["status"=>$ret,"data"=>$list]);
+  }
+
+  public function DBDate(string $s){
+     return $s=="" ? null : "20".preg_replace('/[^\d]/','-', rawurldecode($s));
+  }
+
+ public function DBInt(?string $s){
+   if( is_null( $s))
+    return null;
+
+   return intval( preg_replace("/[^0-9]+/","",rawurldecode($s) ) );
  }
 
     //=============================================================

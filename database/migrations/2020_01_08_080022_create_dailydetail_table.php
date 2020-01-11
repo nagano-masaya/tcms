@@ -15,6 +15,8 @@ class CreateDailydetailTable extends Migration
     {
         Schema::create('dailydetail', function (Blueprint $table) {
             $table->bigIncrements('daily_id');
+            $table->bigInteger('const_id');
+            $table->date('daily_date');
             $table->integer('disp_order');
             $table->integer('subject_id');
             $table->string('subject',10);
