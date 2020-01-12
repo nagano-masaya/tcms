@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+require('controlHelper.php');
+
 class PagesController extends CommonController
 {
     public function __construct()
@@ -139,15 +141,6 @@ class PagesController extends CommonController
     //  請求一覧のリクエスト処理（GET)
     //==================================================
     public function claimlist(Request $request){
-
-/*
-      if(isset($request->cont)){
-        \App\contruct::where('cont_id',intval($request->cont))
-                  ->delete();
-      }
-*/
-
-
       $cons = \App\claims::select()
           ->join('company','claims.company_id','company.company_id')
           ->whereNull('claims.deleted_at')
@@ -322,21 +315,10 @@ class PagesController extends CommonController
       return view('pages.depositdetail',['did'=>$depo->depo_id, 'dep'=>$depo,'disps'=>$disps,'claimrows'=>$claimrows,'sql'=>$sql]);
     }
 
-/*
-postdata = {
- _token: CSRF_TOKEN,
- depo_id:parseInt($("input[name='depo_id']").val()),
- company_id:parseInt($("input[name='company_id']").val()),
- user_id:{{Auth::user()->id}},
- price:parseInt($("input[name='price']").val()),
- depo_date:$("input[name='depo_date']").val(),
- history:"{{$dep->history}}"
-};
-*/
     public function depositdetailSave(Request $request){
       $depo = $request->session()->get('depositdetaile_org_data');
 
-    return DB::transaction(function () use ($request,$depo) {
+      return DB::transaction(function () use ($request,$depo) {
         //------------------------------------------------------
         // 入金テーブル(deposit)を更新
         $depo->price = (int)($request->price."0000");
@@ -468,35 +450,44 @@ postdata = {
       return view('pages.diary',['supplier'=>$supplier,'units'=>$units,'consts'=>$consts,'companies'=>$companies ]);
     }
 
-  function unicode_decode($str) {
-      return preg_replace_callback('/\\\\u([0-9a-f]{4})/i', 'replace_unicode_escape_sequence', $str);
-  }
-
-  public function diaryPost(Request $request){
-    return utf8_decode('%{u52B4}%u52D9%u8CBB');
-
+    public function diaryPost(Request $request){
     $list=[];
     $data = $request->data;
+
+    //return var_dump($data);
+
     $ret = DB::transaction(function () use ($request,$data,$list) {
       foreach ($data as $item) {
+        $supplier_id = DBInt($item['supplier_id']);
+
+        if( is_null($supplier_id ) ){
+            $supplier = \App\company::create([
+              'nickname'=>unescape ($item['supplier']),
+              'fullname'=>unescape ($item['supplier']),
+              'is_customer'=>0,
+              'is_subcon'=>1
+            ]);
+            $supplier_id  = $supplier->company_id;
+        };
+
         $rec = \App\dailydetail::updateOrCreate(
           ['daily_id'=>$item['daily_id']],
           [
-            'const_id'=>$this->DBInt($item['const_id']),
-            'disp_order'=>$this->DBInt($item['disp_order']),
-            'daily_date'=>$this->DBDate($item['daily_date']),
-            'subject_id'=>$this->DBInt($item['subject_id']),
-            'subject'=>unicode_decode($item['subject']),
-            'item_name'=>rawurldecode ($item['item_name']),
-            'qty'=>$this->DBInt($item['qty']),
-            'unit_id'=>$this->DBInt($item['unit_id']),
-            'unit_text'=>rawurldecode ($item['unit']),
-            'supplier_id'=>$this->DBInt($item['supplier_id']),
-            'supplier_text'=>rawurldecode ($item['supplier']),
-            'unit_price'=>$this->DBInt($item['unit_price']),
-            'sub_total'=>$this->DBInt($item['sub_total']),
-            'tax'=>$this->DBInt($item['tax']),
-            'total_price'=>$this->DBint($item['total_price']),
+            'const_id'=>DBInt($item['const_id']),
+            'disp_order'=>DBInt($item['disp_order']),
+            'daily_date'=>DBDate($item['daily_date']),
+            'subject_id'=>DBInt($item['subject_id']),
+            'subject'=>unescape($item['subject']),
+            'item_name'=>unescape ($item['item_name']),
+            'qty'=>DBInt($item['qty']),
+            'unit_id'=>DBInt($item['unit_id']),
+            'unit_text'=>unescape ($item['unit']),
+            'supplier_id'=>$supplier_id,
+            'supplier_text'=>unescape ($item['supplier']),
+            'unit_price'=>DBInt($item['unit_price']),
+            'sub_total'=>DBInt($item['sub_total']),
+            'tax'=>DBInt($item['tax']),
+            'total_price'=>DBInt($item['total_price']),
             'user_id'=>Auth::user()->id
           ]
         );
@@ -506,16 +497,6 @@ postdata = {
     return response()->json(["status"=>$ret,"data"=>$list]);
   }
 
-  public function DBDate(string $s){
-     return $s=="" ? null : "20".preg_replace('/[^\d]/','-', rawurldecode($s));
-  }
-
- public function DBInt(?string $s){
-   if( is_null( $s))
-    return null;
-
-   return intval( preg_replace("/[^0-9]+/","",rawurldecode($s) ) );
- }
 
     //=============================================================
     //
@@ -596,12 +577,12 @@ postdata = {
             ['odrdetail_id'=>$itm->id],
             [
               'item_name'=>$itm->item_name,
-              'unit_price'=>$this->DBInt($itm->unit_price)*10000,
-              'qty'=>$this->DBInt($itm->qty)*10000,
+              'unit_price'=>DBInt($itm->unit_price)*10000,
+              'qty'=>DBInt($itm->qty)*10000,
               'unit_id'=>intval($itm->unit_id),
-              'total_price'=>$this->DBInt($itm->total_price)*10000,
-              'tax'=>$this->DBInt($itm->tax)*10000,
-              'taxed_price'=>$this->DBInt($itm->taxed_price)*10000
+              'total_price'=>DBInt($itm->total_price)*10000,
+              'tax'=>DBInt($itm->tax)*10000,
+              'taxed_price'=>DBInt($itm->taxed_price)*10000
             ]
           );
           $orderdetail_result[] = ["idx"=>$itm->idx, "result"=>$ret];
@@ -619,9 +600,9 @@ postdata = {
               'orderclaim_recept_date'=>$itm->orderclaim_recept_date==""  ? null : strtotime(  "20".preg_replace('/[^\d]/','', $itm->orderclaim_recept_date)),
               'orderclaim_recept_user_id'=>intval($itm->orderclaim_recept_user_id),
               'orderclaim_recept_user_name'=>$itm->orderclaim_recept_user_name,
-              'oderclaim_discount_price'=>(isset($itm->oderclaim_discount_price)  ?  $this->DBInt($itm->oderclaim_discount_price)*10000 : null),
-              'orderclaim_offset_price'=>(isset($itm->orderclaim_offset_price)  ?  $this->DBInt($itm->orderclaim_offset_price)*10000 : null),
-              'orderclaim_claim_price'=>(isset($itm->orderclaim_claim_price)  ?  $this->DBInt($itm->orderclaim_claim_price)*10000 : null),
+              'oderclaim_discount_price'=>(isset($itm->oderclaim_discount_price)  ?  DBInt($itm->oderclaim_discount_price)*10000 : null),
+              'orderclaim_offset_price'=>(isset($itm->orderclaim_offset_price)  ?  DBInt($itm->orderclaim_offset_price)*10000 : null),
+              'orderclaim_claim_price'=>(isset($itm->orderclaim_claim_price)  ?  DBInt($itm->orderclaim_claim_price)*10000 : null),
             ]
           );
           $claims_result[]= ["idx"=>$itm->idx, "result"=>$ret];
@@ -630,7 +611,7 @@ postdata = {
             ['payment_id'=>$itm->payment_id],
             [
               'orderclaim_id'=>$itm->orderclaim_id,
-              'pay_dispose_date'=>$this->DBDate($itm->pay_dispose_date),
+              'pay_dispose_date'=>DBDate($itm->pay_dispose_date),
               'pay_confirm_date'=>$itm->pay_confirm_date == "" ? null : $itm->pay_confirm_date,
               'payed_date'=>$itm->payed_date == "" ? null : $itm->payed_date,
               'pay_method'=>$itm->pay_method,

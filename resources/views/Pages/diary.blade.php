@@ -112,7 +112,7 @@
     </table>
     <table class="list-table table table-striped" id="detaillist">
       <tbody>
-        <tr data-id="#daily_id#" data-uid="#user_id#">
+        <tr data-id="#daily_id#" data-uid="#user_id#" data-rowid="#rowid#">
           <td>
               <div class="row">
                 <div class="col-2 p-0 dropdown">
@@ -163,25 +163,27 @@
   </div>
 </div>
 
-<div class="dropdown" style="position:relative;" id="complist">
+<div  style="position:relative;" id="complist">
   <ul class="dropdown-menu" style="position:absolute;" id="compmenu">
+  </ul>
+
+  <ul class="metismenu " style="position:absolute;" id="unitmenu">
   </ul>
 </div>
 
 
-<div class="popper" id="testbtn">
+<script type="application/javascript" id="unitdata">
 
-</div>
-
-<script type="application/javascript">
-
-  var parents=[];
+  var unitparents=[];
 
   var units = [
 @foreach($units as $item)
   {id:{{$item->unit_id}}, text:"{{$item->unit_title}}", type:"{{$item->unittype_title}}"},
 @endforeach
   ];
+
+</script>
+<script type="application/javascript">
 
 var conts = [
 @php
@@ -204,41 +206,41 @@ var consts = [
 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
 
-  function initUnitMenu(root){
+  function initUnitMenu(){
+    var root = $('#unitmenu');
     $(root).children().remove();
     var unittype="";
     var utype ="";
-    var root = $('#unitmenu');
     var parent = null;
     var submenu = null;
     units.forEach(function(itm){
-      if(unittype != itm.unittype_title){
+      if(unittype != itm.type){
         if( parent !== null ){
-          parents.push(parent);
+          unitparents.push(parent);
           root.append(parent);
         }
-        submenu = $('<ul></ul>').addClass('dropdown-menu');
-        parent = $('<li class="dropdown-submenu"></li>')
-        .append($('<a class="dropdown-item dropdown-toggle" href="#">'+ itm.unittype_title +'</a>'))
+        submenu = $('<ul></ul>')
+        parent = $('<li class=" "></li>')
+        .append($('<a class="has-arrow" href="#" >'+ itm.type +'</a>'))
         .append(submenu)
         ;
-        unittype = itm.unittype_title;
+        unittype = itm.type;
       }
       submenu.append(
         $('<li></li>')
           .append(
-            $('<a>'+itm.unit_title+'</a>')
-              .addClass('dropdown-item')
+            $('<a>'+itm.text+'</a>')
               .attr('href',"#")
-              .attr('data-id',itm.unit_id)
+              .attr('data-id',itm.id)
               .on('click',onClickUnitMenu)
           )
       );
     });
     if( parent !== null ){
-      parents.push(parent);
+      unitparents.push(parent);
       root.append(parent);
     }
+    $(root).metisMenu();
   }
 
   function onClickUnitMenu(){
@@ -340,21 +342,7 @@ function initDialy(){
     recvdata = data;
     var parent = $('#detaillist tbody');
     data.data.forEach(function(data){
-      templ = rowtempl.replace("#daily_id#",data.daily_id)
-              .replace("#subject_id#",data.subject_id)
-              .replace("#subject#",data.subject)
-              .replace("#item_name#",data.item_name)
-              .replace("#qty#",data.qty)
-              .replace("#unit_id#",data.unit_id)
-              .replace("#unit_text#",data.unit_text)
-              .replace("#supplier_id#",data.supplier_id)
-              .replace("#supplier_text#",data.supplier_text)
-              .replace("#unit_price#",data.unit_price)
-              .replace("#sub_total#",data.sub_total)
-              .replace("#tax#",data.tax)
-              .replace("#total_price#",data.total_price)
-              .replace("#user_id#",data.user_id);
-      $(templ).appendTo(parent);
+      $(newrow(data)).appendTo(parent);
     })
   })
 }
@@ -388,9 +376,6 @@ function initCompMenu(){
   });
 }
 
-</script>
-
-<script type="text/javascript">
 var rowtepl;
 
 {{--/*==========================*/--}}
@@ -426,6 +411,7 @@ $(window).on('DOMContentLoaded',function(){
 
 });
 
+{{--/*   金額再計算  */--}}
 function recalcrow(){
   cells = $(this).parentsUntil('td','.rowbreak').find('.jpcurrency');
   qty = parseInt($(cells[0]).val().replace(/[^0-9]+/g,""));
@@ -452,13 +438,16 @@ function recalcrow(){
 
 }
 
+{{-- /*  行追加  */ --}}
 function newrow(data){
   templ = rowtempl;
   if(data == null){
     templ = rowtempl.replace("#daily_id#","0")
+            .replace("#rowid#",UUID())
             .replace(/#.+#/g,"");
   }else{
     templ = rowtempl.replace("#daily_id#",data.daily_id)
+            .replace("#rowid#",UUID())
             .replace("#subject_id#",data.subject_id)
             .replace("#subject#",data.subject)
             .replace("#item_name#",data.item_name)
@@ -485,7 +474,7 @@ function newrow(data){
 }
 
 
-
+{{--/* 追加ボタン押下時の処理 */--}}
 function newItem(){
   try{
     var cont_id = parseInt($('#dropdown_cont').attr('data-id'));
@@ -511,6 +500,7 @@ function newItem(){
   }
 }
 
+{{--/* 保存処理 */--}}
 var postdata;
 function validate(){
   crnum = v8n()
@@ -526,6 +516,7 @@ function validate(){
     var dt = $('[name="daily_date"]').val();
     $('#detaillist tr').each(function(){
       src += delim + "{"
+        +'"rowid":"'+$(this).attr('data-rowid')+'",'
         +'"disp_order":'+this.rowIndex + ','
         +'"const_id":'+const_id + ','
         +'"daily_id":'+$(this).attr("data-id") + ','

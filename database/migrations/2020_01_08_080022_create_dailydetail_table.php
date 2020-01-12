@@ -21,7 +21,7 @@ class CreateDailydetailTable extends Migration
             $table->integer('subject_id');
             $table->string('subject',10);
             $table->string('item_name',64);
-            $table->integer('qty')->nullable();
+            $table->integer('qty');
             $table->integer('unit_id');
             $table->string('unit_text');
             $table->bigInteger('supplier_id');

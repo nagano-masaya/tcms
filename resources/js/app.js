@@ -5,7 +5,7 @@
  */
 
 require('./bootstrap');
-require('bootstrap-menu');
+require('metismenu');
 require('bootstrap-transition');
 
 

@@ -17,12 +17,12 @@ class CreateCompanyTable extends Migration
             $table->bigIncrements('company_id');
             $table->string('nickname',20);
             $table->string('fullname',64);
-            $table->integer('is_customer');
-            $table->integer('is_subcon');
-            $table->integer('closing');
-            $table->integer('closing_day');
-            $table->integer('payment');
-            $table->integer('payment_day');
+            $table->integer('is_customer')->default(0);
+            $table->integer('is_subcon')->default(0);
+            $table->integer('closing')->default(0);
+            $table->integer('closing_day')->nullable();
+            $table->integer('payment')->default(0);
+            $table->integer('payment_day')->nullable();
             $table->string('zip',20)->nullable();
             $table->string('address')->nullable();
             $table->string('tel',20)->nullable();
