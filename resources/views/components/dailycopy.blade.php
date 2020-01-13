@@ -8,7 +8,7 @@ dailycopydlg
 @slot('on_click')
 onDailyCopyEnd()
 @endslot
-<ul class="nav nav-tabs" role="tablist">
+<ul class="nav nav-pills" role="tablist">
   <li class="nav-item">
     <a class="nav-link active" id="item1-tab" data-toggle="tab" href="#item1" role="tab" aria-controls="item1" aria-selected="true">過去の日報から</a>
   </li>
@@ -29,28 +29,42 @@ onDailyCopyEnd()
         <input class="form-control" type="text" name="" value="" data-id="0">
       </div>
     </div>
-    <div class="input-group">
-      <div class="small input-group-prepend">
-        <div class="input-group-text">
-          現場名
-        </div>
+    <div class="d-flex">
+      <div class="input-group-text">
+        現場名
       </div>
-      <div class="">
+      <div class="flex-grow-1">
         <input class="form-control" type="text" name="" value="" data-id="0">
       </div>
     </div>
     <div class="container">
 
       <div class="row">
-        <div class="col-2">
-          <ul class="metismenu">
-            <li>20.01/05</li>
-            <li>20.01/04</li>
-            <li>20.01/03</li>
-            <li>20.01/01</li>
+        <div class="col-2 p-0 h-50" style="overflow:scroll;">
+          <ul class="metismenu w-100">
+            <li><a href="#">20.01/10</a></li>
+            <li><a href="#">20.01/09</a></li>
+            <li><a href="#">20.01/08</a></li>
+            <li><a href="#">20.01/06</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
+            <li><a href="#">20.01/05</a></li>
           </ul>
         </div>
-        <div class="col-10">
+        <div class="col-10 p-0">
 
         </div>
       </div>
@@ -65,6 +79,15 @@ onDailyCopyEnd()
 <script type="text/javascript">
 function DailyCopyEnd(){
 }
+
+$(window).on('DOMContentLoaded' ,function(){
+    $(window).on('resize', function(){
+      elm = $('#dailycopydlg .modal-body');
+      p = $('#dailycopydlg .metismenu').parent();
+      $(p).height(  $(elm).height() - $(p).offset().top );
+      console.log("w:" + $(elm).width() + " h:" + $(elm).height() );
+    })
+});
 </script>
 
 @endcomponent
