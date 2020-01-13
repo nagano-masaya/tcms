@@ -77,11 +77,14 @@
 
 <div class="container">
   <div class="row mt-2">
-    <div class="col-10">
+    <div class="col-8">
 明細
     </div>
-    <div class="col-2 text-right clickable" onclick="newItem()">
-      <span class="iconify" data-icon="bx:bx-add-to-queue" data-inline="false" ></span>
+    <div class="col-2 text-right text-primary clickable" onclick="showDataCopy()">
+      <i class="far fa-copy"></i><span>明細コピー</span>
+    </div>
+    <div class="col-2 text-right text-primary clickable" onclick="newItem()">
+      <i class="far fa-plus-square"></i>
       <span>新規</span>
     </div>
   </div>
@@ -110,7 +113,7 @@
         </tr>
       </thead>
     </table>
-    <table class="list-table table table-striped" id="detaillist">
+    <table class="list-table table table-bordered" id="detaillist">
       <tbody>
         <tr data-id="#daily_id#" data-uid="#user_id#" data-rowid="#rowid#">
           <td>
@@ -122,19 +125,19 @@
                   </ul>
                 </div>
                 <div class="col-3 p-0 input-group">
-                  <div class="input-group-prepend align-text-bottom">
-                    <span class="fas fa-home px-1 pt-2 align-text-bottom text-gray"></span>
+                  <input type="text" class="form-control p-1" name="supplier" data-id="#supplier_id#" value="#supplier_text#" placeholder="発注先" autocomplete="off">
+                  <div class="input-group-append">
+                    <div class="fas fa-search px-1 pt-3 align-text-bottom text-gray small"></div>
                   </div>
-                  <input type="text" class="form-control p-1" name="supplier" data-id="#supplier_id#" value="#supplier_text#" placeholder="発注先">
                 </div>
-                <div class="col-7 p-0"><input type="text" class="form-control p-1" name="item_name" value="#item_name#" placeholder="名称"></div>
+                <div class="col-7 p-0"><input type="text" class="form-control p-1" name="item_name" value="#item_name#" placeholder="名称" autocomplete="off"></div>
               </div>
               <div class="row rowbreak">
                 <div class="col-2 p-0 input-group">
                   <input type="text" class="form-control p-1 jpcurrency" name="qty" value="#qty#" placeholder="数量">
                   <div class="input-group-apped" style="line-height:2.1rem">
 <!--                    <span class="px-1 small" style="line-height:0.6rem;vertical-align:bottom">ダース</span> -->
-                    <input type="button" class="small border-0" name="unit" data-id="" value="台">
+                    <input type="button" class="small border-0" name="unit" data-id="" value="台" onclick="showUnitMenu(this)">
                   </div>
                 </div>
                 <div class="col-10 p-0">
@@ -142,7 +145,12 @@
                     <div class="col-3 p-0"><input type="text" class="form-control jpcurrency p-1" name="unit_price" value="#unit_price#" placeholder="単価" autocomplete="off"></div>
                     <div class="col-3 p-0"><input type="text" class="form-control jpcurrency p-1" name="sub_total" value="#sub_total#" placeholder="小計"></div>
                     <div class="col-3 p-0"><input type="text" class="form-control jpcurrency p-1" name="tax" value="#tax#" placeholder="消費税"></div>
-                    <div class="col-3 p-0"><input type="text" class="form-control jpcurrency p-1" name="total_price" value="#total_price#" placeholder="計"></div>
+                    <div class="col-3 p-0 input-group">
+                      <input type="text" class="form-control jpcurrency p-1" name="total_price" value="#total_price#" placeholder="計">
+                      <div class="input-group-append text-right pr-1" style="width:1.3rem">
+                        <span class="fas fa-trash-alt px-2 pt-3 align-text-bottom text-gray clickable"></span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -166,11 +174,13 @@
 <div  style="position:relative;" id="complist">
   <ul class="dropdown-menu" style="position:absolute;" id="compmenu">
   </ul>
-
-  <ul class="metismenu " style="position:absolute;" id="unitmenu">
-  </ul>
+  <div class="backdrop-hidden" style="  position:absolute;z-index:10000">
+    <ul class="metismenu shadow" tabindex="-1" style="position:absolute;" id="unitmenu"/>
+  </div>
 </div>
 
+@component('components.dailycopy')
+@endcomponent
 
 <script type="application/javascript" id="unitdata">
 
@@ -205,48 +215,87 @@ var consts = [
 
 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
-
-  function initUnitMenu(){
-    var root = $('#unitmenu');
-    $(root).children().remove();
-    var unittype="";
-    var utype ="";
-    var parent = null;
-    var submenu = null;
-    units.forEach(function(itm){
-      if(unittype != itm.type){
-        if( parent !== null ){
-          unitparents.push(parent);
-          root.append(parent);
-        }
-        submenu = $('<ul></ul>')
-        parent = $('<li class=" "></li>')
-        .append($('<a class="has-arrow" href="#" >'+ itm.type +'</a>'))
-        .append(submenu)
-        ;
-        unittype = itm.type;
+{{--/*  */--}}
+var ev;
+function initUnitMenu(){
+  var root = $('#unitmenu');
+  $(root).children().remove();
+  var unittype="";
+  var utype ="";
+  var parent = null;
+  var submenu = null;
+  units.forEach(function(itm){
+    if(unittype != itm.type){
+      if( parent !== null ){
+        unitparents.push(parent);
+        root.append(parent);
       }
-      submenu.append(
-        $('<li></li>')
-          .append(
-            $('<a>'+itm.text+'</a>')
-              .attr('href',"#")
-              .attr('data-id',itm.id)
-              .on('click',onClickUnitMenu)
-          )
-      );
-    });
-    if( parent !== null ){
-      unitparents.push(parent);
-      root.append(parent);
+      submenu = $('<ul></ul>')
+      parent = $('<li class=" "></li>')
+      .append($('<a class="has-arrow" href="#" >'+ itm.type +'</a>'))
+      .append(submenu)
+      ;
+      unittype = itm.type;
     }
-    $(root).metisMenu();
+    submenu.append(
+      $('<li></li>')
+        .append(
+          $('<a>'+itm.text+'</a>')
+            .attr('href',"#")
+            .attr('data-id',itm.id)
+            .on('click',onClickUnitMenu)
+        )
+    );
+  });
+  if( parent !== null ){
+    unitparents.push(parent);
+    root.append(parent);
+  }
+  $('#unitmenu').parent().on('click',function(e){
+    ev=e;
+    if($(e.target).hasClass("backdrop-show")){
+      $(this)
+        .toggleClass('backdrop-hidden')
+        .toggleClass('backdrop-show');
+        return false;
+    }
+  })
+  .offset({top:0,left:0})
+  .width(0)
+  .height(0);
+
+  $(root).metisMenu();
+}
+
+  function showUnitMenu(elm)
+  {
+    $('#unitmenu')
+    .attr('data-target',$(elm).parentsUntil('tbody').last().attr('data-rowid'))
+    .parent()
+      .toggleClass('backdrop-hidden')
+      .toggleClass('backdrop-show')
+      .offset({top:0,left:0})
+      .height($(document).height())
+      .width($(document).width())
+
+    $('#unitmenu')
+    .attr('data-elm',$(elm) )
+    .offset({
+      top:$(elm).offset().top + $(elm).outerHeight() - $('#unitmenu').outerHeight(),
+      left:$(elm).offset().left + $(elm).outerWidth(),
+    });
+
   }
 
   function onClickUnitMenu(){
-    $('input[name="unit"]')
-    .val( $(this).text() )
-    .attr( "data-id",$(this).attr('data-id') );
+    $('#unitmenu').parent()
+      .toggleClass('backdrop-hidden')
+      .toggleClass('backdrop-show');
+    $('#unitmenu .mm-show').removeClass('mm-show');
+
+    $('[data-rowid="'+ $('#unitmenu').attr('data-target') +'"] input[name="unit"]')
+      .val( $(this).text() )
+      .attr( "data-id",$(this).attr('data-id') );
   }
 
   function onClickSubject(elm){
@@ -456,10 +505,10 @@ function newrow(data){
             .replace("#unit_text#",data.unit_text)
             .replace("#supplier_id#",data.supplier_id)
             .replace("#supplier_text#",data.supplier_text)
-            .replace("#unit_price#",data.unit_price)
-            .replace("#sub_total#",data.sub_total)
-            .replace("#tax#",data.tax)
-            .replace("#total_price#",data.total_price)
+            .replace("#unit_price#",tcms_num3(data.unit_price))
+            .replace("#sub_total#",tcms_num3(data.sub_total))
+            .replace("#tax#",tcms_num3(data.tax))
+            .replace("#total_price#",tcms_num3(data.total_price))
             .replace("#user_id#",data.user_id);
   }
 
@@ -473,6 +522,14 @@ function newrow(data){
 
 }
 
+
+function showDataCopy(){
+  $('#dailycopydlg .modal-dialog')
+      .removeClass('modal-sm')
+      .addClass('modal-lg');
+      
+  $('#dailycopydlg').modal('show');
+}
 
 {{--/* 追加ボタン押下時の処理 */--}}
 function newItem(){

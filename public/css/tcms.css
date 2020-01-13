@@ -256,6 +256,7 @@ input::placeholder{
 
 .metismenu {
     background: #212529;
+    list-style: none;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -275,7 +276,9 @@ input::placeholder{
 .metismenu li:last-child {
   margin-bottom: 5px;
 }
-
+.metismenu li{
+  list-style: none;
+}
 
 .metismenu > li {
     /*-webkit-box-flex: 1;
@@ -326,4 +329,28 @@ ul{
 #unitmenu a{
   padding-top:1px;
   padding-bottom: 1px;
+}
+
+#unitmenu li{
+  margin-top:1px;
+}
+
+.metismenu .has-arrow::after{
+  transform: rotate(135deg) translate(0, -50%);
+}
+.metismenu .mm-active > .has-arrow::after,
+.metismenu .has-arrow[aria-expanded="true"]::after{
+  transform: rotate(225deg) translate(0, -50%);
+}
+
+.backdrop-show{
+  display:normal;
+}
+
+.backdrop-hidden{
+  display:none;
+}
+
+.text-gray{
+  color:var(--gray);
 }

@@ -28,9 +28,13 @@ class listController extends Controller
         }
         public function listcompanys(Request $req){
         }
+
         public function persons(Request $req){
         }
 
+        //==============================================================
+        //  工事一覧の取得
+        //==============================================================
         public function listconstructs(Request $req){
           $list = \App\construct::select(
             ['const_id','const_name','constructs.cont_id','contructs.name'])
@@ -39,6 +43,9 @@ class listController extends Controller
           return response()->json(["status"=>"OK","data"=>$list]);
         }
 
+        //==============================================================
+        //  単位一覧の取得
+        //==============================================================
         public function listunits(Request $req){
           $list = \App\units::select(
             ['unit_id','unit_title','unittypes.unittype_title'])
@@ -60,7 +67,7 @@ class listController extends Controller
         }
 
         //==============================================================
-        //  取引先一覧の取得
+        //  日報の取得
         //==============================================================
         public function listdaily(Request $req){
           $list = \App\dailydetail::select()

@@ -1,11 +1,11 @@
-<div class="modal" id="{{$compo_id}}" tabindex="-1">
+<div class="modal shadow" id="{{$compo_id}}" tabindex="-1">
   <div class="modal-dialog modal-sm modal-dialog-scrollable">
 
     <!-- 3.モーダルのコンテンツ -->
     <div class="modal-content">
       <!-- 4.モーダルのヘッダ -->
-      <div class="modal-header ">
-        <h4 class="modal-title" id="modal-label">{{ $title }}</h4>
+      <div class="modal-header bg-primary text-white">
+        <h6 class="modal-title" id="modal-label">{{ $title }}</h6>
         <span aria-hidden="true">&times;</span>
       </div>
       <!-- 5.モーダルのボディ -->
