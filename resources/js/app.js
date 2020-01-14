@@ -7,7 +7,7 @@
 require('./bootstrap');
 require('metismenu');
 require('bootstrap-transition');
-
+require('bootstrap-4-autocomplete');
 
 /**
 window.Vue = require('vue');

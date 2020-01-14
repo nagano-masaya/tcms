@@ -8,6 +8,7 @@
         <h6 class="modal-title" id="modal-label">{{ $title }}</h6>
         <span aria-hidden="true">&times;</span>
       </div>
+      {{ isset($content_header) ? $content_header : ""}}
       <!-- 5.モーダルのボディ -->
       <div class="modal-body">
         {{$slot}}
@@ -30,6 +31,8 @@
   @endslot
   @slot('on_click')
   onMenuEditEnd()
+  @endslot
+  @slot('content_header')
   @endslot
   <textarea id="memoarea" rows="8" ></textarea>
   @endcomponent

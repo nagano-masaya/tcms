@@ -320,6 +320,11 @@ function initUnitMenu(){
     parent.dropdown();
   }
 
+  var sups={
+@foreach($supplier as  $item)
+    "{{$item->nickname}}":{{$item->company_id}} ,
+@endforeach
+  };
   function initSupplierMenu(){
 
   }
@@ -517,6 +522,8 @@ function newrow(data){
     .on('input',recalcrow)
     .attachNum3();
 
+  row.find('[name="supplier"]').autocomplete({srouce:sups});
+
   $('#detaillist tbody').append(row);
   initSubjectMenu(  row.find('[name="subject"]')  );
 
@@ -527,7 +534,7 @@ function showDataCopy(){
   $('#dailycopydlg .modal-dialog')
       .removeClass('modal-sm')
       .addClass('modal-lg');
-      
+
   $('#dailycopydlg').modal('show');
 }
 

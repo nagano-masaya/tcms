@@ -32,5 +32,9 @@ class DatabaseSeeder extends Seeder
         $this->call(OrderclaimsTableSeeder::class);
         $this->call(OrdertypeTableSeeder::class);
         $this->call(PersonTableSeeder::class);
+        $this->call(DailydetailTableSeeder::class);
+        $this->call(ItemtypeTableSeeder::class);
+        $this->call(ItemsTableSeeder::class);
+        $this->call(CompanyitemsTableSeeder::class);
     }
 }

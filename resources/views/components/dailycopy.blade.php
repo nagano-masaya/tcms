@@ -37,35 +37,37 @@ onDailyCopyEnd()
         <input class="form-control" type="text" name="" value="" data-id="0">
       </div>
     </div>
-    <div class="container">
+    <div class="container p-0">
 
-      <div class="row">
-        <div class="col-2 p-0 h-50" style="overflow:scroll;">
-          <ul class="metismenu w-100">
-            <li><a href="#">20.01/10</a></li>
-            <li><a href="#">20.01/09</a></li>
-            <li><a href="#">20.01/08</a></li>
-            <li><a href="#">20.01/06</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
-            <li><a href="#">20.01/05</a></li>
+      <div class="d-flex">
+        <div class="p-0" style="overflow-y:scroll;overflow-x:hidden;width:7rem;">
+          <ul class="metismenu small">
+            <li ><a href="#">20.01/10</a></li>
+            <li ><a href="#">20.01/09</a></li>
+            <li ><a href="#">20.01/08</a></li>
+            <li ><a href="#">20.01/07</a></li>
+            <li ><a href="#">20.01/06</a></li>
+            <li ><a href="#">19.12/28</a></li>
+            <li ><a href="#">19.12/27</a></li>
+            <li ><a href="#">19.12/26</a></li>
+            <li ><a href="#">19.12/25</a></li>
+            <li ><a href="#">19.12/24</a></li>
+            <li ><a href="#">19.12/22</a></li>
+            <li ><a href="#">19.12/21</a></li>
+            <li ><a href="#">19.12/20</a></li>
           </ul>
         </div>
-        <div class="col-10 p-0">
-
+        <div class="flex-grow-1" style="overflow-y:scroll;overflow-x:hidden;width:7rem;">
+          <ul class="metismenu">
+            <li><a href="#">あｓｄなそぢｎ</a></li>
+            <li><a href="#">あｓｄなそぢｎ</a></li>
+            <li><a href="#">あｓｄなそぢｎ</a></li>
+            <li><a href="#">あｓｄなそぢｎ</a></li>
+            <li><a href="#">あｓｄなそぢｎ</a></li>
+            <li><a href="#">あｓｄなそぢｎ</a></li>
+            <li><a href="#">あｓｄなそぢｎ</a></li>
+            <li><a href="#">あｓｄなそぢｎ</a></li>
+          </ul>
         </div>
       </div>
     </div>
@@ -80,13 +82,24 @@ onDailyCopyEnd()
 function DailyCopyEnd(){
 }
 
+function calcDailyCopyHeight(){
+  h = $(window).innerHeight()
+      - $('#dailycopydlg .modal-footer').outerHeight()
+      - $('#dailycopydlg .metismenu').offset().top
+      - parseInt($('#dailycopydlg .modal-body').css('padding-bottom'))
+      - 45;
+
+  $('#dailycopydlg .metismenu').parent().outerHeight(h);
+}
+
 $(window).on('DOMContentLoaded' ,function(){
+    $('#dailycopydlg').on('shown.bs.modal',function(){
+      calcDailyCopyHeight();
+    });
     $(window).on('resize', function(){
-      elm = $('#dailycopydlg .modal-body');
-      p = $('#dailycopydlg .metismenu').parent();
-      $(p).height(  $(elm).height() - $(p).offset().top );
-      console.log("w:" + $(elm).width() + " h:" + $(elm).height() );
+      calcDailyCopyHeight();
     })
+    calcDailyCopyHeight();
 });
 </script>
 

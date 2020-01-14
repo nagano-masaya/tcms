@@ -89,6 +89,30 @@ class ConstructsTableSeeder extends Seeder
                 'created_at' => '2020-01-07 03:12:51',
                 'updated_at' => '2020-01-07 03:14:28',
             ),
+            3 => 
+            array (
+                'const_id' => 7,
+                'cont_id' => 2,
+                'user_id' => 1,
+                'const_type_id' => 0,
+                'const_type_name' => '土木一式 ',
+                'const_name' => '5555555',
+                'date_from' => '2020-01-10 20:01:01',
+                'date_to' => '2020-01-10 20:02:28',
+                'date_start' => '2020-01-10 20:01:09',
+                'date_end' => NULL,
+                'person_id' => 0,
+                'person_name' => '伊藤',
+                'state' => '',
+                'progress' => 20.0,
+                'exec_budget' => 0,
+                'resource_cost' => 0,
+                'person_cost' => 0,
+                'histry' => '[]',
+                'deleted_at' => NULL,
+                'created_at' => '2020-01-10 00:55:51',
+                'updated_at' => '2020-01-10 00:55:51',
+            ),
         ));
         
         

@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+    'mycompany'=> env('MYCOMPANY',34),
     'dateformat' => env('DATEFORMAT', 'y.m/d'),
     /*
     |--------------------------------------------------------------------------
