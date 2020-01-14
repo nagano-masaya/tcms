@@ -77,4 +77,32 @@ class listController extends Controller
             ->get();
             return response()->json(["status"=>"OK","data"=>$list]);
         }
+
+        //==============================================================
+        //  商品一覧の取得（AutoComplete用）
+        //==============================================================
+        public function listitemsac(Request $req){
+            $query = \App\items::select()
+              ->join('companyitems','items.item_id','companyitems.item_id');
+            // 取引先IDが指定されていたら条件に追加
+            if( $req->company_id > 0){
+                $query = $query->where('companyitems.company_id',$req->company_id);
+            }
+            //キーワードが設定されていたら条件に追加
+            if( $req->critria->length()>0){
+              $query = $query->where('items.item_name','LIKE',$req->critaria);
+            }
+            // データフェッチ
+            $data = $query->get();
+
+            // AutoComplete用データの生成
+            $list =  array();
+            foreach($item on $data){
+              
+            }
+
+
+
+        }
+
 }

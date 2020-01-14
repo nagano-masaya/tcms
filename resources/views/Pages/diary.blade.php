@@ -522,7 +522,13 @@ function newrow(data){
     .on('input',recalcrow)
     .attachNum3();
 
-  row.find('[name="supplier"]').autocomplete({srouce:sups});
+  row.find('[name="supplier"]').autocomplete({
+        treshold:2,
+        source:sups,
+        onSelectItem:function(data,elm){
+          $(elm).attr('data-id',data.value);
+        }
+      });
 
   $('#detaillist tbody').append(row);
   initSubjectMenu(  row.find('[name="subject"]')  );
