@@ -82,6 +82,7 @@ class listController extends Controller
         //  商品一覧の取得（AutoComplete用）
         //==============================================================
         public function listitemsac(Request $req){
+          try{
             $query = \App\items::select()
               ->join('companyitems','items.item_id','companyitems.item_id');
             // 取引先IDが指定されていたら条件に追加
@@ -89,20 +90,24 @@ class listController extends Controller
                 $query = $query->where('companyitems.company_id',$req->company_id);
             }
             //キーワードが設定されていたら条件に追加
-            if( $req->critria->length()>0){
+            if( !is_null($req->critria) && $req->critria->length()>0){
               $query = $query->where('items.item_name','LIKE',$req->critaria);
             }
             // データフェッチ
             $data = $query->get();
 
             // AutoComplete用データの生成
+            //  ※同じキーワードがあったらダメじゃね？
             $list =  array();
-            foreach($item on $data){
-              
+            foreach($data as $item){
+              $list[$item->item_name] = $item->item_id;
             }
 
-
-
+            return response()->json(["result"=>"OK","data"=>$list]);
+          }catch(Exception $ex)
+          {
+            return response()->json(["message"=>$ex->getMessage()]);
+          }
         }
 
 }

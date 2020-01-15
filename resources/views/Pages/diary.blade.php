@@ -94,9 +94,9 @@
         <tr>
           <th class="small text-gray">
             <div class="row text-center">
+              <div class="col-2 p-0 border">科目</div>
               <div class="col-3 p-0 border">発注先</div>
-              <div class="col-8 p-0 border">名称</div>
-              <div class="col-1 p-0 border">科目</div>
+              <div class="col-7 p-0 border">名称</div>
             </div>
             <div class="row text-center">
               <div class="col-2 border ">数量</div>
@@ -125,9 +125,9 @@
                   </ul>
                 </div>
                 <div class="col-3 p-0 input-group">
-                  <input type="text" class="form-control p-1" name="supplier" data-id="#supplier_id#" value="#supplier_text#" placeholder="発注先" autocomplete="off">
-                  <div class="input-group-append">
-                    <div class="fas fa-search px-1 pt-3 align-text-bottom text-gray small"></div>
+                  <input type="text" class="form-control p-1 border-right-0" name="supplier" data-id="#supplier_id#" value="#supplier_text#" placeholder="発注先" autocomplete="off">
+                  <div class="input-group-append border border-left-0">
+                    <div class="far fa-list-alt mx-1 px-1 pt-3 align-text-bottom text-gray small"></div>
                   </div>
                 </div>
                 <div class="col-7 p-0"><input type="text" class="form-control p-1" name="item_name" value="#item_name#" placeholder="名称" autocomplete="off"></div>
@@ -429,14 +429,40 @@ function initCompMenu(){
       .on('click',onclickCompMenu)
   });
 }
+var itemaclist = [];
 
-var rowtepl;
+{{--/* 品名のAutoComplete更新  */--}}
+function updateItemAC(id,critaria){
+    $(elm).parentsUntil('data-rowid')
+
+    $.ajax({
+        url: 'listitemsac',
+        type: 'POST',
+        data: {_token: CSRF_TOKEN,
+          company_id:id,
+          critaria:critaria
+        },
+        dataType: 'JSON'
+    }).done(function(data){
+        {{--/* clear hash-map  ※autocompleteが参照しているリストオブジェクト＝itemaclistが保持するリストオブジェクトの関係を維持するため、itemaclistの中身は変更させない */--}}
+        keys = Object.keys(itemaclist);
+        while(keys.length>0){
+          delete itemaclist[keys.pop()];
+        }
+
+        for(key in data.data)
+          itemaclist[key] = data.data[key];
+        console.log('itemac updated' + JSON.stringify(itemaclist));
+    });
+}
+
 
 {{--/*==========================*/--}}
 {{--/*                          */--}}
 {{--/* Initialize               */--}}
 {{--/*                          */--}}
 {{--/*==========================*/--}}
+var rowtempl;   {{--/* 明細行のテンプレート保存用 */--}}
 $(window).on('DOMContentLoaded',function(){
   rowtempl = $('#detaillist tbody').html();
              $('#detaillist tbody').html('');
@@ -523,13 +549,17 @@ function newrow(data){
     .attachNum3();
 
   row.find('[name="supplier"]').autocomplete({
-        treshold:2,
+        treshold:1,
         source:sups,
         onSelectItem:function(data,elm){
           $(elm).attr('data-id',data.value);
+          updateItemAC(data.value,"");
         }
-      });
-
+  });
+  row.find('[name="item_name"]').autocomplete({
+       treshold:1,
+       source:itemaclist
+  });
   $('#detaillist tbody').append(row);
   initSubjectMenu(  row.find('[name="subject"]')  );
 

@@ -54,6 +54,8 @@ Route::post('register', 'Auth\RegisterController@register');
 Route::post('listpersons', 'listController@listpersons');
 Route::post('listconstructs','listController@listconstructs');
 Route::post('listunits','listController@listunits');
+Route::post('listitemsac','listcontroller@listitemsac');
+
 /**/
 Route::get('upload', 'fileController@check');
 Route::post('upload', 'fileController@upload');
