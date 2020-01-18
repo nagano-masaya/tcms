@@ -18,7 +18,6 @@ class CreateCompanyitemsTable extends Migration
             $table->bigInteger('item_id');
             $table->bigInteger('person_id');
             $table->timestamps();
-
             //$table->unique('company_id','item_id','person_id');
         });
     }

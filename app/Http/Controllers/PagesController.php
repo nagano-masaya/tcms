@@ -456,19 +456,62 @@ class PagesController extends CommonController
 
     //return var_dump($data);
 
-    $ret = DB::transaction(function () use ($request,$data,$list) {
+    return DB::transaction(function () use ($request,$data,$list) {
+      $listSupplier = [];
+      $listDaily = [];
+      $listItem = [];
+      $listPerson = [];
       foreach ($data as $item) {
+        $rowid = $item['rowid'];
         $supplier_id = DBInt($item['supplier_id']);
-
-        if( is_null($supplier_id ) ){
+        $addCompItem = false;
+        // 発注先が新規登録の場合は、発注先を登録し、発行されたIDで更新する
+        if( is_null($supplier_id ) || $supplier_id==0 ){
             $supplier = \App\company::create([
               'nickname'=>unescape ($item['supplier']),
               'fullname'=>unescape ($item['supplier']),
               'is_customer'=>0,
-              'is_subcon'=>1
+              'is_subcon'=>1,
+              'user_id'=>Auth::user()->id
             ]);
             $supplier_id  = $supplier->company_id;
+            $listSupplier[$rowid]=['supplier_id'=>$supplier_id];
+            $addCompItem = true;
         };
+        // 商品が未登録の場合は登録し、発行されたＩＤで更新する
+        $subjectid = DBInt($item['subject_id']);
+        $itemid = DBInt($item['item_id']);
+        $personid = DBInt($item['person_id']);
+        if( $itemid==0 && $personid==0){  // 両ＩＤとも０＝未登録
+          //科目が労務費の場合は社員マスターに登録（社員マスターは自社だけじゃないよ）
+          if($subjectid == 200){
+            $q = \App\person::create([
+              'pname'=>unescape($item['item_name']),
+              'full_pname'=>unescape($item['item_name']),
+              'company_id'=>$supplier_id,
+              'user_id'=>Auth::user()->id
+            ]);
+            $personid = $q->person_id;
+            $listPerson[$rowid]=['person_id'=>$personid];
+          }else{
+            // アイテムを登録
+            $q = \App\items::create([
+              'item_name'=>unescape($item['item_name']),
+              'def_price'=>DBInt($item['unit_price']),
+              'item_type'=>$subjectid,
+              'user_id'=>Auth::user()->id
+            ]);
+            $itemid = $q->item_id;
+            //　取引先の取り扱い品目として登録
+            $q = \App\companyitems::create([
+              'company_id'=>$supplier_id,
+              'item_id'=>$itemid,
+              'person_id'=>0,
+              'user_id'=>Auth::user()->id
+            ]);
+            $listItem[$rowid]=['item_id'=>$itemid];
+          }
+        }
 
         $rec = \App\dailydetail::updateOrCreate(
           ['daily_id'=>$item['daily_id']],
@@ -476,9 +519,11 @@ class PagesController extends CommonController
             'const_id'=>DBInt($item['const_id']),
             'disp_order'=>DBInt($item['disp_order']),
             'daily_date'=>DBDate($item['daily_date']),
-            'subject_id'=>DBInt($item['subject_id']),
+            'subject_id'=>$subjectid,
             'subject'=>unescape($item['subject']),
             'item_name'=>unescape ($item['item_name']),
+            'item_id'=>$itemid,
+            'person_id'=>$personid,
             'qty'=>DBInt($item['qty']),
             'unit_id'=>DBInt($item['unit_id']),
             'unit_text'=>unescape ($item['unit']),
@@ -491,10 +536,11 @@ class PagesController extends CommonController
             'user_id'=>Auth::user()->id
           ]
         );
-      }
-    });
+        $listDaily[$item['rowid']]=["daily_id"=>$rec->daily_id];
 
-    return response()->json(["status"=>$ret,"data"=>$list]);
+      }
+      return response()->json(["status"=>"OK","daily"=>$listDaily,"supplier"=>$listSupplier,"item"=>$listItem,"person"=>$listPerson]);
+    });
   }
 
 

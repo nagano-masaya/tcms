@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Model;
 use Illuminate\Http\Auth;
 
@@ -39,6 +39,7 @@ class listController extends Controller
           $list = \App\construct::select(
             ['const_id','const_name','constructs.cont_id','contructs.name'])
             ->join('contructs','constructs.cont_id','contructs.cont_id')
+            ->where('constructs.cont_id',$req->cont_id)
             ->get();
           return response()->json(["status"=>"OK","data"=>$list]);
         }
@@ -70,10 +71,13 @@ class listController extends Controller
         //  日報の取得
         //==============================================================
         public function listdaily(Request $req){
-          $list = \App\dailydetail::select()
-            ->where('daily_date',$req->daily_date)
-            ->where('const_id',$req->const_id)
-            ->orderBy('disp_order')
+          $q = \App\dailydetail::select()
+                  ->where('const_id',$req->const_id);
+
+          if(isset($req->daily_date))
+            $q = $q->where('daily_date',$req->daily_date);
+
+          $list = $q->orderBy('daily_date','desc')->orderBy('disp_order')
             ->get();
             return response()->json(["status"=>"OK","data"=>$list]);
         }
@@ -83,24 +87,31 @@ class listController extends Controller
         //==============================================================
         public function listitemsac(Request $req){
           try{
-            $query = \App\items::select()
+            $qItem = \App\items::select(['items.item_id',DB::raw('0 as person_id'),'item_name as title' ])
               ->join('companyitems','items.item_id','companyitems.item_id');
+
+            $qPerson = \App\person::select([DB::raw('0 as item_id'),'person.person_id','pname as title' ]);
+
+
             // 取引先IDが指定されていたら条件に追加
             if( $req->company_id > 0){
-                $query = $query->where('companyitems.company_id',$req->company_id);
+              $qItem = $qItem->where('companyitems.company_id',$req->company_id);
+              $qPerson = $qPerson->where('company_id',$req->company_id);
             }
             //キーワードが設定されていたら条件に追加
             if( !is_null($req->critria) && $req->critria->length()>0){
-              $query = $query->where('items.item_name','LIKE',$req->critaria);
+              $qItem = $qItem->where('items.item_name','LIKE',$req->critaria);
+              $qPerson = $qPerson->where('items.item_name','LIKE',$req->critaria);
             }
             // データフェッチ
-            $data = $query->get();
+
+            $data = $qItem->union($qPerson)->get();
 
             // AutoComplete用データの生成
             //  ※同じキーワードがあったらダメじゃね？
             $list =  array();
             foreach($data as $item){
-              $list[$item->item_name] = $item->item_id;
+              $list[$item->title] = ['item_id'=>$item->item_id,'person_id'=>$item->person_id];
             }
 
             return response()->json(["result"=>"OK","data"=>$list]);

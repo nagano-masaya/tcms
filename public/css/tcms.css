@@ -235,10 +235,6 @@ input::placeholder{
   margin-right: .1rem;
 }
 
-.input-group-prepend i{
-  color:gray !important;
-}
-
 .text-glay {
   color:gray;
 }

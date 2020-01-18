@@ -34,21 +34,18 @@
             aria-expanded="false">
         </button>
         <div class="dropdown-menu w-100" aria-labelledby="dropdown_cont">
-          <a class="dropdown-item" href="#">Menu #1</a>
-          <a class="dropdown-item" href="#">Menu #2</a>
-          <a class="dropdown-item" href="#">Menu #3</a>
         </div>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="px-0 col-2 input-group">
-      <div class="input-group-prepend p-1 lead">
-        <i class="fas fa-caret-left pt-1 clickable"></i>
+      <div class="input-group-prepend p-1 lead text-glay">
+        <i class="fas fa-caret-left pt-1 clickable h3" name="daily_date_prev"></i>
       </div>
       <input type="button" class="form-control text-left datepicker" name="daily_date" value="" maxlength="128">
-      <div class="input-group-append p-1 lead">
-        <i class="fas fa-caret-right pt-1 clickable"></i>
+      <div class="input-group-append p-1 lead text-glay">
+        <i class="fas fa-caret-right pt-1 clickable h3" name="daily_date_next"></i>
       </div>
     </div>
     <div class="px-0 col-1">
@@ -66,9 +63,6 @@
             aria-expanded="false">
         </button>
         <div class="dropdown-menu w-100" aria-labelledby="dropdown_const">
-          <a class="dropdown-item" href="#">Menu #1</a>
-          <a class="dropdown-item" href="#">Menu #2</a>
-          <a class="dropdown-item" href="#">Menu #3</a>
         </div>
       </div>
     </div>
@@ -125,19 +119,19 @@
                   </ul>
                 </div>
                 <div class="col-3 p-0 input-group">
-                  <input type="text" class="form-control p-1 border-right-0" name="supplier" data-id="#supplier_id#" value="#supplier_text#" placeholder="発注先" autocomplete="off">
+                  <input type="text" class="form-control p-1 border-right-0" name="supplier" data-supid="#supplier_id#" value="#supplier_text#" placeholder="発注先" autocomplete="off">
                   <div class="input-group-append border border-left-0">
                     <div class="far fa-list-alt mx-1 px-1 pt-3 align-text-bottom text-gray small"></div>
                   </div>
                 </div>
-                <div class="col-7 p-0"><input type="text" class="form-control p-1" name="item_name" value="#item_name#" placeholder="名称" autocomplete="off"></div>
+                <div class="col-7 p-0"><input type="text" class="form-control p-1" name="item_name" value="#item_name#" data-supid="#supplier_id#" data-iid="#item_id#" data-pid="#person_id#" placeholder="名称" autocomplete="off"></div>
               </div>
               <div class="row rowbreak">
                 <div class="col-2 p-0 input-group">
                   <input type="text" class="form-control p-1 jpcurrency" name="qty" value="#qty#" placeholder="数量">
                   <div class="input-group-apped" style="line-height:2.1rem">
 <!--                    <span class="px-1 small" style="line-height:0.6rem;vertical-align:bottom">ダース</span> -->
-                    <input type="button" class="small border-0" name="unit" data-id="" value="台" onclick="showUnitMenu(this)">
+                    <input type="button" class="small border-0" name="unit" data-id="#unit_id#" value="#unit_text#" onclick="showUnitMenu(this)">
                   </div>
                 </div>
                 <div class="col-10 p-0">
@@ -180,9 +174,22 @@
 </div>
 
 @component('components.dailycopy')
+@slot('onCommit')
+onCommitCopy
+@endslot
 @endcomponent
 
 <script type="application/javascript" id="unitdata">
+
+function onCommitCopy(arr){
+  arr.forEach(function(item){
+    item.daily_id = 0;
+    item.daily_date = moment($('[name="daily_date"]').val(),DATEFORMAT);
+    item.const_id = $('#dropdown_const').prop('data-id');
+    newrow(item);
+  });
+}
+
 
   var unitparents=[];
 
@@ -267,7 +274,7 @@ function initUnitMenu(){
   $(root).metisMenu();
 }
 
-  function showUnitMenu(elm)
+function showUnitMenu(elm)
   {
     $('#unitmenu')
     .attr('data-target',$(elm).parentsUntil('tbody').last().attr('data-rowid'))
@@ -329,7 +336,7 @@ function initUnitMenu(){
 
   }
 
-  function initContMenu(){
+function initContMenu(){
     var menu = $('[aria-labelledby="dropdown_cont"]');
     menu.children().remove();
     conts.forEach(function(item){
@@ -340,15 +347,37 @@ function initUnitMenu(){
             $('#dropdown_cont')
               .attr('data-id',$(elm).attr('data-id'))
               .html($(elm).text());
-              initConstMenu();
+              loadConstData($(elm).attr('data-id'));
           });
     });
     menu.dropdown();
-  }
+}
 
-  function initConstMenu(){
+
+function loadConstData(cont_id){
+    $.ajax({
+        url: 'listconstructs',
+        type: 'POST',
+        data: {_token: CSRF_TOKEN,
+          cont_id:cont_id,
+        },
+        dataType: 'JSON'
+    }).done(function(data){
+      recvdata = data;
+      consts = [];
+      var parent = $('#detaillist tbody');
+      data.data.forEach(function(data){
+        consts.push({id:data.const_id, text:data.const_name});
+      });
+      initConstMenu();
+    })
+}
+
+function initConstMenu(){
     var menu = $('[aria-labelledby="dropdown_const"]');
     menu.children().remove();
+    $('#dropdown_const').html("");
+
     consts.forEach(function(item){
       var cont_id = parseInt($('#dropdown_cont').attr('data-id'));
       $('<div class="clickable"><a data-id="'+item.id+'">'+item.text +'</a></div>')
@@ -369,7 +398,8 @@ function initUnitMenu(){
       .html($(elm).text());
     console.log("initConstMenu " + $(elm).attr('data-id') + ":" +$(elm).text() + " - " + elm.html())
     initDialy();
-  }
+}
+
 var recvdata;
 function initDialy(){
   var strval = $('#dropdown_const').attr('data-id');
@@ -401,10 +431,6 @@ function initDialy(){
   })
 }
 
-function onBottomPopper(){
-
-}
-
 var companies=[
 @foreach($companies as $item)
      {!! json_encode($item) !!} ,
@@ -431,6 +457,14 @@ function initCompMenu(){
 }
 var itemaclist = [];
 
+{{--/* clear hash-map  ※autocompleteが参照しているリストオブジェクト＝itemaclistが保持するリストオブジェクトの関係を維持するため、itemaclistの中身は変更させない */--}}
+function clearItemACList(){
+  keys = Object.keys(itemaclist);
+  while(keys.length>0){
+    delete itemaclist[keys.pop()];
+  }
+}
+
 {{--/* 品名のAutoComplete更新  */--}}
 function updateItemAC(id,critaria){
     $(elm).parentsUntil('data-rowid')
@@ -444,15 +478,9 @@ function updateItemAC(id,critaria){
         },
         dataType: 'JSON'
     }).done(function(data){
-        {{--/* clear hash-map  ※autocompleteが参照しているリストオブジェクト＝itemaclistが保持するリストオブジェクトの関係を維持するため、itemaclistの中身は変更させない */--}}
-        keys = Object.keys(itemaclist);
-        while(keys.length>0){
-          delete itemaclist[keys.pop()];
-        }
-
+        clearItemACList();
         for(key in data.data)
-          itemaclist[key] = data.data[key];
-        console.log('itemac updated' + JSON.stringify(itemaclist));
+          itemaclist[key] = escape('{"item_id":'+data.data[key].item_id+',"person_id":' + data.data[key].person_id + "}");
     });
 }
 
@@ -472,9 +500,23 @@ $(window).on('DOMContentLoaded',function(){
   });
   rowtempl = rowtempl.replace('#subject_menu_item#',subjectitems);
 
+  {{--/* 日付を変更された時の処理 */--}}
+  $('[name="daily_date_next"]')
   $('[name="daily_date"]').val(moment().format(DATEFORMAT));
-
   $('[name="daily_date"]').on('change',function(e){
+    initDialy();
+  });
+  $('[name="daily_date_prev"]').on('click',function(){
+    $('[name="daily_date"]').val(
+      moment($('[name="daily_date"]').val(),DATEFORMAT)
+                  .subtract(1,'days').format(DATEFORMAT)　);
+    initDialy();
+
+  });
+  $('[name="daily_date_next"]').on('click',function(){
+    $('[name="daily_date"]').val(
+      moment($('[name="daily_date"]').val(),DATEFORMAT)
+                  .add(1,'days').format(DATEFORMAT))
     initDialy();
   });
 
@@ -524,17 +566,23 @@ function newrow(data){
   if(data == null){
     templ = rowtempl.replace("#daily_id#","0")
             .replace("#rowid#",UUID())
+            .replace(/#supplier_id#/g,0)
+            .replace(/#unit_id#/g,1)
+            .replace(/#unit_text#/g,"個")
             .replace(/#.+#/g,"");
   }else{
+    console.log("newrow:" + JSON.stringify(data));
     templ = rowtempl.replace("#daily_id#",data.daily_id)
             .replace("#rowid#",UUID())
             .replace("#subject_id#",data.subject_id)
             .replace("#subject#",data.subject)
+            .replace('#item_id#',data.item_id)
+            .replace('#person_id#',data.person_id)
             .replace("#item_name#",data.item_name)
             .replace("#qty#",data.qty)
             .replace("#unit_id#",data.unit_id)
             .replace("#unit_text#",data.unit_text)
-            .replace("#supplier_id#",data.supplier_id)
+            .replace(/#supplier_id#/g,data.supplier_id)
             .replace("#supplier_text#",data.supplier_text)
             .replace("#unit_price#",tcms_num3(data.unit_price))
             .replace("#sub_total#",tcms_num3(data.sub_total))
@@ -548,18 +596,41 @@ function newrow(data){
     .on('input',recalcrow)
     .attachNum3();
 
-  row.find('[name="supplier"]').autocomplete({
+  row.find('[name="supplier"]')
+      .on('input',function(){
+        val = sups[$(this).val()];
+        if(val == undefined){
+          val="0";
+        }
+        $(this).attr('data-supid',val);
+      })
+      .autocomplete({
         treshold:1,
         source:sups,
         onSelectItem:function(data,elm){
-          $(elm).attr('data-id',data.value);
+          $(elm).attr('data-supid',data.value);
           updateItemAC(data.value,"");
+
+          $(elm).parent().parent().find('input[name="item_name"]').focus();
+
         }
-  });
+      });
   row.find('[name="item_name"]').autocomplete({
        treshold:1,
-       source:itemaclist
+       source:itemaclist,
+       onSelectItem:function(data,elm){
+         var v = JSON.parse(unescape(data.value));
+         $(elm)
+            .attr('data-iid', v.item_id)
+            .attr('data-pid', v.person_id);
+       }
+  }).on('focus',function(){
+
+  }).on('input',function(){
+    $(this).attr("data-pid","0");
+    $(this).attr("data-iid","0");
   });
+
   $('#detaillist tbody').append(row);
   initSubjectMenu(  row.find('[name="subject"]')  );
 
@@ -627,6 +698,10 @@ function validate(){
           src +=  ',"' + $(this).attr("name") + '_id":"' + $(this).attr('data-id') + '"';
         }
       });
+      src += ',"supplier_id":' + $(this).find('input[name="supplier"]').attr('data-supid');
+      src += ',"item_id":' + $(this).find('input[name="item_name"]').attr('data-iid');
+      src += ',"person_id":' + $(this).find('input[name="item_name"]').attr('data-pid');
+
       src += "}";
       delim = ","
     })
@@ -642,7 +717,23 @@ function validate(){
         },
         dataType: 'JSON'
     }).done(function(data){
-
+      for(item in data.daily){
+        $('[data-rowid="'+ item +'"]').attr('data-id',data.daily[item].daily_id);
+      }
+      for(item in data.supplier){
+        $('[data-rowid="'+ item +'"] [data-supid]').attr('data-supid',data.supplier[item].supplier_id);
+      }
+      for(item in data.item){
+        $('[data-rowid="'+ item +'"] [name="item_name"]').attr('data-iid',data.item[item].item_id);
+      }
+      for(item in data.person){
+        $('[data-rowid="'+ item +'"] [name="item_name"]').attr('data-pid',data.item[item].person_id);
+      }
+      toastr.options = {
+        "positionClass": "toast-top-left",
+        "timeOut": "1500",
+      };
+      toastr.info('保存しました');
     })
 }
 </script>

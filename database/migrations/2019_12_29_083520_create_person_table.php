@@ -18,6 +18,9 @@ class CreatePersonTable extends Migration
             $table->string('pname',5);
             $table->string('full_pname')->default("");
             $table->string('role')->default("");
+            $table->bigInteger('company_id')->default(0);
+            $table->json('history')->default('[]');
+            $table->bigInteger('user_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
