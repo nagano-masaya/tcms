@@ -446,14 +446,30 @@ function onclickCompMenu(elm)
     .val($(elm).text());
 }
 
+{{--/*====================================*/--}}
+{{--/*   取引先メニューの初期化　                                              */--}}
+{{--/*====================================*/--}}
 var compMenuCaller=null;
 function initCompMenu(){
-  parent = $('#compmenu');
-  companies.forEach(function(item){
-    $('<li class="dropdown-item px-1 " data-id="'+ item.company_id +'">'+item.nickname+'</li>')
-      .appendTo(parent)
-      .on('click',onclickCompMenu)
+  $.ajax({
+      url: 'listcompanies',
+      type: 'POST',
+      data: {_token: CSRF_TOKEN,
+          company_id:id,
+          critaria:critaria
+      },
+      dataType: 'JSON'
+  }).done(function(data){
+      parent = $('#compmenu');
+      parent.children().remove();
+      data.data.forEach(function(item){
+          $('<li class="dropdown-item px-1 " data-id="'+ item.company_id +'">'+item.nickname+'</li>')
+            .appendTo(parent)
+            .on('click',onclickCompMenu)
+      });
   });
+
+
 }
 var itemaclist = [];
 

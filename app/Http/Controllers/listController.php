@@ -26,7 +26,12 @@ class listController extends Controller
 
         public function listcontructs(Request $req){
         }
-        public function listcompanys(Request $req){
+
+        public function listcompanies(Request $req){
+          $list = \App\company::select(['company_id','nickname','is_customer','is_subcon','is_own'])
+              ->get();
+
+          return response()->json(["status"=>"OK","data"=>$list]);
         }
 
         public function persons(Request $req){

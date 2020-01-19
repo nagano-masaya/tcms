@@ -53,6 +53,7 @@ Route::post('register', 'Auth\RegisterController@register');
 
 Route::post('listpersons', 'listController@listpersons');
 Route::post('listconstructs','listController@listconstructs');
+Route::post('listcompanies', 'listController@listcompanies');
 Route::post('listunits','listController@listunits');
 Route::post('listitemsac','listcontroller@listitemsac');
 
