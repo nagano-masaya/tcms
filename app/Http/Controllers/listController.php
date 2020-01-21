@@ -50,6 +50,28 @@ class listController extends Controller
         }
 
         //==============================================================
+        //  工事の経費一覧を取得
+        //  const_id: 一覧を取得する工事の工事ID
+        //==============================================================
+        public function listconstcosts(Request $req){
+          $rescost = \App\dailydetail::select(
+                'item_id','item_name',DB::raw('TRUNCATE(SUM(total_price)/10000,0) as price')
+            )
+            ->where('const_id',$req->const_id)
+            ->where('item_id>0')
+            ->get();
+
+            $resperson = \App\dailydetail::select(
+                  'item_id','item_name',DB::raw('TRUNCATE(SUM(total_price)/10000,0) as price')
+              )
+              ->where('const_id',$req->const_id)
+              ->where('person_id>0')
+              ->get();
+
+              return response()->json(["status"=>"OK","resource"=>$rescost,"person"=>$personcost]);
+        }
+
+        //==============================================================
         //  単位一覧の取得
         //==============================================================
         public function listunits(Request $req){
@@ -76,7 +98,12 @@ class listController extends Controller
         //  日報の取得
         //==============================================================
         public function listdaily(Request $req){
-          $q = \App\dailydetail::select()
+          $q = \App\dailydetail::select(['*',
+            DB::raw('TRUNCATE(qty / 10000,0) as qty_n'),
+            DB::raw('TRUNCATE(unit_price / 10000,0) as unit_price_n'),
+            DB::raw('TRUNCATE(sub_total / 10000,0) as sub_total_n'),
+            DB::raw('TRUNCATE(tax / 10000,0) as tax_n'),
+            DB::raw('TRUNCATE(total_price / 10000,0) as total_price_n')])
                   ->where('const_id',$req->const_id);
 
           if(isset($req->daily_date))

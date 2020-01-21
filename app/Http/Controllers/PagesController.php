@@ -450,6 +450,9 @@ class PagesController extends CommonController
       return view('pages.diary',['supplier'=>$supplier,'units'=>$units,'consts'=>$consts,'companies'=>$companies ]);
     }
 
+    //======================================================
+    //  日報データ更新
+    //======================================================
     public function diaryPost(Request $request){
     $list=[];
     $data = $request->data;
@@ -524,21 +527,32 @@ class PagesController extends CommonController
             'item_name'=>unescape ($item['item_name']),
             'item_id'=>$itemid,
             'person_id'=>$personid,
-            'qty'=>DBInt($item['qty']),
+            'qty'=>DBInt($item['qty'])*10000,
             'unit_id'=>DBInt($item['unit_id']),
             'unit_text'=>unescape ($item['unit']),
             'supplier_id'=>$supplier_id,
             'supplier_text'=>unescape ($item['supplier']),
-            'unit_price'=>DBInt($item['unit_price']),
-            'sub_total'=>DBInt($item['sub_total']),
-            'tax'=>DBInt($item['tax']),
-            'total_price'=>DBInt($item['total_price']),
+            'unit_price'=>DBInt($item['unit_price'])*10000,
+            'sub_total'=>DBInt($item['sub_total'])*10000,
+            'tax'=>DBInt($item['tax'])*10000,
+            'total_price'=>DBInt($item['total_price'])*10000,
             'user_id'=>Auth::user()->id
           ]
         );
-        $listDaily[$item['rowid']]=["daily_id"=>$rec->daily_id];
 
+        $listDaily[$item['rowid']]=["daily_id"=>$rec->daily_id];
       }
+
+      //=================================
+      //    現場情報のコストを更新
+
+      $ret = \App\construct::where('const_id', $request->const_id)
+                ->update(
+                    [
+                      'resource_cost'=>DB::raw('(select sum(total_price) from dailydetail where item_id>0 AND const_id='.$request->const_id.")"),
+                      'person_cost'=>DB::raw('(select sum(total_price) from dailydetail where person_id>0 AND const_id='.$request->const_id.")")
+                   ]
+                 );
       return response()->json(["status"=>"OK","daily"=>$listDaily,"supplier"=>$listSupplier,"item"=>$listItem,"person"=>$listPerson]);
     });
   }

@@ -163,7 +163,9 @@ function inittab1(){
           }
           dcdlg_dailylist[day][item.daily_id] = item;
         });
-
+        setTimeout(function(){
+        				$("#overlay").fadeOut(300);
+        			},500);
       });
       {{--/* 全選択ボタンの処理 */--}}
       $('#dailycopydlg #item1 .select-all').on('click',function(){

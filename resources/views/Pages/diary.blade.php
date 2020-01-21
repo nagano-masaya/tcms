@@ -370,6 +370,9 @@ function loadConstData(cont_id){
         consts.push({id:data.const_id, text:data.const_name});
       });
       initConstMenu();
+      setTimeout(function(){
+				$("#overlay").fadeOut(300);
+			},500);
     })
 }
 
@@ -399,44 +402,47 @@ function initConstMenu(){
     console.log("initConstMenu " + $(elm).attr('data-id') + ":" +$(elm).text() + " - " + elm.html())
     initDialy();
 }
-
-var recvdata;
+{{--/*--------------------------------------------------*/--}}
+{{--/* 　日報データ受信 　                             */--}}
+{{--/*--------------------------------------------------*/--}}
 function initDialy(){
-  var strval = $('#dropdown_const').attr('data-id');
-  if(strval.match(/^[0-9]+$/g) === null){
-    return ;
-  }
-  const_id = parseInt(strval);
-  var strdate = $('[name="daily_date"]').val();
-  if(!moment(strval,DATEFORMAT).isValid())
-    return ;
+    var strval = $('#dropdown_const').attr('data-id');
+    if(strval.match(/^[0-9]+$/g) === null){
+      return ;
+    }
+    const_id = parseInt(strval);
+    var strdate = $('[name="daily_date"]').val();
+    if(!moment(strval,DATEFORMAT).isValid())
+      return ;
 
-  parent = $('#detaillist tbody');
-  parent.children().remove();
+    parent = $('#detaillist tbody');
+    parent.children().remove();
 
-  $.ajax({
-      url: 'listdaily',
-      type: 'POST',
-      data: {_token: CSRF_TOKEN,
-        const_id:const_id,
-        daily_date:strdate
-      },
-      dataType: 'JSON'
-  }).done(function(data){
-    recvdata = data;
-    var parent = $('#detaillist tbody');
-    data.data.forEach(function(data){
-      $(newrow(data)).appendTo(parent);
+    $.ajax({
+        url: 'listdaily',
+        type: 'POST',
+        data: {_token: CSRF_TOKEN,
+            const_id:const_id,
+            daily_date:strdate
+        },
+        dataType: 'JSON'
+    }).done(function(data){
+        var parent = $('#detaillist tbody');
+        setTimeout(function(){
+        				$("#overlay").fadeOut(300);
+        			},500);
+        data.data.forEach(function(data){
+            $(newrow(data)).appendTo(parent);
+        })
     })
-  })
 }
 
 var companies=[
-@foreach($companies as $item)
-     {!! json_encode($item) !!} ,
-@endforeach
 ];
 
+{{--/*====================================*/--}}
+{{--/*   取引先メニュー項目クリック時の処理                          */--}}
+{{--/*====================================*/--}}
 function onclickCompMenu(elm)
 {
   if( compMenuCaller===null)
@@ -450,7 +456,7 @@ function onclickCompMenu(elm)
 {{--/*   取引先メニューの初期化　                                              */--}}
 {{--/*====================================*/--}}
 var compMenuCaller=null;
-function initCompMenu(){
+function initCompMenu(id=0,critaria=""){
   $.ajax({
       url: 'listcompanies',
       type: 'POST',
@@ -467,7 +473,10 @@ function initCompMenu(){
             .appendTo(parent)
             .on('click',onclickCompMenu)
       });
-  });
+      setTimeout(function(){
+      				$("#overlay").fadeOut(300);
+      			},500);
+      });
 
 
 }
@@ -481,7 +490,9 @@ function clearItemACList(){
   }
 }
 
-{{--/* 品名のAutoComplete更新  */--}}
+{{--/*====================================*/--}}
+{{--/*   品名のAutoComplete更新 　                                              */--}}
+{{--/*====================================*/--}}
 function updateItemAC(id,critaria){
     $(elm).parentsUntil('data-rowid')
 
@@ -495,18 +506,23 @@ function updateItemAC(id,critaria){
         dataType: 'JSON'
     }).done(function(data){
         clearItemACList();
-        for(key in data.data)
+        for(key in data.data){
           itemaclist[key] = escape('{"item_id":'+data.data[key].item_id+',"person_id":' + data.data[key].person_id + "}");
+        }
+        setTimeout(function(){
+        				$("#overlay").fadeOut(300);
+        			},500);
     });
 }
 
 
 {{--/*==========================*/--}}
-{{--/*                          */--}}
-{{--/* Initialize               */--}}
-{{--/*                          */--}}
+{{--/*                                                                      */--}}
+{{--/* Initialize                                                       */--}}
+{{--/*                                                                      */--}}
 {{--/*==========================*/--}}
 var rowtempl;   {{--/* 明細行のテンプレート保存用 */--}}
+
 $(window).on('DOMContentLoaded',function(){
   rowtempl = $('#detaillist tbody').html();
              $('#detaillist tbody').html('');
@@ -520,33 +536,30 @@ $(window).on('DOMContentLoaded',function(){
   $('[name="daily_date_next"]')
   $('[name="daily_date"]').val(moment().format(DATEFORMAT));
   $('[name="daily_date"]').on('change',function(e){
-    initDialy();
+     initDialy();
   });
-  $('[name="daily_date_prev"]').on('click',function(){
-    $('[name="daily_date"]').val(
-      moment($('[name="daily_date"]').val(),DATEFORMAT)
-                  .subtract(1,'days').format(DATEFORMAT)　);
-    initDialy();
+     $('[name="daily_date_prev"]').on('click',function(){
+     $('[name="daily_date"]').val(
+       moment($('[name="daily_date"]').val(),DATEFORMAT)
+                    .subtract(1,'days').format(DATEFORMAT)　);
+      initDialy();
 
-  });
-  $('[name="daily_date_next"]').on('click',function(){
-    $('[name="daily_date"]').val(
-      moment($('[name="daily_date"]').val(),DATEFORMAT)
-                  .add(1,'days').format(DATEFORMAT))
-    initDialy();
-  });
+    });
+    $('[name="daily_date_next"]').on('click',function(){
+      $('[name="daily_date"]').val(
+        moment($('[name="daily_date"]').val(),DATEFORMAT)
+                    .add(1,'days').format(DATEFORMAT))
+      initDialy();
+    });
 
-  initUnitMenu();
-  initSubjectMenu();
-  initSupplierMenu();
-  initContMenu();
-  initCompMenu();
+    initUnitMenu();
+    initSubjectMenu();
+    initSupplierMenu();
+    initContMenu();
+    initCompMenu();
 
-
-  $('.dropdown-item').addClass('clickable');
-  $('.jpcurrency').attachNum3();
-
-
+    $('.dropdown-item').addClass('clickable');
+    $('.jpcurrency').attachNum3();
 });
 
 {{--/*   金額再計算  */--}}
@@ -595,15 +608,15 @@ function newrow(data){
             .replace('#item_id#',data.item_id)
             .replace('#person_id#',data.person_id)
             .replace("#item_name#",data.item_name)
-            .replace("#qty#",data.qty)
+            .replace("#qty#",data.qty_n)
             .replace("#unit_id#",data.unit_id)
             .replace("#unit_text#",data.unit_text)
             .replace(/#supplier_id#/g,data.supplier_id)
             .replace("#supplier_text#",data.supplier_text)
-            .replace("#unit_price#",tcms_num3(data.unit_price))
-            .replace("#sub_total#",tcms_num3(data.sub_total))
-            .replace("#tax#",tcms_num3(data.tax))
-            .replace("#total_price#",tcms_num3(data.total_price))
+            .replace("#unit_price#",tcms_num3(data.unit_price_n))
+            .replace("#sub_total#",tcms_num3(data.sub_total_n))
+            .replace("#tax#",tcms_num3(data.tax_n))
+            .replace("#total_price#",tcms_num3(data.total_price_n))
             .replace("#user_id#",data.user_id);
   }
 
@@ -652,13 +665,37 @@ function newrow(data){
 
 }
 
-
+{{--/*--------------------------------------------------------------------*/--}}
+{{--/*   データコピーボタン押下時の処理                           */--}}
+{{--/*--------------------------------------------------------------------*/--}}
 function showDataCopy(){
-  $('#dailycopydlg .modal-dialog')
-      .removeClass('modal-sm')
-      .addClass('modal-lg');
+    try{
+      var cont_id = parseInt($('#dropdown_cont').attr('data-id'));
+      if(!(cont_id>0)){
+         throw "工事を選択してください";
+      }
 
-  $('#dailycopydlg').modal('show');
+      var const_id = parseInt($('#dropdown_const').attr('data-id'));
+      if(!(const_id>0)){
+         throw "現場を選択してください";
+      }
+      var dt = moment($('[name="daily_date"]').val(),DATEFORMAT);
+      if(!dt.isValid()){
+         throw "日付を指定してください"
+      }
+      $('#dailycopydlg .modal-dialog')
+          .removeClass('modal-sm')
+          .addClass('modal-lg');
+
+      $('#dailycopydlg').modal('show');
+    }catch(e){
+        toastr.options = {
+            "positionClass": "toast-top-left",
+            "timeOut": "1500",
+        };
+        toastr.error(e);
+    }
+
 }
 
 {{--/* 追加ボタン押下時の処理 */--}}
@@ -729,6 +766,7 @@ function validate(){
         url: 'diary',
         type: 'POST',
         data: {_token: CSRF_TOKEN,
+          const_id:parseInt($('#dropdown_const').attr('data-id')),
           data:postdata
         },
         dataType: 'JSON'
@@ -745,11 +783,14 @@ function validate(){
       for(item in data.person){
         $('[data-rowid="'+ item +'"] [name="item_name"]').attr('data-pid',data.item[item].person_id);
       }
-      toastr.options = {
-        "positionClass": "toast-top-left",
-        "timeOut": "1500",
-      };
-      toastr.info('保存しました');
+      setTimeout(function(){
+				$("#overlay").fadeOut(300);
+        toastr.options = {
+          "positionClass": "toast-top-left",
+          "timeOut": "1500",
+        };
+        toastr.info('保存しました');
+			},500);
     })
 }
 </script>

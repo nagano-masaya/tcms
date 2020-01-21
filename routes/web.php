@@ -23,6 +23,7 @@ Route::get('contruct', 'PagesController@contruct')->middleware('auth');
 Route::get('contdetaile', 'PagesController@contDetaile')->middleware('auth');
 Route::post('contdetaile', 'PagesController@conDetailSave')->middleware('auth');
 Route::get('constdetaile', 'PagesController@constDetaile')->middleware('auth');
+Route::post('listconstcosts','listController@listconstcosts')->middleware('auth');
 
 Route::get('claimlist', 'PagesController@claimlist')->middleware('auth');
 Route::get('claimdetail', 'PagesController@claimdetail')->middleware('auth');

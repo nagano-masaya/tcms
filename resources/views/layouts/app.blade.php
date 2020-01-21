@@ -44,6 +44,12 @@
 
 </head>
 <body>
+    <div id="ajaxspinner" style="{width:0; height:0;position:relative}">
+      <div id="overlay">
+          <div class="cv-spinner">
+              <span class="spinner"></span>
+          </div>
+      </div>    </div>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">

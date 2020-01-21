@@ -78,6 +78,14 @@ document.addEventListener('DOMContentLoaded', function() {
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     attachNum3('.jpcurrency');
 
+    $(document).ajaxSend(function() {
+         $("#overlay").fadeIn(300);　
+     }).ajaxComplete(function(){
+       setTimeout(function(){
+ 				$("#overlay").fadeOut(300);
+ 			  },500);
+     });
+
     jQuery.fn.extend({
         attachNum3: function() {
             $(this).on('input', function() {

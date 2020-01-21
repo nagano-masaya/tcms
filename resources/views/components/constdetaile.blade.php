@@ -191,91 +191,97 @@ var memos = [
     {'date':'2019-12-15 16:10','user':'利用者2','memo':'メモ2' }
   ];
 
-  initConstDetail();
 
-  {{--/* 読み込み時の処理*/--}}
-  function initConstDetail(){
   var resources = [
-        {"date":"2019-12-14 11:24","name":"BH0.2","price":250000,"order_to":"南陽" },
-        {'date':'2019-12-15 15:51','name':'利用者2','price':25000,"order_to":"川端"  }
   ];
 
   var members = [
-        {"name":"麻川","days":8,"hour":64.0,"unit_price":1680,"price":107520 },
-        {'name':'高藤','days':7,"hour":56.0,"unit_price":1680, "price":94080 }
   ];
 
-  $('#resourcetbl tbody tr').remove();
-  var base = $('#resourcetbl tbody');
-  resources.forEach(function(itm){
-    $(base).append('<tr><td>'
-              +itm.date+'</td><td>'
-              +itm.name+'</td><td>'
-              +itm.price+'</td><td>'
-              +itm.order_to+'</td></tr>');
-  });
+  {{--/* 読み込み時の処理*/--}}
+  function initConstDetail(){
+    $.ajax({
+        url: 'listconstructs',
+        type: 'POST',
+        data: {_token: CSRF_TOKEN,
+          cont_id:cont_id,
+        },
+        dataType: 'JSON'
+    }).done(function(data){
+        var total_cost = 0;
+        data.rescost.forEach(function(item){
+          total_cost += item.price;
+        });
+        data.personcost.forEach(function(item){
+          total_cost += item.price;
+        });
+        $('#constdetail [name="budget_used"]').val(tcms_num3(total_cost));
+    });
+  }
 
-  $('#membertbl tbody tr').remove();
-  var base = $('#membertbl tbody');
-  members.forEach(function(itm){
-    $(base).append('<tr><td>'+itm.name+'</td><td>'+itm.hour+'h </td><td>'+itm.unit_price+'</td><td>'+itm.price+'</td></tr>');
-  });
+  function initConstCosts(){
+      $('#resourcetbl tbody tr').remove();
+      var base = $('#resourcetbl tbody');
+      resources.forEach(function(itm){
+        $(base).append('<tr><td>'
+                  +itm.name+'</td><td>'
+                  +itm.price+'</td></tr>');
+      });
 
-  $('#memotbl tbody tr').remove();
+      $('#membertbl tbody tr').remove();
+      var base = $('#membertbl tbody');
+      members.forEach(function(itm){
+        $(base).append('<tr><td>'+itm.name+'</td><td>'+itm.hour+'h </td><td>'+itm.unit_price+'</td><td>'+itm.price+'</td></tr>');
+      });
+  }
 
-  memos.forEach(function(itm){
-    $('#memotbl tbody').append('<tr><td><div class="card" data-toggle="modal" data-target="#constmemoeditor"><div class="table-secondary">'+itm.date + " "+ itm.user +'</div><pre class="content m-0">'+itm.memo+'</pre></div></td></tr>')
-  });
-  $('#memotbl tbody [data-toggle] .content').click(onClickMemo);
-  {{--/* 工種ドロップダウン初期化*/--}}
-  {{--/*  		<li role="presentation"><a href="#">リンクのリスト１</a></li> */--}}
-  var target = $('#constdetail [name="const_type_box"] ul');
-  target.children().remove();
-  CONSTTYPES.forEach(function(itm){
-     target.append(
-       $('<li></li>',{
-          role:"presentation",
-        })
-        .append(
-          $('<a>'+itm.title+'</a>',{href:"#"})
-        )
-    );
-  });
+  function initMemo(){
+    $('#memotbl tbody tr').remove();
+    memos.forEach(function(itm){
+        $('#memotbl tbody').append('<tr><td><div class="card" data-toggle="modal" data-target="#constmemoeditor"><div class="table-secondary">'+itm.date + " "+ itm.user +'</div><pre class="content m-0">'+itm.memo+'</pre></div></td></tr>')
+    });
+    $('#memotbl tbody [data-toggle] .content').click(onClickMemo);
+    {{--/* 工種ドロップダウン初期化*/--}}
+    {{--/*  		<li role="presentation"><a href="#">リンクのリスト１</a></li> */--}}
+    var target = $('#constdetail [name="const_type_box"] ul');
+    target.children().remove();
+    CONSTTYPES.forEach(function(itm){
+       target.append(
+         $('<li></li>',{
+            role:"presentation",
+          })
+          .append(
+            $('<a>'+itm.title+'</a>',{href:"#"})
+          )
+      );
+    });
 
-  target.children().on('click',function(){
-    $('#constdetail input[name="const_type"]').val($(this).text());
-  });
+    target.children().on('click',function(){
+        $('#constdetail input[name="const_type"]').val($(this).text());
+    });
 
-  $('#constdetail [name="exec_budget"]').on("input",constdetail_calc);
-
- const_used_budget = 0;
-  $('#resourcetbl tbody tr').each(function(){
-      const_used_budget += parseInt($(this).find('td').get(2).innerText.replace( '/.+/g' , '' ));
-  });
-  $('#membertbl tbody tr').each(function(){
-      const_used_budget += parseInt($(this).find('td').get(3).innerText.replace( '/.+/g' , '' ));
-  });
-  $('#constdetail [name="budget_used"]').val(tcms_num3(const_used_budget));
-
-  $('#constdetail .btn_ok').on("click",function(){
-  //--constdata.row_id = $('#constdetail [name=""]').val();
-  //--constdata.const_id = $('#constdetail [name=""]').val();
-  {{$data}}.const_name = $('#constdetail [name="const_name"]').val();
-  {{$data}}.const_type = $('#constdetail [name="const_type"]').val();
-  {{$data}}.const_person_id = $('#constdetail [name="const_person"]').attr("data-id");
-  {{$data}}.const_person_name = $('#constdetail [name="const_person"]').val();
-  {{$data}}.const_progress = $('#constdetail [name="const_progress"]').val();
-  {{$data}}.const_date_from = $('#constdetail [name="const_date_from"]').val();
-  {{$data}}.const_date_to = $('#constdetail [name="const_date_to"]').val();
-  {{$data}}.const_date_start = $('#constdetail [name="const_date_start"]').val();
-  {{$data}}.const_date_end = $('#constdetail [name="const_date_end"]').val();
-  {{$data}}.exec_budget =   $('#constdetail [name="exec_budget"]').val();
-  //--constdata.resource_const
-  //--constdata.person_cost
-
-    {{$on_click}};
-  });
+    $('#constdetail [name="exec_budget"]').on("input",constdetail_calc);
 }
+
+
+$('#constdetail .btn_ok').on("click",function(){
+      //--constdata.row_id = $('#constdetail [name=""]').val();
+      //--constdata.const_id = $('#constdetail [name=""]').val();
+      {{$data}}.const_name = $('#constdetail [name="const_name"]').val();
+      {{$data}}.const_type = $('#constdetail [name="const_type"]').val();
+      {{$data}}.const_person_id = $('#constdetail [name="const_person"]').attr("data-id");
+      {{$data}}.const_person_name = $('#constdetail [name="const_person"]').val();
+      {{$data}}.const_progress = $('#constdetail [name="const_progress"]').val();
+      {{$data}}.const_date_from = $('#constdetail [name="const_date_from"]').val();
+      {{$data}}.const_date_to = $('#constdetail [name="const_date_to"]').val();
+      {{$data}}.const_date_start = $('#constdetail [name="const_date_start"]').val();
+      {{$data}}.const_date_end = $('#constdetail [name="const_date_end"]').val();
+      {{$data}}.exec_budget =   $('#constdetail [name="exec_budget"]').val();
+      //--constdata.resource_const
+      //--constdata.person_cost
+
+      {{$on_click}};
+});
 
 
 function onClickMemo(){
@@ -284,7 +290,7 @@ function onClickMemo(){
 
 {{--/* モーダル表示直前の処理*/--}}
 
-  $('#constdetail').on('show.bs.modal',function(){
+$('#constdetail').on('show.bs.modal',function(){
     _constdata = {{$data}};
     $('#constdetail input[name="const_type"]').val( _constdata.const_type);
     $('#constdetail [name="const_name"]').val( _constdata.const_name);
