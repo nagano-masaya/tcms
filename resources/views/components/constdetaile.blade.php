@@ -198,6 +198,7 @@ var memos = [
   var members = [
   ];
 
+  var const_used_budget
   {{--/* 読み込み時の処理*/--}}
   function initConstDetail(){
     $.ajax({
