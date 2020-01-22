@@ -126,32 +126,21 @@
       </div>
   </div>
   <div class="row">
-    <div class="form-group col-6 p-0">
+    <div class="form-group col-5 p-0">
       <div class="input-group-prepend input-group-text input-group-sm">
         <span>資材/機材</span>
       </div>
-      <table class="small col-md-12" id="resourcetbl">
+      <table class="table table-bordered small col-md-12" id="resourcetbl">
         <tbody>
-          <tr>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>2</td>
-          </tr>
         </tbody>
       </table>
     </div>
-    <div class="form-group col-3 p-0">
+    <div class="form-group col-4 p-0">
       <div class="input-group-prepend input-group-text input-group-sm">
         <span>出面</span>
       </div>
-      <table class="small col-md-12" id="membertbl">
+      <table class="table table-bordered small col-md-12" id="membertbl">
         <tbody>
-          <tr>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>2</td>
           </tr>
         </tbody>
       </table>
@@ -162,12 +151,6 @@
       </div>
       <table class="table small col-md-12" id="memotbl">
         <tbody>
-          <tr>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>2</td>
-          </tr>
         </tbody>
       </table>
     </div>
@@ -184,6 +167,8 @@
 </div>
 
 <script type="application/javascript">
+const CSRF_TOKEN = "{{csrf_token()}}";
+
 var _constdata;
 
 var memos = [
@@ -192,31 +177,39 @@ var memos = [
   ];
 
 
-  var resources = [
-  ];
-
-  var members = [
-  ];
+  var resources = [];
+  var members = [];
+ var recvdata;
 
   var const_used_budget
   {{--/* 読み込み時の処理*/--}}
-  function initConstDetail(){
+  function initConstDetail(const_id){
     $.ajax({
-        url: 'listconstructs',
+        url: 'listconstcosts',
         type: 'POST',
         data: {_token: CSRF_TOKEN,
-          cont_id:cont_id,
+          const_id:const_id,
         },
         dataType: 'JSON'
     }).done(function(data){
+      recvdata = data;
+
         var total_cost = 0;
-        data.rescost.forEach(function(item){
-          total_cost += item.price;
+        resources=[];
+        data.resource.forEach(function(item){
+          resources.push({"name":item.item_name, "price":item.price})
+          total_cost += parseInt(item.price);
+          console.log(total_cost);
         });
-        data.personcost.forEach(function(item){
-          total_cost += item.price;
+        members=[];
+        data.person.forEach(function(item){
+          members.push({"name":item.item_name, "price":item.price})
+          total_cost += parseInt(item.price);
+          console.log(total_cost);
         });
         $('#constdetail [name="budget_used"]').val(tcms_num3(total_cost));
+
+        initConstCosts();
     });
   }
 
@@ -226,13 +219,15 @@ var memos = [
       resources.forEach(function(itm){
         $(base).append('<tr><td>'
                   +itm.name+'</td><td>'
-                  +itm.price+'</td></tr>');
+                  +tcms_num3(itm.price)+'</td></tr>');
       });
 
       $('#membertbl tbody tr').remove();
       var base = $('#membertbl tbody');
       members.forEach(function(itm){
-        $(base).append('<tr><td>'+itm.name+'</td><td>'+itm.hour+'h </td><td>'+itm.unit_price+'</td><td>'+itm.price+'</td></tr>');
+        $(base).append('<tr><td>'
+                  +itm.name+'</td><td>'
+                  +tcms_num3(itm.price)+'</td></tr>');
       });
   }
 
@@ -306,6 +301,8 @@ $('#constdetail').on('show.bs.modal',function(){
     $('#constdetail [name="exec_budget"]').val( _constdata.exec_budget);
 
     $('#constdetail span[name="cont_name"]').text({{$title}});
+
+    initConstDetail( _constdata.const_id);
 });
 
 var used = null;

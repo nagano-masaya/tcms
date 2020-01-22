@@ -55,17 +55,31 @@ class listController extends Controller
         //==============================================================
         public function listconstcosts(Request $req){
           $rescost = \App\dailydetail::select(
-                'item_id','item_name',DB::raw('TRUNCATE(SUM(total_price)/10000,0) as price')
+                'item_id'
+                ,'item_name'
+                ,DB::raw('TRUNCATE(SUM(qty)/10000,0) as qty')
+                ,'unit_text'
+                ,DB::raw('TRUNCATE(SUM(total_price)/10000,0) as price')
             )
             ->where('const_id',$req->const_id)
-            ->where('item_id>0')
+            ->where('item_id','>','0')
+            ->groupBy('item_id')
+            ->groupBy('item_name')
+            ->groupBy('unit_text')
             ->get();
 
-            $resperson = \App\dailydetail::select(
-                  'item_id','item_name',DB::raw('TRUNCATE(SUM(total_price)/10000,0) as price')
+            $personcost = \App\dailydetail::select(
+                  'person_id'
+                  ,'item_name'
+                  ,DB::raw('TRUNCATE(SUM(qty)/10000,0) as qty')
+                  ,'unit_text'
+                  ,DB::raw('TRUNCATE(SUM(total_price)/10000,0) as price')
               )
               ->where('const_id',$req->const_id)
-              ->where('person_id>0')
+              ->where('person_id','>','0')
+              ->groupBy('person_id')
+              ->groupBy('item_name')
+              ->groupBy('unit_text')
               ->get();
 
               return response()->json(["status"=>"OK","resource"=>$rescost,"person"=>$personcost]);
