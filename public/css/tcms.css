@@ -382,3 +382,17 @@ ul{
 .text-gray{
   color:var(--gray);
 }
+
+#resourcetbl td.unit{
+  text-align: right !important;
+  width:5.5rem;
+}
+#resourcetbl td.price{
+  text-align: right !important;
+  width:5.5rem;
+}
+
+#membertbl td.price{
+  text-align: right !important;
+  width:4rem;
+}

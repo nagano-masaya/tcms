@@ -160,7 +160,7 @@ class listController extends Controller
               $list[$item->title] = ['item_id'=>$item->item_id,'person_id'=>$item->person_id];
             }
 
-            return response()->json(["result"=>"OK","data"=>$list]);
+            return response()->json(["result"=>"OK","id"=>$req->company_id,"data"=>$list]);
           }catch(Exception $ex)
           {
             return response()->json(["message"=>$ex->getMessage()]);

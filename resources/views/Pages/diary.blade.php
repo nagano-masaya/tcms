@@ -480,7 +480,8 @@ function initCompMenu(id=0,critaria=""){
 
 
 }
-var itemaclist = [];
+var itemaclist = [];   {{--/*カレント明細行で表示するオートコンプリートのリスト */--}}
+var compaclsit = [];  {{--/* 取引先毎のオートコンプリートのリストを、取引先IDをキーにして保持*/--}}
 
 {{--/* clear hash-map  ※autocompleteが参照しているリストオブジェクト＝itemaclistが保持するリストオブジェクトの関係を維持するため、itemaclistの中身は変更させない */--}}
 function clearItemACList(){
@@ -506,9 +507,12 @@ function updateItemAC(id,critaria){
         dataType: 'JSON'
     }).done(function(data){
         clearItemACList();
+        var aclist=[];
         for(key in data.data){
-          itemaclist[key] = escape('{"item_id":'+data.data[key].item_id+',"person_id":' + data.data[key].person_id + "}");
+          aclist[key+" "] = escape('{"item_id":'+data.data[key].item_id+',"person_id":' + data.data[key].person_id + "}");
+          itemaclist[key+" "] = aclist[key+" "];
         }
+        compaclsit[data.id] = aclist;
         setTimeout(function(){
         				$("#overlay").fadeOut(300);
         			},500);
@@ -654,7 +658,18 @@ function newrow(data){
             .attr('data-pid', v.person_id);
        }
   }).on('focus',function(){
-
+      clearItemACList();
+      var pid = parseInt($(this).attr("data-supid"));
+      if(pid > 0){
+          list = compaclsit[pid];
+          if(list == undefined){
+            updateItemAC(pid,null);
+            return;
+          }
+          for(key in list){
+              itemaclist[key] = list[key];
+          }
+      }
   }).on('input',function(){
     $(this).attr("data-pid","0");
     $(this).attr("data-iid","0");
@@ -798,3 +813,19 @@ function validate(){
 
 
 @endsection
+{{--
+オートコンプリートについて
+■生成
+　・名称フィールドがフォーカスを得た時、取引先ＩＤをキーにしてcompaclistからリストを取得
+　・存在しない場合（comaclist[comp_id]==undefined)は、取引先IDをパラメータとして、ajaxでリスト取得
+　・取引先IDが0の場合（comp_id==0)は、リストを空にして続行　＝＞　新規なのでリストは存在しないという認識
+
+■更新
+　更新はしない
+
+■削除
+　しない
+
+・データ量が膨大になるかも。
+
+  --}}

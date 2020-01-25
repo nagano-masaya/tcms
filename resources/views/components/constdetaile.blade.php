@@ -130,7 +130,7 @@
       <div class="input-group-prepend input-group-text input-group-sm">
         <span>資材/機材</span>
       </div>
-      <table class="table table-bordered small col-md-12" id="resourcetbl">
+      <table class="table table-bordered small " id="resourcetbl">
         <tbody>
         </tbody>
       </table>
@@ -197,18 +197,18 @@ var memos = [
         var total_cost = 0;
         resources=[];
         data.resource.forEach(function(item){
-          resources.push({"name":item.item_name, "price":item.price})
+          resources.push({"name":item.item_name, "qty":item.qty, "unit":item.unit_text,  "price":item.price})
           total_cost += parseInt(item.price);
           console.log(total_cost);
         });
         members=[];
         data.person.forEach(function(item){
-          members.push({"name":item.item_name, "price":item.price})
+          members.push({"name":item.item_name, "qty":item.qty, "unit":item.unit_text, "price":item.price})
           total_cost += parseInt(item.price);
-          console.log(total_cost);
         });
         $('#constdetail [name="budget_used"]').val(tcms_num3(total_cost));
-
+        const_used_budget = total_cost;
+        constdetail_calc();
         initConstCosts();
     });
   }
@@ -218,7 +218,8 @@ var memos = [
       var base = $('#resourcetbl tbody');
       resources.forEach(function(itm){
         $(base).append('<tr><td>'
-                  +itm.name+'</td><td>'
+                  +itm.name+'</td><td class="unit">'
+                  +tcms_num3(itm.qty) + itm.unit +'</td><td class="price">'
                   +tcms_num3(itm.price)+'</td></tr>');
       });
 
@@ -226,8 +227,9 @@ var memos = [
       var base = $('#membertbl tbody');
       members.forEach(function(itm){
         $(base).append('<tr><td>'
-                  +itm.name+'</td><td>'
-                  +tcms_num3(itm.price)+'</td></tr>');
+        +itm.name+'</td><td class="unit">'
+        +tcms_num3(itm.qty) + itm.unit +'</td><td class="price">'
+        +tcms_num3(itm.price)+'</td></tr>');
       });
   }
 
@@ -307,7 +309,6 @@ $('#constdetail').on('show.bs.modal',function(){
 
 var used = null;
 var sum = null;
-var const_used_budget;
 var res = [];
 function constdetail_calc(){
     var remain ;
