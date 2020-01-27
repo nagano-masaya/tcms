@@ -12,12 +12,12 @@ class ContructsTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('contructs')->delete();
-        
+
         \DB::table('contructs')->insert(array (
-            0 => 
+            0 =>
             array (
                 'cont_id' => 1,
                 'name' => '工事１-1',
@@ -35,7 +35,7 @@ class ContructsTableSeeder extends Seeder
                 'claim_remain' => 0,
                 'deposit_remain' => 0,
                 'documents' => NULL,
-                'comment' => NULL,
+                'memo' => NULL,
                 'sales_person' => NULL,
                 'const_admin' => NULL,
                 'update_by' => 0,
@@ -43,7 +43,7 @@ class ContructsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => '2020-01-07 03:14:28',
             ),
-            1 => 
+            1 =>
             array (
                 'cont_id' => 2,
                 'name' => 'aaaaaaaa',
@@ -61,7 +61,7 @@ class ContructsTableSeeder extends Seeder
                 'claim_remain' => 50000000,
                 'deposit_remain' => 50000000,
                 'documents' => NULL,
-                'comment' => NULL,
+                'memo' => NULL,
                 'sales_person' => NULL,
                 'const_admin' => NULL,
                 'update_by' => 0,
@@ -69,7 +69,7 @@ class ContructsTableSeeder extends Seeder
                 'created_at' => '2019-12-08 16:32:29',
                 'updated_at' => '2020-01-10 00:55:51',
             ),
-            2 => 
+            2 =>
             array (
                 'cont_id' => 3,
                 'name' => '工事１-3',
@@ -87,7 +87,7 @@ class ContructsTableSeeder extends Seeder
                 'claim_remain' => 0,
                 'deposit_remain' => 0,
                 'documents' => NULL,
-                'comment' => NULL,
+                'memo' => NULL,
                 'sales_person' => NULL,
                 'const_admin' => NULL,
                 'update_by' => 0,
@@ -96,7 +96,7 @@ class ContructsTableSeeder extends Seeder
                 'updated_at' => '2019-12-08 16:13:58',
             ),
         ));
-        
-        
+
+
     }
 }

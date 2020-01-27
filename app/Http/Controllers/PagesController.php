@@ -73,6 +73,7 @@ class PagesController extends CommonController
             $con->cust_person = $request->cust_person;
             $con->budget_remain = $this->db_int($request->budget_remain)*10000;
             $con->state = $request->state;
+            $con->memo = json_decode($request->memo);
             $con->exec_budget = $this->db_int($request->exec_budget)*10000;
             $con->price_taxed = $this->db_int($request->price_taxed)*10000;
             $con->claim_remain = $this->db_int($request->claim_remain)*10000;
@@ -525,6 +526,8 @@ class PagesController extends CommonController
             'subject_id'=>$subjectid,
             'subject'=>unescape($item['subject']),
             'item_name'=>unescape ($item['item_name']),
+            'paymethod_id'=>DBInt($item['paymethod_id']),
+            'paymethod_text'=>unescape ($item['paymethod']),
             'item_id'=>$itemid,
             'person_id'=>$personid,
             'qty'=>DBInt($item['qty'])*10000,

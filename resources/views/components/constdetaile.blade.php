@@ -126,7 +126,7 @@
       </div>
   </div>
   <div class="row">
-    <div class="form-group col-5 p-0">
+    <div class="form-group col-7 p-0">
       <div class="input-group-prepend input-group-text input-group-sm">
         <span>資材/機材</span>
       </div>
@@ -135,22 +135,13 @@
         </tbody>
       </table>
     </div>
-    <div class="form-group col-4 p-0">
+    <div class="form-group col-5 p-0">
       <div class="input-group-prepend input-group-text input-group-sm">
         <span>出面</span>
       </div>
       <table class="table table-bordered small col-md-12" id="membertbl">
         <tbody>
           </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="form-group col-3 p-0">
-      <div class="input-group-prepend input-group-text input-group-sm form-row">
-        <span class="col text-left">Memo</span><span data-toggle="modal" data-target="#constmemoeditor" class="iconify medium clickable" data-width="16px" data-icon="bx:bx-add-to-queue" data-inline="false" onclick="targetEml=null;$('#memoarea').val('');"></span>
-      </div>
-      <table class="table small col-md-12" id="memotbl">
-        <tbody>
         </tbody>
       </table>
     </div>
@@ -171,7 +162,7 @@ const CSRF_TOKEN = "{{csrf_token()}}";
 
 var _constdata;
 
-var memos = [
+var constmemos = [
     {"date":"2019-12-14 09:40","user":"利用者1","memo":"メモ１" },
     {'date':'2019-12-15 16:10','user':'利用者2','memo':'メモ2' }
   ];
@@ -233,9 +224,10 @@ var memos = [
       });
   }
 
-  function initMemo(){
+  function initConstMemo(){
+
     $('#memotbl tbody tr').remove();
-    memos.forEach(function(itm){
+    constmemos.forEach(function(itm){
         $('#memotbl tbody').append('<tr><td><div class="card" data-toggle="modal" data-target="#constmemoeditor"><div class="table-secondary">'+itm.date + " "+ itm.user +'</div><pre class="content m-0">'+itm.memo+'</pre></div></td></tr>')
     });
     $('#memotbl tbody [data-toggle] .content').click(onClickMemo);

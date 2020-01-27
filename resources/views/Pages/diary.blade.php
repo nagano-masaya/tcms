@@ -90,7 +90,16 @@
             <div class="row text-center">
               <div class="col-2 p-0 border">科目</div>
               <div class="col-3 p-0 border">発注先</div>
-              <div class="col-7 p-0 border">名称</div>
+              <div class="col-7 p-0 border">
+                <div class="row">
+                  <div class="col-10 border">
+                    名称
+                  </div>
+                  <div class="col-2 border">
+                    決済方法
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="row text-center">
               <div class="col-2 border ">数量</div>
@@ -114,7 +123,7 @@
               <div class="row">
                 <div class="col-2 p-0 dropdown">
                   <input type="button" class="form-control dropdown-toggle p-1" name="subject" data-toggle="dropdown" data-id="#subject_id#" value="#subject#" placeholder="科目">
-                  <ul class="dropdown-menu">
+                  <ul class="dropdown-menu" name="subjectmenu">
                     #subject_menu_item#
                   </ul>
                 </div>
@@ -124,13 +133,23 @@
                     <div class="far fa-list-alt mx-1 px-1 pt-3 align-text-bottom text-gray small"></div>
                   </div>
                 </div>
-                <div class="col-7 p-0"><input type="text" class="form-control p-1" name="item_name" value="#item_name#" data-supid="#supplier_id#" data-iid="#item_id#" data-pid="#person_id#" placeholder="名称" autocomplete="off"></div>
+                <div class="col-7 p-0">
+                  <div class="row">
+                    <div class="col-10">
+                      <input type="text" class="form-control p-1" name="item_name" value="#item_name#" data-supid="#supplier_id#" data-iid="#item_id#" data-pid="#person_id#" placeholder="名称" autocomplete="off">
+                    </div>
+                    <div class="col-2 dropdown">
+                      <input type="button" class="form-control dropdown-toggle p-1" name="paymethod" data-toggle="dropdown" data-id="#paymethod_id#" value="#paymethod_text#" placeholder="決済方法" autocomplete="off">
+                      <ul class="dropdown-menu" name="paymethodmenu">
+                        #paymethod_menu_item#
+                      </ul>
+                    </div>
+                  </div>
               </div>
               <div class="row rowbreak">
                 <div class="col-2 p-0 input-group">
                   <input type="text" class="form-control p-1 jpcurrency" name="qty" value="#qty#" placeholder="数量">
                   <div class="input-group-apped" style="line-height:2.1rem">
-<!--                    <span class="px-1 small" style="line-height:0.6rem;vertical-align:bottom">ダース</span> -->
                     <input type="button" class="small border-0" name="unit" data-id="#unit_id#" value="#unit_text#" onclick="showUnitMenu(this)">
                   </div>
                 </div>
@@ -312,18 +331,11 @@ function showUnitMenu(elm)
         .val($(elm).text());
   }
 
-  function initSubjectMenu(){
-    var parent = $('ul[name="subjectmenu"]');
-    SUBJECTS.forEach(function(itm){
-      parent.append(
-        $('<li>'+ itm.text +'</li>')
-          .attr('data-id',itm.id)
-          .on('click',function(){
-            $('[name=subject]').val($(this).text())
-              .attr($(this).attr('data-id'))
-          })
-      )
-    });
+  function initSubjectMenu(parent){
+    parent.dropdown();
+  }
+
+  function initPayMethodMenu(parent){
     parent.dropdown();
   }
 
@@ -530,11 +542,20 @@ var rowtempl;   {{--/* 明細行のテンプレート保存用 */--}}
 $(window).on('DOMContentLoaded',function(){
   rowtempl = $('#detaillist tbody').html();
              $('#detaillist tbody').html('');
-  subjectitems = "";
+
+  var items = "";
   SUBJECTS.forEach(function(item){
-    subjectitems += '<li class="dropdown-item small clickable px-1" data-id="'+item.id+'" onclick="onClickSubject(this)">'+item.text+'</li>';
+    items += '<li class="dropdown-item small clickable px-1" data-id="'+item.id+'" onclick="onClickSubject(this)">'+item.text+'</li>';
   });
-  rowtempl = rowtempl.replace('#subject_menu_item#',subjectitems);
+
+  rowtempl = rowtempl.replace('#subject_menu_item#',items);
+
+  items = "";
+  PAYMETHODS.forEach(function(item){
+    items += '<li class="dropdown-item small clickable px-1" data-id="'+item.id+'" onclick="onClickSubject(this)">'+item.text+'</li>';
+  });
+  rowtempl = rowtempl.replace('#paymethod_menu_item#',items);
+
 
   {{--/* 日付を変更された時の処理 */--}}
   $('[name="daily_date_next"]')
@@ -557,7 +578,6 @@ $(window).on('DOMContentLoaded',function(){
     });
 
     initUnitMenu();
-    initSubjectMenu();
     initSupplierMenu();
     initContMenu();
     initCompMenu();
@@ -612,6 +632,8 @@ function newrow(data){
             .replace('#item_id#',data.item_id)
             .replace('#person_id#',data.person_id)
             .replace("#item_name#",data.item_name)
+            .replace('#paymethod_id#',data.paymethod_id)
+            .replace('#paymethod_text#',data.paymethod_text)
             .replace("#qty#",data.qty_n)
             .replace("#unit_id#",data.unit_id)
             .replace("#unit_text#",data.unit_text)
@@ -675,9 +697,10 @@ function newrow(data){
     $(this).attr("data-iid","0");
   });
 
-  $('#detaillist tbody').append(row);
-  initSubjectMenu(  row.find('[name="subject"]')  );
+  initSubjectMenu(  row.find('[name="subjectmenu"]')  );
+  initPayMethodMenu(  row.find('[name="paymethodmenu"]')  );
 
+  $('#detaillist tbody').append(row);
 }
 
 {{--/*--------------------------------------------------------------------*/--}}

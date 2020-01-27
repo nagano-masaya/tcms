@@ -21,6 +21,8 @@ class CreateDailydetailTable extends Migration
             $table->integer('subject_id');
             $table->string('subject',10);
             $table->string('item_name',64);
+            $table->integer('paymethod_id')->default(1);
+            $table->string( 'paymethod_text')->default('現金');
             $table->integer('person_id')->nullable();
             $table->integer('item_id')->nullable();
             $table->integer('qty');

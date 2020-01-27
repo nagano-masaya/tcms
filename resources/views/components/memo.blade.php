@@ -18,9 +18,7 @@
                   <div class="col-6 memotime font30p overflow-hidden">
                     #time#
                   </div>
-                  <div class="col-6 memouser  font30p text-right" data-id="#id#">
-                    #name#
-                  </div>
+                  <div class="col-6 memouser  font30p text-right" data-id="#id#">#name#</div>
                 </div>
                 <div class="row">
                   <div class="col-12  small">
@@ -44,7 +42,7 @@ if( elm.innerHTML != "" ){
     memotemplate = elm.innerHTML;
    elm.innerHTML="";
 }
-initMemo([]);
+//initMemo([]);
 
 $(window).on('load resize',function(){
 
@@ -58,7 +56,7 @@ function initMemo(data){
   $('#memo .btn-add').on('click',function(){
     target.append(memotemplate
       .replace('#id#', "{{Auth::user()->id}}")
-      .replace('#time#',moment().format('YY\'MM/DD hh:mm' ))
+      .replace('#time#',moment().format('YY\'MM/DD' ))
       .replace('#name#',"{{Auth::user()->name}}")
       .replace('#memotext#',"")
     );
@@ -66,7 +64,7 @@ function initMemo(data){
   data.forEach(function(item){
         target.append(memotemplate
           .replace('#id#', item.id)
-          .replace('#time#',item.date)
+          .replace('#time#',moment(item.date).format('YY\'MM/DD' ))
           .replace('#name#',item.name)
           .replace('#memotext#',item.memo)
         );
@@ -79,10 +77,10 @@ function getMemo(){
   var data = [];
   $('#memodata tr').each(function(itm){
     data.push({
-      date:moment(itm.find('memotime').text() ).format(),
-      id:parseInt(itm.find('[data-id]').attr('data-id') ),
-      name:itm.find('memotime').text(),
-      memo:itm.find('memotext').text()
+      date:moment($(this).find('.memotime').text(),DATEFORMAT ).format(),
+      id:parseInt($(this).find('[data-id]').attr('data-id') ),
+      name:$(this).find('.memouser').html(),
+      memo:$(this).find('.memotext').val()
     })
   });
   return data;

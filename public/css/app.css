@@ -3,7 +3,7 @@
 * A jQuery menu plugin
 * @version 3.0.5
 * @author Osman Nuri Okumus <onokumus@gmail.com> (https://github.com/onokumus)
-* @license: MIT 
+* @license: MIT
 */
 .metismenu .arrow {
   float: right;
@@ -2493,7 +2493,7 @@ pre code {
   background-color: #fff;
   border-color: #a1cbef;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
+  /*box-shadow: 0 0 0 0.2rem rgba(52, 144, 220, 0.25);*/
 }
 
 .form-control::-webkit-input-placeholder {
@@ -20203,4 +20203,3 @@ readers do not read off random characters that represent icons */
 .fa.fa-cab:before {
   content: "\F1BA";
 }
-

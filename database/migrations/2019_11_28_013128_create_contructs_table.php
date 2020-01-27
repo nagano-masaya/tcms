@@ -30,7 +30,7 @@ class CreateContructsTable extends Migration
             $table->bigInteger('claim_remain');
             $table->bigInteger('deposit_remain');
             $table->json('documents')->nullable();
-            $table->json('comment')->nullable();
+            $table->json('memo')->nullable();
             $table->string('sales_person')->nullable();
             $table->string('const_admin')->nullable();
             $table->bigInteger('update_by');

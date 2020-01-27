@@ -218,6 +218,9 @@ var consts = {
   },
 @endforeach
 };
+
+var memos={!! is_null($con->memo) ? "[]":$con->memo !!};
+
 </script>
 <script type="application/javascript">
 
@@ -279,6 +282,7 @@ $(document).ready(function(){
           .appendTo( $('[name="cont_state_menu"] ul') );
     });
 
+    initMemo(memos);
 });
 
 
@@ -328,7 +332,7 @@ function validate(){
         claim_remain:$("input[name='claim_remain']").val(),
         deposit_remain:$("input[name='deposit_remain']").val(),
         documents:$("input[name='documents']").val(),
-        comment:$("input[name='comment']").val(),
+        memo:JSON.stringify(getMemo()),
         sales_person:$("input[name='sales_person']").val(),
         update_by:$("input[name='cont_id']").val(),
         consts : JSON.stringify(consts)
