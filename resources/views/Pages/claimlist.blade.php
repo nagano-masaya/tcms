@@ -7,12 +7,19 @@
     <div class="col-10">
       請求一覧
     </div>
-    <div class="col-2 clickable">
+    <div class="col-2 clickable" onclick="newdetail()">
       <span class="iconify" data-icon="bx:bx-add-to-queue" data-inline="false"></span>
       <span>新規</span>
     </div>
 
   </div>
+<script type="text/javascript" id="tmpsrc">
+  var conts = [
+  @foreach($conts as $item)
+  {"id":{{$item->cont_id}} ,"title":"{{$item->name}}" },
+  @endforeach
+];
+</script>
 <script type="application/javascript">
  var elm;
  var param;
@@ -24,6 +31,12 @@
     }
     window.location.href="claimdetail";
   }
+
+  function newdetail(){
+    $('#contselector').showSelector('取引先を選択',conts,function(id,title){
+      window.location.href="claimdetail?cid=0&cmp="+id+"&t="+CCSKEY();
+    });
+  };
 </script>
 
   <div class="row">
@@ -55,5 +68,12 @@
     </div>
   </div>
 </div>
+
+@component('components.listSelector')
+@slot('compo_id')
+contselector
+@endslot
+@endcomponent
+
 
 @endsection

@@ -147,23 +147,41 @@ class PagesController extends CommonController
           ->whereNull('claims.deleted_at')
           ->get();
 
-      return view('Pages.claimlist',['cons' => $cons]);
+      $conts = \App\contruct::select('cont_id','name')
+          ->join('company','contructs.cust_company_id','company.company_id')
+          ->get();
+      return view('Pages.claimlist',['cons' => $cons,'conts'=>$conts]);
     }
 
     public function claimdetail(Request $request){
 
       $cid="0";
-      if(isset($request->cid)){
+      if(isset($request->cid) && intval($request->cid)>0){
+        //  既存データ
         $cid=$request->cid;
+        $con = \App\claims::select()
+          ->leftJoin('company','claims.company_id','company.company_id')
+          ->firstOrNew(['claim_id' => $request->cid]);
+        // オリジナルデータとしてセッションに保持させる
+        $company_id = $con->company_id;
+      }else{
+        //　新規データ
+        $company_id = intval($request->cmp);
+        $company = \App\company::select()
+          ->where('company_id',$company_id)
+          ->first();
+
+        $con = \App\claims::firstOrNew(['claim_id' => $request->cid]);
+        $con->claim_id = 0;
+        $con->company_id = $company_id;
+        $con->nickname = $company->nickname;
+        $con->pay_price = 0;
       }
-      $con = \App\claims::select()
-        ->leftJoin('company','claims.company_id','company.company_id')
-        ->firstOrNew(['claim_id' => $request->cid]);
-      // オリジナルデータとしてセッションに保持させる
+
       $request->session()->put('claimdetaile_org_data',$con);
 
       $details = \App\claimdetail::select()
-        ->where('claim_id',$request->cid)
+        ->where('claim_id',$cid)
         ->get();
 
       $conts = \App\contruct::select()
@@ -182,10 +200,34 @@ class PagesController extends CommonController
       if( $con == null){
         return "NULL";
       };
-      return DB::transaction(function () use ($request,$con) {
+      $flds = [
+        'company_id'=>$request->company_id,
+        'user_id'=>Auth::user()->id,
+        'price'=>$request->price*10000,
+        'claim_date'=>$request->claim_date,
+        'claim_make_date'=>$request->claim_make_date,
+        'claim_sent_date'=>$request->claim_sent_date,
+        'pay_date'=>$request->pay_date,
+        'pay_price'=>$request->pay_price*10000,
+        'price_total'=>$request->price_total*10000,
+        'tax_rate'=>$request->tax_rate,
+        'tax'=>$request->tax*10000,
+        'taxed_price'=>$request->taxed_price*10000,
+        'discount_price'=>$request->discount_price*10000,
+        'offset_price'=>$request->offset_price*10000
+      ];
+      var_dump($flds);
+
+      return DB::transaction(function () use ($request,$con,$flds) {
         //$con->claim_id = $request->claim_id;
+
+
+        $id = \App\claims::updateOrCreate(
+          ['claim_id'=>$request->claim_id],$flds
+        );
+/*
         $con->company_id = $request->company_id;
-        $con->user_id = $request->user_id;
+        $con->user_id = Auth::user()->id;
         $con->price = $request->price*10000;
         $con->claim_date = $request->claim_date;
         $con->claim_make_date = $request->claim_make_date;
@@ -198,9 +240,10 @@ class PagesController extends CommonController
         $con->taxed_price = $request->taxed_price*10000;
         $con->discount_price = $request->discount_price*10000;
         $con->offset_price = $request->offset_price*10000;
-        $con->details = $request->details;
         $con->history = $request->history;
         $con->save();
+*/
+        print("claim saved\n");
 
         $details = json_decode($request->details);
         $idx=0;

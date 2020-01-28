@@ -60,136 +60,136 @@ function newItem(){
    });
 }
 
-  var objs;
-  function initDetails(){
-    $("#detaillist tbody").children().remove();
-    var num=0;
-    details.forEach(function(itm){
-      var templ=$('#rowbase').html();
+var objs;
+function initDetails(){
+  $("#detaillist tbody").children().remove();
+  var num=0;
+  details.forEach(function(itm){
+    var templ=$('#rowbase').html();
 
-      if(!itm.deleted && templ !== undefined ){
-        $("#detaillist tbody").append(
-          '<tr data-rowid="'+num+'"><td>'
-          + templ
-          .replace("#clmdid#",itm.clmdetail_id)
-          .replace(/#row#/g,num)
-          .replace("#text#",itm.text)
-          .replace("#unit_price#",itm.unit_price)
-          .replace("#qty#",itm.qty)
-          .replace("#price#",itm.price)
-          .replace("#cont_text#",itm.cont_text)
-          .replace("#cont_id#",itm.cont_id)
-          +'</td></tr>'
-        );
-      }
-      num++;
-    });
+    if(!itm.deleted && templ !== undefined ){
+      $("#detaillist tbody").append(
+        '<tr data-rowid="'+num+'"><td>'
+        + templ
+        .replace("#clmdid#",itm.clmdetail_id)
+        .replace(/#row#/g,num)
+        .replace("#text#",itm.text)
+        .replace("#unit_price#",itm.unit_price)
+        .replace("#qty#",itm.qty)
+        .replace("#price#",itm.price)
+        .replace("#cont_text#",itm.cont_text)
+        .replace("#cont_id#",itm.cont_id)
+        +'</td></tr>'
+      );
+    }
+    num++;
+  });
 
-
-    $("#detaillist tbody .col_qty,.col_uprice").keyup(function(){
-      num=1;
-      objs = $(this).parent().find('.col_qty,.col_uprice');
-        try{
-          $(this).parent().find('.col_qty,.col_uprice').each(function(idx,itm){
-            num = num * parseInt($(itm).val().replace( /,/g, ''));
-          });
-          if(!isNaN(num)){
-            $(this).siblings('.col_price').val(String(num).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'));
-          }
-        }catch(e){
-            console.log(e);
-        }
-      console.log(num);
-    });
-  }
-  function saveDetails(){
-    var arr=[];
-    $("#detaillist td").each(function(){
-        arr.push(
-          {
-            rowid:parseInt($(this).find('[data-rowid]').attr('data-rowid')),
-            clmdetail_id:parseInt($(this).find('[data-id]').attr('data-id')),
-            cont_id:parseInt($(this).find('[cid]').attr('cid')),
-            cont_text:$(this).find('[cid]').text(),
-            text:$(this).find('.col_text').val(),
-            unit_price:parseInt($(this).find('.col_uprice').val().replace( /,/g, '')),
-            qty:parseInt($(this).find('.col_qty').val()),
-            price:parseInt($(this).find('.col_price').val().replace( /,/g, '')),
-            deleted:$(this).find('[data-rowid]').hasClass('hidden')
-          }
-        )
-    });
-    details=arr;
-    $('[name="details"]').val(JSON.stringify(arr));
-  }
-
-  var recvData="";
-
-  function validate(){
-    saveDetails();
-    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-
-    //console.log($('input[name="company_id"]').val());
-    $.ajax({
-        url: 'claimdetail',
-        type: 'POST',
-        data: {_token: CSRF_TOKEN,
-          claim_id:parseInt($("input[name='claim_id']").val()),
-          company_id:parseInt($("input[name='company_id']").val()),
-          user_id:parseInt($("input[name='user_id']").val()),
-          price:parseInt($("input[name='price']").val().replace( /,/g, '')),
-          claim_date:$("input[name='claim_date']").val(),
-          claim_make_date:$("input[name='claim_make_date']").val(),
-          claim_sent_date:$("input[name='claim_sent_date']").val(),
-          pay_date:$("input[name='pay_date']").val(),
-          pay_price:parseInt($("input[name='pay_price']").val().replace( /,/g, '')),
-          price_total:parseInt($("input[name='price_total']").val().replace( /,/g, '')),
-          tax_rate:parseInt($("input[name='tax_rate']").val()),
-          tax:parseInt($("input[name='tax']").val().replace( /,/g, '')),
-          taxed_price:parseInt($("input[name='taxed_price']").val().replace( /,/g, '')),
-          discount_price:parseInt($("input[name='discount_price']").val().replace( /,/g, '')),
-          offset_price:parseInt($("input[name='offset_price']").val().replace( /,/g, '')),
-          details:$("input[name='details']").val(),
-          history:$("input[name='history']").val(),
-        },
-        dataType: 'JSON'
-    }).always(function(data) {
-        data.data.forEach(function(itm){
-          $('[data-rowid="'+itm.rowid+'"]').attr('data-id',itm.clmdetail_id);
+  $("#detaillist tbody .col_qty,.col_uprice").keyup(function(){
+    num=1;
+    objs = $(this).parent().find('.col_qty,.col_uprice');
+      try{
+        $(this).parent().find('.col_qty,.col_uprice').each(function(idx,itm){
+          num = num * parseInt($(itm).val().replace( /,/g, ''));
         });
-        toastr.options = {
-          "positionClass": "toast-bottom-right",
-          "timeOut": "1500",
-        };
-        toastr.info('保存しました。');
-      })
-  };
+        if(!isNaN(num)){
+          $(this).siblings('.col_price').val(String(num).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'));
+        }
+      }catch(e){
+          console.log(e);
+      }
+    console.log(num);
+  });
+}
+function saveDetails(){
+  var arr=[];
+  $("#detaillist td").each(function(){
+      arr.push(
+        {
+          rowid:parseInt($(this).find('[data-rowid]').attr('data-rowid')),
+          clmdetail_id:parseInt($(this).find('[data-id]').attr('data-id')),
+          cont_id:parseInt($(this).find('[cid]').attr('cid')),
+          cont_text:$(this).find('[cid]').text(),
+          text:$(this).find('.col_text').val(),
+          unit_price:parseInt($(this).find('.col_uprice').val().replace( /,/g, '')),
+          qty:parseInt($(this).find('.col_qty').val()),
+          price:parseInt($(this).find('.col_price').val().replace( /,/g, '')),
+          deleted:$(this).find('[data-rowid]').hasClass('hidden')
+        }
+      )
+  });
+  details=arr;
+  $('[name="details"]').val(JSON.stringify(arr));
+}
+
+var recvData="";
+
+function validate(){
+  saveDetails();
+  var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
+  //console.log($('input[name="company_id"]').val());
+  $.ajax({
+      url: 'claimdetail',
+      type: 'POST',
+      data: {_token: CSRF_TOKEN,
+        claim_id:parseInt($("input[name='claim_id']").val()),
+        company_id:parseInt($("input[name='company_id']").val()),
+        user_id:parseInt($("input[name='user_id']").val()),
+        price:parseInt($("input[name='price']").val().replace( /,/g, '')),
+        claim_date:moment($("input[name='claim_date']").val(),DATEFORMAT).format('YYYY-MM-DD'),
+        claim_make_date:$("input[name='claim_make_date']").val(),
+        claim_sent_date:$("input[name='claim_sent_date']").val(),
+        pay_date:$("input[name='pay_date']").val(),
+        pay_price:parseInt($("input[name='pay_price']").val().replace( /,/g, '')),
+        price_total:parseInt($("input[name='price_total']").val().replace( /,/g, '')),
+        tax_rate:parseInt($("input[name='tax_rate']").val()),
+        tax:parseInt($("input[name='tax']").val().replace( /,/g, '')),
+        taxed_price:parseInt($("input[name='taxed_price']").val().replace( /,/g, '')),
+        discount_price:parseInt($("input[name='discount_price']").val().replace( /,/g, '')),
+        offset_price:parseInt($("input[name='offset_price']").val().replace( /,/g, '')),
+        details:$("input[name='details']").val(),
+        history:$("input[name='history']").val(),
+      },
+      dataType: 'JSON'
+  }).always(function(data) {
+      data.data.forEach(function(itm){
+        $('[data-rowid="'+itm.rowid+'"]').attr('data-id',itm.clmdetail_id);
+      });
+      toastr.options = {
+        "positionClass": "toast-bottom-right",
+        "timeOut": "1500",
+      };
+      toastr.info('保存しました。');
+    })
+};
 
 
-
+$(document).ready(function(){
   initDetails();
+  initContMenu();
 
   $('.jpcurrency').each(function(){
     $(this).val(
       tcms_num3($(this).val())
     );
   });
+});
 
 </script>
 
 <input type="hidden" name="claim_id" value="{{$con->claim_id}}"/>
 <input type="hidden" name="user_id" value="{{$con->user_id}}"/>
 <input type="hidden" name="company_id" value="{{$con->company_id}}"/>
-<input type="hidden" name="details" value="{{json_encode($con->details)}}"/>
-<input type="hidden" name="claim_make_date" value="{{$con->claim_make_date->format('Y-m-d')}}"/>
-<input type="hidden" name="claim_sent_date" value="{{$con->claim_sent_date->format('Y-m-d')}}"/>
+<input type="hidden" name="claim_make_date" value="{{is_null($con->claim_make_date) ? date('y-m-d') : $con->claim_make_date->format('y.m/d')}}"/>
+<input type="hidden" name="claim_sent_date" value="{{is_null($con->claim_sent_date) ? "" : $con->claim_sent_date->format('y.m/d')}}"/>
 <div class="container">
   <div class="row">
     <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         請求日
       </div>
-      <input type="button" class="form-control text-left" name="claim_date" value="{{$con->claim_date->format('Y-m-d')}}" maxlength="128">
+      <input type="button" class="form-control text-left datepicker" name="claim_date" value="{{is_null($con->claim_date) ? date('y.m/d') : $con->claim_date->format('y.m/d')}}" maxlength="128">
     </div>
     <div class="px-0 col-6">
       <div class="input-group-prepend input-group-text input-group-sm">
@@ -320,37 +320,36 @@ var conts = [
   },
   @endforeach
 ];
-  var selected_cont_id;
-  var selected_cont_name;
-  var caller;
-  function showContSelector(call){
-      caller = $(call);
-      $('#constselector').modal('show');
-  }
+var selected_cont_id;
+var selected_cont_name;
+var caller;
+function showContSelector(call){
+    caller = $(call);
+    $('#constselector').modal('show');
+}
 
-  function onClickContItem(){
-    selected_cont_id = $(this).attr('data-cid');
-    selected_cont_name = $(this).text();
-  }
-  function initContList(){
-    conts.forEach(function(itm){
-      $('#contlist tbody').append(
-        '<tr><td><div data-cid="'+itm.cont_id+'">'+itm.cont_name+'</div></td></tr>"'
-      );
-      $('#contlist [data-cid]').click(onClickContItem);
-    });
-  };
+function onClickContItem(){
+  selected_cont_id = $(this).attr('data-cid');
+  selected_cont_name = $(this).text();
+}
+function initContMenu(){
+  conts.forEach(function(itm){
+    $('#contlist tbody').append(
+      '<tr><td><div data-cid="'+itm.cont_id+'">'+itm.cont_name+'</div></td></tr>"'
+    );
+    $('#contlist [data-cid]').click(onClickContItem);
+  });
+};
 
-  initContList();
 
-  function onContSelectionEnd(){
-    caller.text(selected_cont_name);
-    caller.attr('cid',selected_cont_id);
-  }
+function onContSelectionEnd(){
+  caller.text(selected_cont_name);
+  caller.attr('cid',selected_cont_id);
+}
 
-  function delete_claim(itm){
-    $('[data-rowid="'+itm+'"]').addClass('hidden');
-  }
+function delete_claim(itm){
+  $('[data-rowid="'+itm+'"]').addClass('hidden');
+}
 
 </script>
 <table class="table table-hover table-striped" id="contlist">
@@ -364,22 +363,22 @@ var conts = [
 <div id="rowbase" style="visibility:hidden;width:0px;height:0px">
   <div class="container" data-rowid="#row#" data-id="#clmdid#">
     <div class="row">
-      <input type="text" class="form-control col-7 col_text" value="#text#"/>
+      <input type="text" class="form-control col-6 col_text" value="#text#"/ placeholder="※明細として記載する内容を入力">
+      <div class="col-5 small">
+       <button class="form-control text-left" onclick="showContSelector(this)"  cid="#cont_id#">#cont_text#</button>
+      </div>
+      <div class="col-1">
+        <span class="iconify clickable" data-icon="bx:bx-arrow-from-bottom" data-inline="false"></span>
+        <span class="iconify clickable" data-icon="bx:bx-arrow-from-top" data-inline="false"></span>
+        <span class="iconify clickable" data-icon="fa-solid:trash-alt" data-inline="false" onclick="delete_claim('#row#')"></span>
+      </div>
+    </div>
+    <div class="row">
       <input type="text" class="form-control col-2 col_uprice  text-right jpcurrency" value="#unit_price#"/>
       <input type="text" class="form-control col-1 col_qty" value="#qty#"/>
       <input type="text" class="form-control col-2 col_price text-right jpcurrency" value="#price#"/>
-      </div>
     </div>
-    <div class="row clickable">
-     <div class="col-11 small">
-      <button class="form-control text-left" onclick="showContSelector(this)"  cid="#cont_id#">#cont_text#</button>
-     </div>
-     <div class="col-1">
-       <span class="iconify clickable" data-icon="bx:bx-arrow-from-bottom" data-inline="false"></span>
-       <span class="iconify clickable" data-icon="bx:bx-arrow-from-top" data-inline="false"></span>
-       <span class="iconify clickable" data-icon="fa-solid:trash-alt" data-inline="false" onclick="delete_claim('#row#')"></span>
-     </div>
-   </div>
+  </div>
 </div>
 
 @endsection

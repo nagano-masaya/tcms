@@ -7,18 +7,17 @@
   <div class="row justify-content-center">
     <div class="col-md-12">
         <div class="card-body">
-          <table class="table table-striped table-hover table-condensed">
+          <table class="table table-hover table-condensed">
             <thead>
               <tr>
-                <th class="card-header" colspan="3">
+                <th  colspan="3">
                   工事一覧
                 </th>
-                <th class="card-header text-right clickable"　onclick="window.location.href='contdetaile?cont=0'">
-                  <span class="iconify" data-icon="bx:bx-add-to-queue" data-inline="false"></span>
-                  <span>新規</span>
+                <th class="card-header text-right">
+                  <span class="clickable" onclick="window.location.href='contdetaile?cont=0'"><i class="far fa-plus-square"></i>新規</span>
                 </th>
               </tr>
-              <tr>
+              <tr class="card-header">
                 <th class="info">工事名</th>
                 <th class="info">工期</th>
                 <th class="info">受注額</th>
@@ -27,7 +26,7 @@
             </thead>
             <tbody>
               @foreach($cons as $con)
-                <tr>
+                <tr clas="clickable">
                   <td target="{{$con->cont_id}}">{{$con->name}}</td>
                   <td target="{{$con->cont_id}}">{{$con->date_from}}<br>～{{$con->date_to}}</td>
                   <td target="{{$con->cont_id}}" class="text-right">

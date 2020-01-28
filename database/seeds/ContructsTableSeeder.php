@@ -12,22 +12,22 @@ class ContructsTableSeeder extends Seeder
      */
     public function run()
     {
-
+        
 
         \DB::table('contructs')->delete();
-
+        
         \DB::table('contructs')->insert(array (
-            0 =>
+            0 => 
             array (
                 'cont_id' => 1,
                 'name' => '工事１-1',
-                'date_from' => '2020-01-07',
-                'date_to' => '2020-01-07',
+                'date_from' => '2020-01-28',
+                'date_to' => '2020-01-28',
                 'customer' => NULL,
                 'cust_company_id' => 1,
                 'cust_company' => '発注元１',
                 'cust_person' => NULL,
-                'price' => 20000000,
+                'price' => 120000000000,
                 'budget_remain' => 0,
                 'state' => '未着手',
                 'exec_budget' => 14000000,
@@ -35,15 +35,15 @@ class ContructsTableSeeder extends Seeder
                 'claim_remain' => 0,
                 'deposit_remain' => 0,
                 'documents' => NULL,
-                'memo' => NULL,
+                'memo' => '[{"date":"2020-01-27T00:00:00+09:00","id":1,"name":"\\u5229\\u7528\\u8005\\uff11","memo":"asdasd\\""}]',
                 'sales_person' => NULL,
                 'const_admin' => NULL,
                 'update_by' => 0,
                 'deleted_at' => NULL,
                 'created_at' => NULL,
-                'updated_at' => '2020-01-07 03:14:28',
+                'updated_at' => '2020-01-28 00:45:52',
             ),
-            1 =>
+            1 => 
             array (
                 'cont_id' => 2,
                 'name' => 'aaaaaaaa',
@@ -69,7 +69,7 @@ class ContructsTableSeeder extends Seeder
                 'created_at' => '2019-12-08 16:32:29',
                 'updated_at' => '2020-01-10 00:55:51',
             ),
-            2 =>
+            2 => 
             array (
                 'cont_id' => 3,
                 'name' => '工事１-3',
@@ -96,7 +96,7 @@ class ContructsTableSeeder extends Seeder
                 'updated_at' => '2019-12-08 16:13:58',
             ),
         ));
-
-
+        
+        
     }
 }

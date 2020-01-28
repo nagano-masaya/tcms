@@ -21,7 +21,7 @@ class ItemsTableSeeder extends Seeder
             array (
                 'item_id' => 1,
                 'item_name' => '10cmブロック',
-                'item_type' => 1,
+                'item_type' => 100,
                 'def_price' => 1000000,
                 'user_id' => 0,
                 'deleted_at' => NULL,
@@ -206,17 +206,6 @@ class ItemsTableSeeder extends Seeder
             ),
             17 => 
             array (
-                'item_id' => 18,
-                'item_name' => '4tローラ',
-                'item_type' => 3,
-                'def_price' => 50000000,
-                'user_id' => 0,
-                'deleted_at' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            18 => 
-            array (
                 'item_id' => 19,
                 'item_name' => '５mmワイヤー',
                 'item_type' => 1,
@@ -226,7 +215,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            19 => 
+            18 => 
             array (
                 'item_id' => 20,
                 'item_name' => '652T5K',
@@ -237,7 +226,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            20 => 
+            19 => 
             array (
                 'item_id' => 21,
                 'item_name' => '75VPP',
@@ -248,7 +237,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            21 => 
+            20 => 
             array (
                 'item_id' => 22,
                 'item_name' => '８インチ水中ポンプ',
@@ -259,7 +248,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            22 => 
+            21 => 
             array (
                 'item_id' => 23,
                 'item_name' => '9トラロープ',
@@ -270,7 +259,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            23 => 
+            22 => 
             array (
                 'item_id' => 24,
                 'item_name' => 'BH0.2',
@@ -281,7 +270,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            24 => 
+            23 => 
             array (
                 'item_id' => 25,
                 'item_name' => 'BH0.3',
@@ -292,7 +281,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            25 => 
+            24 => 
             array (
                 'item_id' => 26,
                 'item_name' => 'BH0.45',
@@ -303,7 +292,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            26 => 
+            25 => 
             array (
                 'item_id' => 27,
                 'item_name' => 'BH0.5',
@@ -314,7 +303,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            27 => 
+            26 => 
             array (
                 'item_id' => 28,
                 'item_name' => 'BH0.7',
@@ -325,7 +314,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            28 => 
+            27 => 
             array (
                 'item_id' => 29,
                 'item_name' => 'DT4',
@@ -336,7 +325,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            29 => 
+            28 => 
             array (
                 'item_id' => 30,
                 'item_name' => 'M-30',
@@ -347,7 +336,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            30 => 
+            29 => 
             array (
                 'item_id' => 31,
                 'item_name' => 'PEテープ',
@@ -358,7 +347,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            31 => 
+            30 => 
             array (
                 'item_id' => 32,
                 'item_name' => 'PPロープ',
@@ -369,7 +358,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            32 => 
+            31 => 
             array (
                 'item_id' => 33,
                 'item_name' => 'RC-40',
@@ -380,7 +369,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            33 => 
+            32 => 
             array (
                 'item_id' => 34,
                 'item_name' => 'VP200（三相）',
@@ -391,7 +380,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            34 => 
+            33 => 
             array (
                 'item_id' => 35,
                 'item_name' => 'アイボルト',
@@ -402,7 +391,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            35 => 
+            34 => 
             array (
                 'item_id' => 36,
                 'item_name' => 'アスガラ処分',
@@ -413,7 +402,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            36 => 
+            35 => 
             array (
                 'item_id' => 37,
                 'item_name' => 'アンカー',
@@ -424,7 +413,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            37 => 
+            36 => 
             array (
                 'item_id' => 38,
                 'item_name' => 'エアーピック',
@@ -435,7 +424,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            38 => 
+            37 => 
             array (
                 'item_id' => 39,
                 'item_name' => 'エアホース',
@@ -446,7 +435,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            39 => 
+            38 => 
             array (
                 'item_id' => 40,
                 'item_name' => 'エンジンカッター',
@@ -457,7 +446,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            40 => 
+            39 => 
             array (
                 'item_id' => 41,
                 'item_name' => 'エンジンブロア',
@@ -468,7 +457,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            41 => 
+            40 => 
             array (
                 'item_id' => 42,
                 'item_name' => 'オールフィッツジョイント３０００',
@@ -479,7 +468,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            42 => 
+            41 => 
             array (
                 'item_id' => 43,
                 'item_name' => 'かき板',
@@ -490,7 +479,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            43 => 
+            42 => 
             array (
                 'item_id' => 44,
                 'item_name' => 'ガソリン',
@@ -501,7 +490,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            44 => 
+            43 => 
             array (
                 'item_id' => 45,
                 'item_name' => 'カッター',
@@ -512,7 +501,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            45 => 
+            44 => 
             array (
                 'item_id' => 46,
                 'item_name' => 'かなてこ',
@@ -523,7 +512,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            46 => 
+            45 => 
             array (
                 'item_id' => 47,
                 'item_name' => 'キャップタイヤ',
@@ -534,7 +523,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            47 => 
+            46 => 
             array (
                 'item_id' => 48,
                 'item_name' => 'キラク',
@@ -545,7 +534,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            48 => 
+            47 => 
             array (
                 'item_id' => 49,
                 'item_name' => 'クロー',
@@ -556,7 +545,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            49 => 
+            48 => 
             array (
                 'item_id' => 50,
                 'item_name' => 'ゲッターパイル',
@@ -567,7 +556,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            50 => 
+            49 => 
             array (
                 'item_id' => 51,
                 'item_name' => 'コノエダブル',
@@ -578,7 +567,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            51 => 
+            50 => 
             array (
                 'item_id' => 52,
                 'item_name' => 'コノエネイル',
@@ -589,7 +578,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            52 => 
+            51 => 
             array (
                 'item_id' => 53,
                 'item_name' => 'コンクリート',
@@ -600,7 +589,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            53 => 
+            52 => 
             array (
                 'item_id' => 54,
                 'item_name' => 'コンクリートガラ',
@@ -611,7 +600,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            54 => 
+            53 => 
             array (
                 'item_id' => 55,
                 'item_name' => 'コンテナハウス・トイレ・倉庫',
@@ -622,7 +611,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            55 => 
+            54 => 
             array (
                 'item_id' => 56,
                 'item_name' => 'コンパネ　',
@@ -633,7 +622,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            56 => 
+            55 => 
             array (
                 'item_id' => 57,
                 'item_name' => 'コンプレッサー　',
@@ -644,7 +633,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            57 => 
+            56 => 
             array (
                 'item_id' => 58,
                 'item_name' => 'サクションホース',
@@ -655,7 +644,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            58 => 
+            57 => 
             array (
                 'item_id' => 59,
                 'item_name' => 'さげふり',
@@ -666,7 +655,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            59 => 
+            58 => 
             array (
                 'item_id' => 60,
                 'item_name' => 'サニーホース',
@@ -677,7 +666,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            60 => 
+            59 => 
             array (
                 'item_id' => 61,
                 'item_name' => 'サニーホース200',
@@ -688,7 +677,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            61 => 
+            60 => 
             array (
                 'item_id' => 62,
                 'item_name' => 'しガラネット',
@@ -699,7 +688,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            62 => 
+            61 => 
             array (
                 'item_id' => 63,
                 'item_name' => 'シャックル',
@@ -710,7 +699,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            63 => 
+            62 => 
             array (
                 'item_id' => 64,
                 'item_name' => 'スプレー',
@@ -721,7 +710,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            64 => 
+            63 => 
             array (
                 'item_id' => 65,
                 'item_name' => 'スリム看板',
@@ -732,7 +721,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            65 => 
+            64 => 
             array (
                 'item_id' => 66,
                 'item_name' => 'ゼブラテープ',
@@ -743,7 +732,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            66 => 
+            65 => 
             array (
                 'item_id' => 67,
                 'item_name' => 'トイレットペーパー',
@@ -754,7 +743,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            67 => 
+            66 => 
             array (
                 'item_id' => 68,
                 'item_name' => 'トイレブラシ',
@@ -765,7 +754,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            68 => 
+            67 => 
             array (
                 'item_id' => 69,
                 'item_name' => 'トラロープ',
@@ -776,7 +765,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            69 => 
+            68 => 
             array (
                 'item_id' => 70,
                 'item_name' => 'トン袋',
@@ -787,7 +776,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            70 => 
+            69 => 
             array (
                 'item_id' => 71,
                 'item_name' => 'にーどふマット',
@@ -798,7 +787,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            71 => 
+            70 => 
             array (
                 'item_id' => 72,
                 'item_name' => 'のこ刃',
@@ -809,7 +798,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            72 => 
+            71 => 
             array (
                 'item_id' => 73,
                 'item_name' => 'ノミ',
@@ -820,7 +809,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            73 => 
+            72 => 
             array (
                 'item_id' => 74,
                 'item_name' => 'パイプ・クランプ',
@@ -831,7 +820,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            74 => 
+            73 => 
             array (
                 'item_id' => 75,
                 'item_name' => 'パイプサポート',
@@ -842,7 +831,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            75 => 
+            74 => 
             array (
                 'item_id' => 76,
                 'item_name' => 'ハイロッド',
@@ -853,7 +842,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            76 => 
+            75 => 
             array (
                 'item_id' => 77,
                 'item_name' => 'ハウス',
@@ -864,7 +853,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            77 => 
+            76 => 
             array (
                 'item_id' => 78,
                 'item_name' => 'ハケ',
@@ -875,7 +864,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            78 => 
+            77 => 
             array (
                 'item_id' => 79,
                 'item_name' => 'BH0.15',
@@ -886,7 +875,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            79 => 
+            78 => 
             array (
                 'item_id' => 80,
                 'item_name' => 'BH0.08',
@@ -897,7 +886,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            80 => 
+            79 => 
             array (
                 'item_id' => 81,
                 'item_name' => 'ビニールテープ',
@@ -908,7 +897,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            81 => 
+            80 => 
             array (
                 'item_id' => 82,
                 'item_name' => 'ビニルパイプvp',
@@ -919,7 +908,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            82 => 
+            81 => 
             array (
                 'item_id' => 83,
                 'item_name' => 'ピンボール',
@@ -930,7 +919,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            83 => 
+            82 => 
             array (
                 'item_id' => 84,
                 'item_name' => 'ブルーシート#3000',
@@ -941,7 +930,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            84 => 
+            83 => 
             array (
                 'item_id' => 85,
                 'item_name' => 'プレート',
@@ -952,7 +941,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            85 => 
+            84 => 
             array (
                 'item_id' => 86,
                 'item_name' => 'ブロック（12ｃｍ）',
@@ -963,7 +952,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            86 => 
+            85 => 
             array (
                 'item_id' => 87,
                 'item_name' => 'ペンキ',
@@ -974,7 +963,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            87 => 
+            86 => 
             array (
                 'item_id' => 88,
                 'item_name' => 'ポリ容器',
@@ -985,7 +974,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            88 => 
+            87 => 
             array (
                 'item_id' => 89,
                 'item_name' => 'マーカー',
@@ -996,7 +985,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            89 => 
+            88 => 
             array (
                 'item_id' => 90,
                 'item_name' => 'マジックシート',
@@ -1007,7 +996,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            90 => 
+            89 => 
             array (
                 'item_id' => 91,
                 'item_name' => 'マスキングテープ',
@@ -1018,7 +1007,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            91 => 
+            90 => 
             array (
                 'item_id' => 92,
                 'item_name' => 'ライン石灰',
@@ -1029,7 +1018,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            92 => 
+            91 => 
             array (
                 'item_id' => 93,
                 'item_name' => 'レギュラーガソリン',
@@ -1040,7 +1029,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            93 => 
+            92 => 
             array (
                 'item_id' => 94,
                 'item_name' => 'レギュラーガソリン（59-44）',
@@ -1051,7 +1040,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            94 => 
+            93 => 
             array (
                 'item_id' => 95,
                 'item_name' => 'ワイヤクリップ',
@@ -1062,7 +1051,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            95 => 
+            94 => 
             array (
                 'item_id' => 96,
                 'item_name' => '安全掲示板',
@@ -1073,7 +1062,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            96 => 
+            95 => 
             array (
                 'item_id' => 97,
                 'item_name' => '運搬費',
@@ -1084,7 +1073,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            97 => 
+            96 => 
             array (
                 'item_id' => 98,
                 'item_name' => '温度計',
@@ -1095,7 +1084,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            98 => 
+            97 => 
             array (
                 'item_id' => 99,
                 'item_name' => '下地合板',
@@ -1106,7 +1095,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            99 => 
+            98 => 
             array (
                 'item_id' => 100,
                 'item_name' => '仮設トイレ',
@@ -1117,7 +1106,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            100 => 
+            99 => 
             array (
                 'item_id' => 101,
                 'item_name' => '巻き尺',
@@ -1128,7 +1117,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            101 => 
+            100 => 
             array (
                 'item_id' => 102,
                 'item_name' => '看板　',
@@ -1139,7 +1128,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            102 => 
+            101 => 
             array (
                 'item_id' => 103,
                 'item_name' => '吉良田',
@@ -1150,7 +1139,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            103 => 
+            102 => 
             array (
                 'item_id' => 104,
                 'item_name' => '吸出し防止材',
@@ -1161,7 +1150,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            104 => 
+            103 => 
             array (
                 'item_id' => 105,
                 'item_name' => '軽油',
@@ -1172,7 +1161,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            105 => 
+            104 => 
             array (
                 'item_id' => 106,
             'item_name' => '軽油(2tダンプ)',
@@ -1183,7 +1172,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            106 => 
+            105 => 
             array (
                 'item_id' => 107,
             'item_name' => '軽油(重機用)',
@@ -1194,7 +1183,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            107 => 
+            106 => 
             array (
                 'item_id' => 108,
                 'item_name' => '工具倉庫',
@@ -1205,7 +1194,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            108 => 
+            107 => 
             array (
                 'item_id' => 109,
                 'item_name' => '杭',
@@ -1216,7 +1205,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            109 => 
+            108 => 
             array (
                 'item_id' => 110,
                 'item_name' => '高速カッター刃',
@@ -1227,7 +1216,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            110 => 
+            109 => 
             array (
                 'item_id' => 111,
                 'item_name' => '黒板',
@@ -1238,7 +1227,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            111 => 
+            110 => 
             array (
                 'item_id' => 112,
                 'item_name' => '差し筋アンカ　',
@@ -1249,7 +1238,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            112 => 
+            111 => 
             array (
                 'item_id' => 113,
                 'item_name' => '砂',
@@ -1260,7 +1249,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            113 => 
+            112 => 
             array (
                 'item_id' => 114,
                 'item_name' => '砂',
@@ -1271,7 +1260,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            114 => 
+            113 => 
             array (
                 'item_id' => 115,
                 'item_name' => '砕石M-30',
@@ -1282,7 +1271,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            115 => 
+            114 => 
             array (
                 'item_id' => 116,
                 'item_name' => '坂本',
@@ -1293,7 +1282,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            116 => 
+            115 => 
             array (
                 'item_id' => 117,
                 'item_name' => '三角旗',
@@ -1304,7 +1293,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            117 => 
+            116 => 
             array (
                 'item_id' => 118,
                 'item_name' => '重機回送',
@@ -1315,7 +1304,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            118 => 
+            117 => 
             array (
                 'item_id' => 119,
             'item_name' => '重機回送BH0.3(自社)',
@@ -1326,7 +1315,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            119 => 
+            118 => 
             array (
                 'item_id' => 120,
                 'item_name' => '重機回送BH0.45',
@@ -1337,7 +1326,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            120 => 
+            119 => 
             array (
                 'item_id' => 121,
                 'item_name' => '重機回送費',
@@ -1348,7 +1337,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            121 => 
+            120 => 
             array (
                 'item_id' => 122,
                 'item_name' => '重機回送費BH0.15',
@@ -1359,7 +1348,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            122 => 
+            121 => 
             array (
                 'item_id' => 123,
                 'item_name' => '水タンク',
@@ -1370,7 +1359,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            123 => 
+            122 => 
             array (
                 'item_id' => 124,
                 'item_name' => '水糸',
@@ -1381,7 +1370,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            124 => 
+            123 => 
             array (
                 'item_id' => 125,
                 'item_name' => '水中ポンプ2寸',
@@ -1392,7 +1381,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            125 => 
+            124 => 
             array (
                 'item_id' => 126,
                 'item_name' => '水中ポンプ8インチ+ケーブル',
@@ -1403,7 +1392,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            126 => 
+            125 => 
             array (
                 'item_id' => 127,
                 'item_name' => '水中ポンプ管理料',
@@ -1414,7 +1403,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            127 => 
+            126 => 
             array (
                 'item_id' => 128,
                 'item_name' => '製材チョーク',
@@ -1425,7 +1414,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            128 => 
+            127 => 
             array (
                 'item_id' => 129,
                 'item_name' => '赤白丁張',
@@ -1436,7 +1425,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            129 => 
+            128 => 
             array (
                 'item_id' => 130,
                 'item_name' => '説明看板（無反射）枠付',
@@ -1447,7 +1436,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            130 => 
+            129 => 
             array (
                 'item_id' => 131,
                 'item_name' => '草刈り機',
@@ -1458,7 +1447,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            131 => 
+            130 => 
             array (
                 'item_id' => 132,
                 'item_name' => '草刈り機　刃',
@@ -1469,7 +1458,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            132 => 
+            131 => 
             array (
                 'item_id' => 133,
             'item_name' => '草刈り機(刃)',
@@ -1480,7 +1469,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            133 => 
+            132 => 
             array (
                 'item_id' => 134,
                 'item_name' => '草刈り刃',
@@ -1491,7 +1480,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            134 => 
+            133 => 
             array (
                 'item_id' => 135,
                 'item_name' => '耐水マーカー',
@@ -1502,7 +1491,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            135 => 
+            134 => 
             array (
                 'item_id' => 136,
                 'item_name' => '大型土嚢袋',
@@ -1513,7 +1502,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            136 => 
+            135 => 
             array (
                 'item_id' => 137,
                 'item_name' => '単管標識',
@@ -1524,7 +1513,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            137 => 
+            136 => 
             array (
                 'item_id' => 138,
                 'item_name' => '竹ほうき',
@@ -1535,7 +1524,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            138 => 
+            137 => 
             array (
                 'item_id' => 139,
                 'item_name' => '竹ほーき',
@@ -1546,7 +1535,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            139 => 
+            138 => 
             array (
                 'item_id' => 140,
                 'item_name' => '丁型レンチ',
@@ -1557,7 +1546,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            140 => 
+            139 => 
             array (
                 'item_id' => 141,
                 'item_name' => '丁張板',
@@ -1568,7 +1557,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            141 => 
+            140 => 
             array (
                 'item_id' => 142,
                 'item_name' => '吊りフック',
@@ -1579,7 +1568,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            142 => 
+            141 => 
             array (
                 'item_id' => 143,
                 'item_name' => '鉄筋',
@@ -1590,7 +1579,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            143 => 
+            142 => 
             array (
                 'item_id' => 144,
                 'item_name' => '鉄筋カッター',
@@ -1601,7 +1590,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            144 => 
+            143 => 
             array (
                 'item_id' => 145,
                 'item_name' => '鉄骨ビス',
@@ -1612,7 +1601,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            145 => 
+            144 => 
             array (
                 'item_id' => 146,
                 'item_name' => '土嚢袋',
@@ -1623,7 +1612,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            146 => 
+            145 => 
             array (
                 'item_id' => 147,
                 'item_name' => '認識テープ',
@@ -1634,7 +1623,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            147 => 
+            146 => 
             array (
                 'item_id' => 148,
                 'item_name' => '発電機',
@@ -1645,7 +1634,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            148 => 
+            147 => 
             array (
                 'item_id' => 149,
                 'item_name' => '被覆番線',
@@ -1656,7 +1645,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            149 => 
+            148 => 
             array (
                 'item_id' => 150,
                 'item_name' => '敷鉄板',
@@ -1667,7 +1656,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            150 => 
+            149 => 
             array (
                 'item_id' => 151,
                 'item_name' => '幅広テープ',
@@ -1678,7 +1667,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            151 => 
+            150 => 
             array (
                 'item_id' => 152,
                 'item_name' => '平ゴム',
@@ -1689,7 +1678,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            152 => 
+            151 => 
             array (
                 'item_id' => 153,
                 'item_name' => '補助アンカー',
@@ -1700,7 +1689,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            153 => 
+            152 => 
             array (
                 'item_id' => 154,
                 'item_name' => '面取り機',
@@ -1711,7 +1700,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            154 => 
+            153 => 
             array (
                 'item_id' => 155,
                 'item_name' => '輸入シート',
@@ -1722,7 +1711,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            155 => 
+            154 => 
             array (
                 'item_id' => 156,
                 'item_name' => '輸入シート3.6*5.4',
@@ -1733,7 +1722,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            156 => 
+            155 => 
             array (
                 'item_id' => 157,
                 'item_name' => '有筋コンクリートガラ',
@@ -1744,7 +1733,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            157 => 
+            156 => 
             array (
                 'item_id' => 158,
                 'item_name' => '養生テープ',
@@ -1755,7 +1744,7 @@ class ItemsTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-            158 => 
+            157 => 
             array (
                 'item_id' => 159,
             'item_name' => '腕章(11/1)',
@@ -1765,6 +1754,39 @@ class ItemsTableSeeder extends Seeder
                 'deleted_at' => NULL,
                 'created_at' => NULL,
                 'updated_at' => NULL,
+            ),
+            158 => 
+            array (
+                'item_id' => 161,
+                'item_name' => 'ガソリン',
+                'item_type' => 100,
+                'def_price' => 1480000,
+                'user_id' => 1,
+                'deleted_at' => NULL,
+                'created_at' => '2020-01-18 08:49:25',
+                'updated_at' => '2020-01-18 08:49:25',
+            ),
+            159 => 
+            array (
+                'item_id' => 164,
+                'item_name' => 'ガソリン',
+                'item_type' => 100,
+                'def_price' => 1480000,
+                'user_id' => 1,
+                'deleted_at' => NULL,
+                'created_at' => '2020-01-21 04:48:56',
+                'updated_at' => '2020-01-21 04:48:56',
+            ),
+            160 => 
+            array (
+                'item_id' => 166,
+                'item_name' => 'ガソリン',
+                'item_type' => 100,
+                'def_price' => 148,
+                'user_id' => 1,
+                'deleted_at' => NULL,
+                'created_at' => '2020-01-22 07:00:43',
+                'updated_at' => '2020-01-22 07:00:43',
             ),
         ));
         

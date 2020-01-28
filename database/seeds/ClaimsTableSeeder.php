@@ -22,8 +22,8 @@ class ClaimsTableSeeder extends Seeder
                 'claim_id' => 1,
                 'company_id' => 1,
                 'user_id' => 1,
-                'price' => 500000000,
-                'claim_date' => '2019-12-10 00:00:00',
+                'price' => 20000000000,
+                'claim_date' => '2019-12-14 00:00:00',
                 'claim_make_date' => '2019-12-26 00:00:00',
                 'claim_sent_date' => '2019-12-18 00:00:00',
                 'pay_date' => NULL,
@@ -37,7 +37,7 @@ class ClaimsTableSeeder extends Seeder
                 'history' => NULL,
                 'deleted_at' => NULL,
                 'created_at' => NULL,
-                'updated_at' => '2019-12-21 00:00:29',
+                'updated_at' => '2020-01-28 02:21:36',
             ),
         ));
         

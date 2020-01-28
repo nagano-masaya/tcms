@@ -23,6 +23,8 @@ class CreateClaimdetailTable extends Migration
             $table->bigInteger('unit_price');
             $table->bigInteger('qty');
             $table->bigInteger('total_price');
+            $table->bigInteger('discount_price')->default(0);
+            $table->bigInteger('offset_price')->default(0);
             $table->softDeletes();
             $table->timestamps();
 
