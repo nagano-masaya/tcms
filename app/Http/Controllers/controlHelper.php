@@ -1,6 +1,6 @@
 <?php
 
-function DBDate(string $s){
+function DBDate(?string $s){
    return $s=="" ? null : "20".preg_replace('/[^\d]/','-', unescape($s));
 }
 

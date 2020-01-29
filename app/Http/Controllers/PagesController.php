@@ -171,7 +171,8 @@ class PagesController extends CommonController
           ->where('company_id',$company_id)
           ->first();
 
-        $con = \App\claims::firstOrNew(['claim_id' => $request->cid]);
+        $con = \App\claims::firstOrNew(['claim_id' => $request->cid])
+            ->leftJoin('company','claims.company_id','company.company_id');
         $con->claim_id = 0;
         $con->company_id = $company_id;
         $con->nickname = $company->nickname;
@@ -204,73 +205,58 @@ class PagesController extends CommonController
         'company_id'=>$request->company_id,
         'user_id'=>Auth::user()->id,
         'price'=>$request->price*10000,
-        'claim_date'=>$request->claim_date,
-        'claim_make_date'=>$request->claim_make_date,
-        'claim_sent_date'=>$request->claim_sent_date,
-        'pay_date'=>$request->pay_date,
-        'pay_price'=>$request->pay_price*10000,
-        'price_total'=>$request->price_total*10000,
-        'tax_rate'=>$request->tax_rate,
-        'tax'=>$request->tax*10000,
-        'taxed_price'=>$request->taxed_price*10000,
-        'discount_price'=>$request->discount_price*10000,
-        'offset_price'=>$request->offset_price*10000
+        'claim_date'=>DBDate($request->claim_date),
+        'claim_make_date'=>DBDate($request->claim_make_date),
+        'claim_sent_date'=>DBDate($request->claim_sent_date),
+        'pay_date'=>DBDate($request->pay_date),
+        'pay_price'=>DBInt($request->pay_price)*10000,
+        'price_total'=>DBInt($request->total_price)*10000,
+        'tax_rate'=>DBInt($request->tax_rate),
+        'tax'=>DBInt($request->tax)*10000,
+        'taxed_price'=>DBInt($request->taxed_price)*10000,
+        'discount_price'=>DBInt($request->discount_price)*10000,
+        'offset_price'=>DBInt($request->offset_price)*10000
       ];
-      var_dump($flds);
-
-      return DB::transaction(function () use ($request,$con,$flds) {
+      return DB::transaction(function () use ($request,$flds) {
         //$con->claim_id = $request->claim_id;
 
 
         $id = \App\claims::updateOrCreate(
           ['claim_id'=>$request->claim_id],$flds
         );
-/*
-        $con->company_id = $request->company_id;
-        $con->user_id = Auth::user()->id;
-        $con->price = $request->price*10000;
-        $con->claim_date = $request->claim_date;
-        $con->claim_make_date = $request->claim_make_date;
-        $con->claim_sent_date = $request->claim_sent_date;
-        $con->pay_date = $request->pay_date;
-        $con->pay_price = $request->pay_price*10000;
-        $con->price_total = $request->price_total*10000;
-        $con->tax_rate = $request->tax_rate;
-        $con->tax = $request->tax*10000;
-        $con->taxed_price = $request->taxed_price*10000;
-        $con->discount_price = $request->discount_price*10000;
-        $con->offset_price = $request->offset_price*10000;
-        $con->history = $request->history;
-        $con->save();
-*/
-        print("claim saved\n");
-
-        $details = json_decode($request->details);
+        $details = $request->details;
         $idx=0;
         $res = [];
+        var_dump($details);
         foreach($details as $itm){
-          if($itm->deleted == true){
-            if($itm->clmdetail_id!=0){
-              \App\claimdetail::destroy($itm->clmdetail_id);
+          $del=false;
+          if($itm["deleted"] == "true"){
+            if($itm["clmdetail_id"]!=0){
+              \App\claimdetail::destroy($itm["clmdetail_id"]);
+              $del=true;
             }
           }else{
             $id = \App\claimdetail::updateOrCreate(
               [
-                'clmdetail_id'=>$itm->clmdetail_id
+                'clmdetail_id'=>$itm["clmdetail_id"]
               ],
               [
-                'clmdetail_id'=>$itm->clmdetail_id,
+                'clmdetail_id'=>$itm["clmdetail_id"],
                 'listorder'=>$idx,
-                'claim_id'=>$con->claim_id,
-                'cont_id'=>$itm->cont_id,
-                'cont_text'=>$itm->cont_text,
-                'title'=>$itm->text,
-                'unit_price'=>$itm->unit_price*10000,
-                'qty'=>$itm->qty*10000,
-                'total_price'=>$itm->price*10000,
+                'claim_id'=>$request->claim_id,
+                'cont_id'=>$itm["cont_id"],
+                'cont_text'=>$itm["cont_text"],
+                'title'=>$itm["text"],
+                'unit_price'=>DBInt($itm["unit_price"])*10000,
+                'qty'=>DBInt($itm["qty"])*10000,
+                'total_price'=>DBInt($itm["price"])*10000,
+                'tax'=>DBInt($itm["tax"])*10000,
+                'taxed_price'=>DBInt($itm["taxed_price"])*10000,
+                'offset_price'=>DBInt($itm["offset_price"])*10000,
+                'discount_price'=>DBInt($itm["discount_price"])*10000
               ]);
           }
-          array_push($res,['rowid'=>$itm->rowid,'clmdetail_id'=>$id->clmdetail_id ]);
+          array_push($res,['rowid'=>$itm["rowid"],'clmdetail_id'=>$id->clmdetail_id, 'deleted'=>$del ]);
         };
 
         return '{"status":"OK","data":'.json_encode($res)."}" ;

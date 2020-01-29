@@ -23,15 +23,48 @@ table th,td{
         claim_id:{{$itm->claim_id}},
         cont_id:{{$itm->cont_id}},
         cont_text:"{{$itm->cont_text}}",
-        text:"{{$itm->text}}",
+        text:"{{$itm->title}}",
         unit_price:{{$itm->unit_price/10000}},
         qty:{{$itm->qty/10000}},
         price:{{$itm->total_price/10000}},
+        tax:{{$itm->tax/10000}},
+        taxed_price:{{$itm->taxed_price/10000}},
+        offset_price:{{$itm->offset_price/10000}},
+        discount_price:{{$itm->discount_price/10000}},
         deleted:false
       },
   @endforeach
   ];//{cont_id,cont_text,text,unit_price,qty,price,tax}
+function _n(s){
+  return parseInt(s.replace(/[^0-9]+/g,""));
+}
 
+function calcPrices(){
+  var subtotal = 0;
+  var tax = 0;
+  var total = 0;
+  var offset = 0;
+  var discount = 0;
+
+  $('#detaillist tbody tr [name="total_price"]').each(function(){
+    subtotal += _n($(this).val());
+  });
+  $('#detaillist tbody tr [name="tax"]').each(function(){
+    tax += _n($(this).val());
+  });
+  $('#detaillist tbody tr [name="taxed_price"]').each(function(){
+    total += _n($(this).val());
+  });
+  $('#detaillist tbody tr [name="offset_price"]').each(function(){
+    offset += _n($(this).val());
+  });
+  $('#detaillist tbody tr [name="discount_price"]').each(function(){
+    discount += _n($(this).val());
+  });
+
+
+
+}
 
 function newItem(){
   //$('#constselector').show();
@@ -47,40 +80,53 @@ function newItem(){
     .replace("#qty#",0)
     .replace("#price#",0)
     .replace("#cont_text#","")
+    .replace("#tax#","")
+    .replace("#taxed_price#","")
+    .replace("#offset_price#","")
+    .replace("#discount_price#","")
     .replace("#cont_id#","")
     +'</td></tr>'
   ).find('.jpcurrency').each(function(){
       $(this).on(
         'input', function(){
-                              $(this).val(
-                                tcms_num3($(this).val())
-                              );
+          $(this).val(
+            tcms_num3($(this).val())
+          );
         }
-     )
+      )
    });
 }
 
 var objs;
 function initDetails(){
   $("#detaillist tbody").children().remove();
+  var parent = $("#detaillist tbody");
   var num=0;
   details.forEach(function(itm){
     var templ=$('#rowbase').html();
 
     if(!itm.deleted && templ !== undefined ){
-      $("#detaillist tbody").append(
-        '<tr data-rowid="'+num+'"><td>'
+      var rowid=UUID()+num;
+      var elm = $(
+        '<tr data-rowid="'+rowid+'"><td>'
         + templ
         .replace("#clmdid#",itm.clmdetail_id)
-        .replace(/#row#/g,num)
+        .replace(/#row#/g,rowid)
         .replace("#text#",itm.text)
         .replace("#unit_price#",itm.unit_price)
         .replace("#qty#",itm.qty)
         .replace("#price#",itm.price)
         .replace("#cont_text#",itm.cont_text)
         .replace("#cont_id#",itm.cont_id)
+        .replace("#tax#",itm.tax)
+        .replace("#taxed_price#",itm.taxed_price)
+        .replace("#offset_price#",itm.offset_price)
+        .replace("#discount_price#",itm.discount_price)
         +'</td></tr>'
       );
+
+      elm.appendTo(parent)
+        .find('.jpcurrency').attachNum3();
     }
     num++;
   });
@@ -106,14 +152,18 @@ function saveDetails(){
   $("#detaillist td").each(function(){
       arr.push(
         {
-          rowid:parseInt($(this).find('[data-rowid]').attr('data-rowid')),
-          clmdetail_id:parseInt($(this).find('[data-id]').attr('data-id')),
-          cont_id:parseInt($(this).find('[cid]').attr('cid')),
+          rowid:$(this).find('[data-rowid]').attr('data-rowid'),
+          clmdetail_id:$(this).find('[data-id]').attr('data-id'),
+          cont_id:$(this).find('[cid]').attr('cid'),
           cont_text:$(this).find('[cid]').text(),
           text:$(this).find('.col_text').val(),
-          unit_price:parseInt($(this).find('.col_uprice').val().replace( /,/g, '')),
-          qty:parseInt($(this).find('.col_qty').val()),
-          price:parseInt($(this).find('.col_price').val().replace( /,/g, '')),
+          unit_price:$(this).find('.col_uprice').val(),
+          qty:$(this).find('.col_qty').val(),
+          price:$(this).find('.col_price').val(),
+          tax:$(this).find('[name="tax"]').val(),
+          taxed_price:$(this).find('[name="taxed_price"]').val(),
+          offset_price:$(this).find('[name="offset_price"]').val(),
+          discount_price:$(this).find('[name="discount_price"]').val(),
           deleted:$(this).find('[data-rowid]').hasClass('hidden')
         }
       )
@@ -125,6 +175,28 @@ function saveDetails(){
 var recvData="";
 
 function validate(){
+  var elm = null;
+  var crText = v8n()
+      .not.null()
+      .minLength(1)
+      .maxLength(64);
+
+  try{
+    $("#detaillist .col_text").each(function(){
+      elm = $(this);
+      crText.check(elm.val());
+      $(elm).removeClass('bg-error');
+    });
+    saveData();
+  }catch(ex){
+    $(elm)
+      .addClass('bg-error')
+      .focus();
+  }
+}
+
+function saveData(){
+
   saveDetails();
   var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
@@ -133,26 +205,25 @@ function validate(){
       url: 'claimdetail',
       type: 'POST',
       data: {_token: CSRF_TOKEN,
-        claim_id:parseInt($("input[name='claim_id']").val()),
-        company_id:parseInt($("input[name='company_id']").val()),
-        user_id:parseInt($("input[name='user_id']").val()),
-        price:parseInt($("input[name='price']").val().replace( /,/g, '')),
-        claim_date:moment($("input[name='claim_date']").val(),DATEFORMAT).format('YYYY-MM-DD'),
-        claim_make_date:$("input[name='claim_make_date']").val(),
-        claim_sent_date:$("input[name='claim_sent_date']").val(),
-        pay_date:$("input[name='pay_date']").val(),
-        pay_price:parseInt($("input[name='pay_price']").val().replace( /,/g, '')),
-        price_total:parseInt($("input[name='price_total']").val().replace( /,/g, '')),
-        tax_rate:parseInt($("input[name='tax_rate']").val()),
-        tax:parseInt($("input[name='tax']").val().replace( /,/g, '')),
-        taxed_price:parseInt($("input[name='taxed_price']").val().replace( /,/g, '')),
-        discount_price:parseInt($("input[name='discount_price']").val().replace( /,/g, '')),
-        offset_price:parseInt($("input[name='offset_price']").val().replace( /,/g, '')),
-        details:$("input[name='details']").val(),
-        history:$("input[name='history']").val(),
+        claim_id:parseInt($("#claim_id").val()),
+        company_id:parseInt($("#company_id").val()),
+        user_id:{{Auth::user()->id}},
+        price:parseInt($("#price").val().replace( /,/g, '')),
+        claim_date:$("#claim_date").val(),
+        claim_make_date:$("#claim_make_date").val(),
+        claim_sent_date:$("#claim_sent_date").val(),
+        pay_date:$("#pay_date").val(),
+        pay_price:parseInt($("#pay_price").val().replace( /,/g, '')),
+        total_price:parseInt($("#total_price").val().replace( /,/g, '')),
+        tax_rate:parseInt($("#tax_rate").val()),
+        tax:parseInt($("#tax").val().replace( /,/g, '')),
+        taxed_price:parseInt($("#taxed_price").val().replace( /,/g, '')),
+        offset_price:parseInt($("#offset_price").val().replace( /,/g, '')),
+        discount_price:parseInt($("#discount_price").val().replace( /,/g, '')),
+        details:details
       },
       dataType: 'JSON'
-  }).always(function(data) {
+  }).done(function(data) {
       data.data.forEach(function(itm){
         $('[data-rowid="'+itm.rowid+'"]').attr('data-id',itm.clmdetail_id);
       });
@@ -178,36 +249,36 @@ $(document).ready(function(){
 
 </script>
 
-<input type="hidden" name="claim_id" value="{{$con->claim_id}}"/>
-<input type="hidden" name="user_id" value="{{$con->user_id}}"/>
-<input type="hidden" name="company_id" value="{{$con->company_id}}"/>
-<input type="hidden" name="claim_make_date" value="{{is_null($con->claim_make_date) ? date('y-m-d') : $con->claim_make_date->format('y.m/d')}}"/>
-<input type="hidden" name="claim_sent_date" value="{{is_null($con->claim_sent_date) ? "" : $con->claim_sent_date->format('y.m/d')}}"/>
+<input type="hidden" id="claim_id" name="claim_id" value="{{$con->claim_id}}"/>
+<input type="hidden" id="user_id" name="user_id" value="{{$con->user_id}}"/>
+<input type="hidden" id="company_id" name="company_id" value="{{$con->company_id}}"/>
+<input type="hidden" id="claim_make_date" name="claim_make_date" value="{{is_null($con->claim_make_date) ? date('y-m-d') : $con->claim_make_date->format('y.m/d')}}"/>
+<input type="hidden" id="claim_sent_date" name="claim_sent_date" value="{{is_null($con->claim_sent_date) ? "" : $con->claim_sent_date->format('y.m/d')}}"/>
 <div class="container">
   <div class="row">
     <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         請求日
       </div>
-      <input type="button" class="form-control text-left datepicker" name="claim_date" value="{{is_null($con->claim_date) ? date('y.m/d') : $con->claim_date->format('y.m/d')}}" maxlength="128">
+      <input type="button" class="form-control text-left datepicker" id="claim_date" name="claim_date" value="{{is_null($con->claim_date) ? date('y.m/d') : $con->claim_date->format('y.m/d')}}" maxlength="128">
     </div>
     <div class="px-0 col-6">
       <div class="input-group-prepend input-group-text input-group-sm">
         請求先
       </div>
-      <input type="button" class="form-control text-left" name="cont_name" value="{{$con->nickname}}" maxlength="128">
+      <input type="button" class="form-control text-left" id="cont_name" name="cont_name" value="{{$con->nickname}}" maxlength="128">
     </div>
     <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         請求額
       </div>
-      <input type="text" class="form-control jpcurrency" name="price" value="{{$con->price/10000}}" maxlength="15" autocomplete="off">
+      <input type="text" class="form-control jpcurrency" id="price" name="price" value="{{$con->price/10000}}" maxlength="15" autocomplete="off">
     </div>
     <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         受領額
       </div>
-      <input type="text" readonly class="form-control jpcurrency" name="pay_price" value="{{$con->pay_price/10000}}" maxlength="15"  autocomplete="off">
+      <input type="text" readonly class="form-control jpcurrency" id="pay_price" name="pay_price" value="{{$con->pay_price/10000}}" maxlength="15"  autocomplete="off">
     </div>
   </div>
   <div class="row">
@@ -215,37 +286,37 @@ $(document).ready(function(){
       <div class="input-group-prepend input-group-text input-group-sm">
         合計金額
       </div>
-      <input type="text" class="form-control text-right jpcurrency" name="price_total" value="{{$con->price_total/10000}}" maxlength="15"  autocomplete="off">
+      <input type="text" class="form-control text-right jpcurrency" id="total_price" name="total_price" value="{{$con->price_total/10000}}" maxlength="15"  autocomplete="off">
     </div>
     <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         消費税率(%)
       </div>
-      <input type="text" class="form-control text-left" name="tax_rate" value="{{$con->tax_rate}}" maxlength="3"  autocomplete="off">
+      <input type="text" class="form-control text-left" id="tax_rate" name="tax_rate" value="{{$con->tax_rate}}" maxlength="3"  autocomplete="off">
     </div>
     <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         消費税
       </div>
-      <input type="text" class="form-control text-right jpcurrency" name="tax" value="{{$con->tax/10000}}" maxlength="15" autocomplete="off">
+      <input type="text" class="form-control text-right jpcurrency" id="tax" name="tax" value="{{$con->tax/10000}}" maxlength="15" autocomplete="off">
     </div>
     <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         税込金額
       </div>
-      <input type="text" class="form-control text-right jpcurrency" name="taxed_price" value="{{$con->taxed_price/10000}}" maxlength="15" autocomplete="off">
+      <input type="text" class="form-control text-right jpcurrency" id="taxed_price" name="taxed_price" value="{{$con->taxed_price/10000}}" maxlength="15" autocomplete="off">
     </div>
     <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         相殺
       </div>
-      <input type="text" class="form-control text-right jpcurrency" name="offset_price" value="{{$con->offset_price/10000}}" maxlength="15" autocomplete="off">
+      <input type="text" class="form-control text-right jpcurrency" id="offset_price" name="offset_price" value="{{$con->offset_price/10000}}" maxlength="15" autocomplete="off">
     </div>
     <div class="px-0 col-2">
       <div class="input-group-prepend input-group-text input-group-sm">
         値引
       </div>
-      <input type="text" class="form-control text-right jpcurrency" name="discount_price" value="{{$con->discount_price/10000}}" maxlength="15" autocomplete="off">
+      <input type="text" class="form-control text-right jpcurrency" id="discount_price" name="discount_price" value="{{$con->discount_price/10000}}" maxlength="15" autocomplete="off">
     </div>
   </div>
 </div>
@@ -374,9 +445,21 @@ function delete_claim(itm){
       </div>
     </div>
     <div class="row">
-      <input type="text" class="form-control col-2 col_uprice  text-right jpcurrency" value="#unit_price#"/>
-      <input type="text" class="form-control col-1 col_qty" value="#qty#"/>
-      <input type="text" class="form-control col-2 col_price text-right jpcurrency" value="#price#"/>
+      <div class="col-7">
+          <div class="row">
+            <input type="text" class="form-control col-3 col_uprice text-right jpcurrency" name="unit_price" value="#unit_price#"/>
+            <input type="text" class="form-control col-2 col_qty" value="#qty#"/>
+            <input type="text" class="form-control col-4 col_price text-right jpcurrency" name="price" value="#price#"/>
+            <input type="text" class="form-control col-3 col_price text-right jpcurrency" name="tax" value="#tax#" placeholder="消費税" autocomplete="false"/>
+          </div>
+      </div>
+      <div class="col-5">
+        <div class="row">
+          <input type="text" class="form-control col-5 col_price text-right jpcurrency" name="taxed_price" value="#taxed_price#" placeholder="税込金額" autocomplete="false"/>
+          <input type="text" class="form-control col-4 col_price text-right jpcurrency" name="offset_price" value="#offset_price#" placeholder="相殺" autocomplete="false"/>
+          <input type="text" class="form-control col-3 col_price text-right jpcurrency" name="discount_price" value="#discount_price#" placeholder="値引" autocomplete="false"/>
+        </div>
+      </div>
     </div>
   </div>
 </div>

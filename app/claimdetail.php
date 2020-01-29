@@ -16,7 +16,20 @@ class claimdetail extends Model
     protected $guarded = ['clmdetail_id'];
 
 
-    protected $fillable = ['listorder','claim_id','cont_id','cont_text','title','unit_price','qty','total_price'];
+    protected $fillable = [
+      'listorder',
+      'claim_id',
+      'cont_id',
+      'cont_text',
+      'title',
+      'unit_price',
+      'qty',
+      'total_price',
+      'tax',
+      'taxed_price',
+      'offset_price',
+      'discount_price',
+    ];
     //DateTime型でデータを取得するため、$datesに登録
     protected $dates = [
       'apply_date'
